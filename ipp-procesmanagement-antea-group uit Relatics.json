@@ -1,0 +1,5476 @@
+{
+  "versie": "1.1",
+  "project": "IPP Procesmanagement Antea Group",
+  "aangepast": "2026-06-06",
+  "clusters": [
+    {
+      "id": "ipp_6",
+      "label": "Integraal Project- en Programmamanagement",
+      "kleur": "#1a3c34",
+      "afkorting": "IPP",
+      "volgorde": 1,
+      "subclusters": [
+        {
+          "id": "ipp_1",
+          "label": "Besluit spoor Projectmanagement",
+          "kleur": "#2d6a4f",
+          "afkorting": "BSP",
+          "volgorde": 10000,
+          "subclusters": []
+        },
+        {
+          "id": "ipp_2",
+          "label": "Contract Management",
+          "kleur": "#40916c",
+          "afkorting": "COM",
+          "volgorde": 20000,
+          "subclusters": []
+        },
+        {
+          "id": "ipp_3",
+          "label": "Technisch Management",
+          "kleur": "#52b788",
+          "afkorting": "TEM",
+          "volgorde": 30000,
+          "subclusters": [
+            {
+              "id": "ipp_16",
+              "label": "Ontwerpen",
+              "kleur": "#74c69d",
+              "afkorting": "ONT",
+              "volgorde": 30100,
+              "subclusters": []
+            },
+            {
+              "id": "ipp_20",
+              "label": "Technische Onderzoeken",
+              "kleur": "#b7e4c7",
+              "afkorting": "TEO",
+              "volgorde": 30500,
+              "subclusters": []
+            }
+          ]
+        },
+        {
+          "id": "ipp_4",
+          "label": "Klant en Omgevingsmanagement",
+          "kleur": "#8ecae6",
+          "afkorting": "KLO",
+          "volgorde": 40000,
+          "subclusters": []
+        },
+        {
+          "id": "ipp_5",
+          "label": "Plan Management",
+          "kleur": "#219ebc",
+          "afkorting": "PLM",
+          "volgorde": 50000,
+          "subclusters": []
+        },
+        {
+          "id": "ipp_30",
+          "label": "Projectbeheersing",
+          "kleur": "#6a4c93",
+          "afkorting": "PRO",
+          "volgorde": 60000,
+          "subclusters": [
+            {
+              "id": "ipp_46",
+              "label": "PB-Sturing (eigen opdracht)",
+              "kleur": "#023047",
+              "afkorting": "PSE",
+              "volgorde": 99999,
+              "subclusters": []
+            },
+            {
+              "id": "ipp_47",
+              "label": "PB-Afbakening (klantopgave)",
+              "kleur": "#e63946",
+              "afkorting": "PAK",
+              "volgorde": 99999,
+              "subclusters": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rollen": [
+    "Projectmanager",
+    "Contractmanager",
+    "Senior Adviseur",
+    "Adviseur",
+    "Kwaliteitsmanager",
+    "Systems Engineer",
+    "Omgevingsmanager",
+    "Vergunningenspecialist",
+    "Ontwerper",
+    "Opdrachtgever",
+    "Klant"
+  ],
+  "systemen": [
+    "Relatics",
+    "GIS",
+    "SharePoint",
+    "MS Project",
+    "Teams",
+    "Contractmanager",
+    "MS Word 365",
+    "MS Excel 365",
+    "MS Teams",
+    "GIS Connect - Antea World",
+    "Bodem-, geologische- en geomorfologische kaart van Nederland",
+    "Archis",
+    "TopoTijdreis",
+    "Kadastrale Minuutplannen",
+    "Algemeen Hoogtebestand Nederland",
+    "Indicatieve kaart Militair Erfgoed (IKME)",
+    "Verstoringsbronnenkaart",
+    "PDOK",
+    "Dinoloket",
+    "HISGIS",
+    "Omgevingsloket - DSO",
+    "Autodesk applicaties - CAD Basis, Infra en Inventor",
+    "Terraindex",
+    "BDOK",
+    "OODOK",
+    "MS Powerpoint 365",
+    "Primavera P6 EPPM",
+    "MS Sharepoint",
+    "Ibis Cloud",
+    "MS PowerBI Professional",
+    "Dialog",
+    "Clearly",
+    "MS Project 365",
+    "Oracle Primavera Cloud",
+    "Primavera Risk Analysis",
+    "MS Visio 365",
+    "Streetsmart (Cyclomedia)",
+    "Inweva",
+    "NDW Dexter Verkeerstelcijfers (via derden)",
+    "Diego regelscenario's (via RWS)",
+    "TomTom live verkeersdata (via derden)"
+  ],
+  "documenten": [
+    {
+      "code": "PRD-10",
+      "naam": "V&V-plan"
+    },
+    {
+      "code": "PRD-100",
+      "naam": "Uitgangspuntennotitie (UPN) @planfase@?"
+    },
+    {
+      "code": "PRD-101",
+      "naam": "Evaluatieverslag"
+    },
+    {
+      "code": "PRD-102",
+      "naam": "Common data environment ontwerpfase"
+    },
+    {
+      "code": "PRD-103",
+      "naam": "Mappenstructuur NEN ISO 19650"
+    },
+    {
+      "code": "PRD-104",
+      "naam": "BIM Uitvoeringsplan (BUP)"
+    },
+    {
+      "code": "PRD-105",
+      "naam": "Uitgangspuntennotitite ontwerp"
+    },
+    {
+      "code": "PRD-106",
+      "naam": "Tekeningenlijst"
+    },
+    {
+      "code": "PRD-107",
+      "naam": "Beoordelingsworkslows ACC"
+    },
+    {
+      "code": "PRD-109",
+      "naam": "Rapport contractkeuze"
+    },
+    {
+      "code": "PRD-11",
+      "naam": "V&V-rapport"
+    },
+    {
+      "code": "PRD-111",
+      "naam": "Bouweamovereenkomst"
+    },
+    {
+      "code": "PRD-112",
+      "naam": "Aannemingsovereenkomst (bouwteam)"
+    },
+    {
+      "code": "PRD-113",
+      "naam": "RAW-bestek"
+    },
+    {
+      "code": "PRD-114",
+      "naam": "Verificatieplan"
+    },
+    {
+      "code": "PRD-115",
+      "naam": "Verificatierapport"
+    },
+    {
+      "code": "PRD-116",
+      "naam": "Planning"
+    },
+    {
+      "code": "PRD-117",
+      "naam": "Kostennota"
+    },
+    {
+      "code": "PRD-118",
+      "naam": "Kostenraming (SSK)"
+    },
+    {
+      "code": "PRD-119",
+      "naam": "Planningsnota"
+    },
+    {
+      "code": "PRD-12",
+      "naam": "V&V-dossier"
+    },
+    {
+      "code": "PRD-120",
+      "naam": "Uitvoeringsmethodiek"
+    },
+    {
+      "code": "PRD-121",
+      "naam": "Rapportage milieuhygiënisch materiaalonderzoek"
+    },
+    {
+      "code": "PRD-122",
+      "naam": "Verkeersmanagementplan"
+    },
+    {
+      "code": "PRD-123",
+      "naam": "Verkeersmaatregelenplan"
+    },
+    {
+      "code": "PRD-124",
+      "naam": "BLVC plan"
+    },
+    {
+      "code": "PRD-125",
+      "naam": "Stakeholderdossier"
+    },
+    {
+      "code": "PRD-126",
+      "naam": "Issuedossier"
+    },
+    {
+      "code": "PRD-127",
+      "naam": "Historisch Milieukundig Onderzoek cf BRL (HO)"
+    },
+    {
+      "code": "PRD-13",
+      "naam": "Contactbeheersplan"
+    },
+    {
+      "code": "PRD-130",
+      "naam": "Deelmanagementplan - Technisch management"
+    },
+    {
+      "code": "PRD-131",
+      "naam": "BIM Uitvoeringsplan Light (BUP)"
+    },
+    {
+      "code": "PRD-132",
+      "naam": "Raakvlakmanagementplan"
+    },
+    {
+      "code": "PRD-133",
+      "naam": "Raakvlakinformatieblad"
+    },
+    {
+      "code": "PRD-134",
+      "naam": "Keuringsplan"
+    },
+    {
+      "code": "PRD-135",
+      "naam": "Testplan"
+    },
+    {
+      "code": "PRD-14",
+      "naam": "Toetsplan"
+    },
+    {
+      "code": "PRD-140",
+      "naam": "Risico-analyse"
+    },
+    {
+      "code": "PRD-141",
+      "naam": "Operational Concept Description (OCD)"
+    },
+    {
+      "code": "PRD-142",
+      "naam": "Landschapsplan"
+    },
+    {
+      "code": "PRD-143",
+      "naam": "Rijstrokenschema"
+    },
+    {
+      "code": "PRD-144",
+      "naam": "Viltstiftschetsen"
+    },
+    {
+      "code": "PRD-145",
+      "naam": "Ontwerpverantwoording FO"
+    },
+    {
+      "code": "PRD-146",
+      "naam": "Principe dwarsprofielen"
+    },
+    {
+      "code": "PRD-147",
+      "naam": "Knelpuntenanalyse functionele raakvlakken"
+    },
+    {
+      "code": "PRD-148",
+      "naam": "Ruimtelijke inpassing"
+    },
+    {
+      "code": "PRD-149",
+      "naam": "Kostenindicatie (≤40%) alternatieven"
+    },
+    {
+      "code": "PRD-15",
+      "naam": "Toetsplanning"
+    },
+    {
+      "code": "PRD-150",
+      "naam": "Trade-off matrix alternatieven"
+    },
+    {
+      "code": "PRD-151",
+      "naam": "FBS"
+    },
+    {
+      "code": "PRD-152",
+      "naam": "KES/CRS"
+    },
+    {
+      "code": "PRD-153",
+      "naam": "Alternatieven"
+    },
+    {
+      "code": "PRD-154",
+      "naam": "Trade-off varianten"
+    },
+    {
+      "code": "PRD-155",
+      "naam": "Varianten"
+    },
+    {
+      "code": "PRD-157",
+      "naam": "IVO-O: Verkennend booronderzoek"
+    },
+    {
+      "code": "PRD-158",
+      "naam": "IVO-O: karterend booronderzoek"
+    },
+    {
+      "code": "PRD-159",
+      "naam": "Kostenschatting (≤25%)"
+    },
+    {
+      "code": "PRD-16",
+      "naam": "Toetsverslag"
+    },
+    {
+      "code": "PRD-160",
+      "naam": "IVO-proefsleuf"
+    },
+    {
+      "code": "PRD-161",
+      "naam": "Kostenschatting (≤20%)"
+    },
+    {
+      "code": "PRD-162",
+      "naam": "Kostenraming (≤15%)"
+    },
+    {
+      "code": "PRD-163",
+      "naam": "Kostenraming (≤10%)"
+    },
+    {
+      "code": "PRD-164",
+      "naam": "Ontwerpverantwoording SO"
+    },
+    {
+      "code": "PRD-165",
+      "naam": "Ontwerpverantwoording VO"
+    },
+    {
+      "code": "PRD-166",
+      "naam": "Ontwerpverantwoording DO"
+    },
+    {
+      "code": "PRD-167",
+      "naam": "RAMS-analyse"
+    },
+    {
+      "code": "PRD-168",
+      "naam": "LCC-analyse"
+    },
+    {
+      "code": "PRD-169",
+      "naam": "SRS"
+    },
+    {
+      "code": "PRD-17",
+      "naam": "Auditverslag"
+    },
+    {
+      "code": "PRD-170",
+      "naam": "SBS"
+    },
+    {
+      "code": "PRD-171",
+      "naam": "WBS"
+    },
+    {
+      "code": "PRD-172",
+      "naam": "Inpassingsontwerp"
+    },
+    {
+      "code": "PRD-173",
+      "naam": "Vormgevingsvisie"
+    },
+    {
+      "code": "PRD-174",
+      "naam": "Overzichtstekeningen"
+    },
+    {
+      "code": "PRD-175",
+      "naam": "Functioneel Integraal Systeemontwerp (FIS)"
+    },
+    {
+      "code": "PRD-176",
+      "naam": "Kenmerkende dwarsprofielen"
+    },
+    {
+      "code": "PRD-177",
+      "naam": "Grondverwervingstekeningen"
+    },
+    {
+      "code": "PRD-178",
+      "naam": "Safety-case"
+    },
+    {
+      "code": "PRD-179",
+      "naam": "Omgevingsplan"
+    },
+    {
+      "code": "PRD-18",
+      "naam": "Waarnemingsformulier"
+    },
+    {
+      "code": "PRD-180",
+      "naam": "OBS"
+    },
+    {
+      "code": "PRD-181",
+      "naam": "Voorontwerptekening - 3D model"
+    },
+    {
+      "code": "PRD-182",
+      "naam": "Voorontwerptekening - kaderbladen"
+    },
+    {
+      "code": "PRD-183",
+      "naam": "Voorontwerptekening - basissituatie"
+    },
+    {
+      "code": "PRD-184",
+      "naam": "Faseringsplan uitvoering"
+    },
+    {
+      "code": "PRD-185",
+      "naam": "V&G-plan ontwerpfase (VO)"
+    },
+    {
+      "code": "PRD-186",
+      "naam": "V&G-dossier (VO)"
+    },
+    {
+      "code": "PRD-187",
+      "naam": "Verleggingsplan K&L"
+    },
+    {
+      "code": "PRD-188",
+      "naam": "TVP-plan"
+    },
+    {
+      "code": "PRD-189",
+      "naam": "Logistiek plan"
+    },
+    {
+      "code": "PRD-19",
+      "naam": "Selectieleidraad"
+    },
+    {
+      "code": "PRD-190",
+      "naam": "Railverkeerstechnisch ontwerp (RVTO)"
+    },
+    {
+      "code": "PRD-191",
+      "naam": "Hoofdgeometrie"
+    },
+    {
+      "code": "PRD-192",
+      "naam": "Principe oplossing"
+    },
+    {
+      "code": "PRD-193",
+      "naam": "Raakvlakkentekening"
+    },
+    {
+      "code": "PRD-194",
+      "naam": "Hoeveelheden VO"
+    },
+    {
+      "code": "PRD-195",
+      "naam": "Verificatierapport SO"
+    },
+    {
+      "code": "PRD-196",
+      "naam": "Verificatierapport VO"
+    },
+    {
+      "code": "PRD-197",
+      "naam": "Verificatierapport DO"
+    },
+    {
+      "code": "PRD-198",
+      "naam": "Verificatierapport UO"
+    },
+    {
+      "code": "PRD-199",
+      "naam": "Uitgangspuntennotitie SO"
+    },
+    {
+      "code": "PRD-2",
+      "naam": "Inkoopplan"
+    },
+    {
+      "code": "PRD-20",
+      "naam": "Inschrijvingsleidraad"
+    },
+    {
+      "code": "PRD-200",
+      "naam": "Uitgangspuntennotitie VO"
+    },
+    {
+      "code": "PRD-201",
+      "naam": "Uitgangspuntennotitie DO"
+    },
+    {
+      "code": "PRD-202",
+      "naam": "Uitgangspuntennotitie UO"
+    },
+    {
+      "code": "PRD-203",
+      "naam": "SO-berekening"
+    },
+    {
+      "code": "PRD-204",
+      "naam": "VO-berekening"
+    },
+    {
+      "code": "PRD-205",
+      "naam": "DO-berekening"
+    },
+    {
+      "code": "PRD-206",
+      "naam": "UO-berekening"
+    },
+    {
+      "code": "PRD-207",
+      "naam": "Constructieve berekeningen van alle objecten (behalve inkoopdelen) incl. beschouwing fundatie, hoofdwapening en vermoeiingsgevoelige lassen"
+    },
+    {
+      "code": "PRD-208",
+      "naam": "Berekening aandrijvingen (indien van toepassing). Hierin ook inkoopdelen beschouwen (tandwielkasten)"
+    },
+    {
+      "code": "PRD-209",
+      "naam": "Funderingsberekening"
+    },
+    {
+      "code": "PRD-21",
+      "naam": "Nota van Inlichtingen"
+    },
+    {
+      "code": "PRD-210",
+      "naam": "Zettingsberekening"
+    },
+    {
+      "code": "PRD-211",
+      "naam": "3D model - uitwerking"
+    },
+    {
+      "code": "PRD-212",
+      "naam": "Clash detectie rapport (indien van toepassing)"
+    },
+    {
+      "code": "PRD-213",
+      "naam": "Kaderbladen DO"
+    },
+    {
+      "code": "PRD-214",
+      "naam": "Ontwerpdocumenten - specifiek"
+    },
+    {
+      "code": "PRD-215",
+      "naam": "Functioneel ontwerp E-installaties incl. systeemschema"
+    },
+    {
+      "code": "PRD-216",
+      "naam": "RAMS analyse & FMECA"
+    },
+    {
+      "code": "PRD-217",
+      "naam": "RI&E - Machineveiligheid"
+    },
+    {
+      "code": "PRD-218",
+      "naam": "Baanberekening"
+    },
+    {
+      "code": "PRD-219",
+      "naam": "Zettingsberekening"
+    },
+    {
+      "code": "PRD-22",
+      "naam": "Gunningsbeslissing"
+    },
+    {
+      "code": "PRD-220",
+      "naam": "V&G-plan ontwerpfase (DO)"
+    },
+    {
+      "code": "PRD-221",
+      "naam": "V&G-dossier (DO)"
+    },
+    {
+      "code": "PRD-222",
+      "naam": "Cameraplan"
+    },
+    {
+      "code": "PRD-223",
+      "naam": "Voeding- en telecomplan"
+    },
+    {
+      "code": "PRD-224",
+      "naam": "Bewegwijzerings- en geleidelijnenplan"
+    },
+    {
+      "code": "PRD-225",
+      "naam": "Reisinformatie- en bebordingsplan"
+    },
+    {
+      "code": "PRD-226",
+      "naam": "Verlichtingsplan"
+    },
+    {
+      "code": "PRD-227",
+      "naam": "Waterbergingsberekening nieuwe situatie"
+    },
+    {
+      "code": "PRD-228",
+      "naam": "Zettingsberekening"
+    },
+    {
+      "code": "PRD-23",
+      "naam": "Zienswijzen"
+    },
+    {
+      "code": "PRD-230",
+      "naam": "Plan watersysteem & watersysteemkaart nieuwe situatie"
+    },
+    {
+      "code": "PRD-231",
+      "naam": "Uitwerking stuwen en duikers"
+    },
+    {
+      "code": "PRD-232",
+      "naam": "Verhardingsberekeningen"
+    },
+    {
+      "code": "PRD-233",
+      "naam": "Verlichtingsberekening"
+    },
+    {
+      "code": "PRD-234",
+      "naam": "Rioleringsberekening"
+    },
+    {
+      "code": "PRD-235",
+      "naam": "Stabiliteits- en zettingsberekeningen van taluds en terpen"
+    },
+    {
+      "code": "PRD-236",
+      "naam": "Dwarsprofielen (DO)"
+    },
+    {
+      "code": "PRD-237",
+      "naam": "Lengteprofielen (DO)"
+    },
+    {
+      "code": "PRD-238",
+      "naam": "Situatietekeningen (DO)"
+    },
+    {
+      "code": "PRD-239",
+      "naam": "Principedetails (DO)"
+    },
+    {
+      "code": "PRD-24",
+      "naam": "Rapportage verkennend milieuhygiënisch (water)bodemonderzoek"
+    },
+    {
+      "code": "PRD-240",
+      "naam": "Beplantingsplan (DO)"
+    },
+    {
+      "code": "PRD-241",
+      "naam": "Verlichtingsplan"
+    },
+    {
+      "code": "PRD-242",
+      "naam": "Verkeerregelinstallatie (VRI)"
+    },
+    {
+      "code": "PRD-243",
+      "naam": "Rioleringsplan"
+    },
+    {
+      "code": "PRD-244",
+      "naam": "Hoeveelheden DO"
+    },
+    {
+      "code": "PRD-245",
+      "naam": "Vaststellen geometrie"
+    },
+    {
+      "code": "PRD-246",
+      "naam": "UO - berekening - wapening"
+    },
+    {
+      "code": "PRD-247",
+      "naam": "UO - berekening - lassen (niet vermoeiingsgevoelig)"
+    },
+    {
+      "code": "PRD-248",
+      "naam": "Vorm- en wapeningstekeningen"
+    },
+    {
+      "code": "PRD-249",
+      "naam": "Detailtekeningen staal"
+    },
+    {
+      "code": "PRD-25",
+      "naam": "Rapportage archeologisch bureau-onderzoek"
+    },
+    {
+      "code": "PRD-250",
+      "naam": "Overige UO documenten"
+    },
+    {
+      "code": "PRD-251",
+      "naam": "Plan waarin een gevolg wordt gegeven aan de uitgangspunten ten aanzien van onderhoud in de ontwerpfase"
+    },
+    {
+      "code": "PRD-252",
+      "naam": "Plan Veilige Transfer"
+    },
+    {
+      "code": "PRD-253",
+      "naam": "Plan Veilige Berijdbaarheid"
+    },
+    {
+      "code": "PRD-254",
+      "naam": "Legplan"
+    },
+    {
+      "code": "PRD-255",
+      "naam": "V&G-plan uitvoeringsfase"
+    },
+    {
+      "code": "PRD-256",
+      "naam": "Keuringsplan"
+    },
+    {
+      "code": "PRD-257",
+      "naam": "Werkplan"
+    },
+    {
+      "code": "PRD-258",
+      "naam": "Maatvoeringswerkplan"
+    },
+    {
+      "code": "PRD-259",
+      "naam": "Plan vrijkomende materialen"
+    },
+    {
+      "code": "PRD-260",
+      "naam": "Draaiboek BDS"
+    },
+    {
+      "code": "PRD-261",
+      "naam": "Detail keuringsplan indienststelling in TVP"
+    },
+    {
+      "code": "PRD-262",
+      "naam": "Calamiteitenplan"
+    },
+    {
+      "code": "PRD-263",
+      "naam": "Licht- en Schiftplots"
+    },
+    {
+      "code": "PRD-264",
+      "naam": "Verleggingstekeningen K&L"
+    },
+    {
+      "code": "PRD-265",
+      "naam": "Hulpconstructies"
+    },
+    {
+      "code": "PRD-266",
+      "naam": "Installatietekeningen"
+    },
+    {
+      "code": "PRD-267",
+      "naam": "Monitoringsplan"
+    },
+    {
+      "code": "PRD-268",
+      "naam": "Dwarsprofielen (UO)"
+    },
+    {
+      "code": "PRD-269",
+      "naam": "Lengteprofielen (UO)"
+    },
+    {
+      "code": "PRD-27",
+      "naam": "Vergunningenscan"
+    },
+    {
+      "code": "PRD-270",
+      "naam": "Situatietekeningen (UO)"
+    },
+    {
+      "code": "PRD-271",
+      "naam": "Principedetails (UO)"
+    },
+    {
+      "code": "PRD-272",
+      "naam": "Markerings- en bebordingstekeningen"
+    },
+    {
+      "code": "PRD-273",
+      "naam": "Opbreektekeningen -nadenplan"
+    },
+    {
+      "code": "PRD-274",
+      "naam": "Beplantingsplan (UO)"
+    },
+    {
+      "code": "PRD-275",
+      "naam": "K&L-tekeningen (verleggingsplan)"
+    },
+    {
+      "code": "PRD-276",
+      "naam": "Definitief maakbaarheidsplan"
+    },
+    {
+      "code": "PRD-277",
+      "naam": "Hoeveelheden UO"
+    },
+    {
+      "code": "PRD-278",
+      "naam": "Integraal veiligheidsplan"
+    },
+    {
+      "code": "PRD-279",
+      "naam": "Kwalitatieve bedoordeling EV"
+    },
+    {
+      "code": "PRD-28",
+      "naam": "Vergunningenregister"
+    },
+    {
+      "code": "PRD-280",
+      "naam": "K&L Derden inventarisatie"
+    },
+    {
+      "code": "PRD-281",
+      "naam": "K&L ProRail inventarisatie"
+    },
+    {
+      "code": "PRD-282",
+      "naam": "Verkeersanalyse definitieve situatie"
+    },
+    {
+      "code": "PRD-283",
+      "naam": "Analyse trillingen gebruiksfase"
+    },
+    {
+      "code": "PRD-284",
+      "naam": "Vastgoedanalyse"
+    },
+    {
+      "code": "PRD-285",
+      "naam": "Inventarisatie bestaande situatie"
+    },
+    {
+      "code": "PRD-286",
+      "naam": "Geotechnisch onderzoek - Bureaustudie"
+    },
+    {
+      "code": "PRD-287",
+      "naam": "Ballastonderzoek"
+    },
+    {
+      "code": "PRD-288",
+      "naam": "Verhardingsonderzoek"
+    },
+    {
+      "code": "PRD-289",
+      "naam": "Asbestonderzoek gebouwen en objecten"
+    },
+    {
+      "code": "PRD-29",
+      "naam": "(Grond)verwervingsplan"
+    },
+    {
+      "code": "PRD-290",
+      "naam": "Akoestisch onderzoek"
+    },
+    {
+      "code": "PRD-291",
+      "naam": "Boominventarisatie"
+    },
+    {
+      "code": "PRD-292",
+      "naam": "Stikstofberekening"
+    },
+    {
+      "code": "PRD-293",
+      "naam": "Kwalitatieve beoordeling luchtkwaliteit gebruikssituatie"
+    },
+    {
+      "code": "PRD-294",
+      "naam": "Geohydrologisch onderzoek Kunstwerken – Analyse en metingen"
+    },
+    {
+      "code": "PRD-295",
+      "naam": "Uitvoeren watertoets/opstellen waterhuishoudkundig plan"
+    },
+    {
+      "code": "PRD-296",
+      "naam": "Adviesnota bescherming archeologische waarden tijdens uitvoering"
+    },
+    {
+      "code": "PRD-297",
+      "naam": "Verkeersanalyse tijdelijke situatie"
+    },
+    {
+      "code": "PRD-298",
+      "naam": "Analyse trillingen bouwfase"
+    },
+    {
+      "code": "PRD-299",
+      "naam": "Passende beoordeling"
+    },
+    {
+      "code": "PRD-3",
+      "naam": "Vraagspecificatie"
+    },
+    {
+      "code": "PRD-30",
+      "naam": "Planschaderapport"
+    },
+    {
+      "code": "PRD-300",
+      "naam": "Bestemmingsplanwijziging"
+    },
+    {
+      "code": "PRD-301",
+      "naam": "Landmeetkundig onderzoek"
+    },
+    {
+      "code": "PRD-302",
+      "naam": "3D laserscannen"
+    },
+    {
+      "code": "PRD-303",
+      "naam": "Obstakelonderzoek"
+    },
+    {
+      "code": "PRD-304",
+      "naam": "Bouwkundige 0-opname"
+    },
+    {
+      "code": "PRD-305",
+      "naam": "Sonderingen en Boringen"
+    },
+    {
+      "code": "PRD-306",
+      "naam": "Nader bodemonderzoek"
+    },
+    {
+      "code": "PRD-307",
+      "naam": "K&L verleggingen"
+    },
+    {
+      "code": "PRD-308",
+      "naam": "Opsporen OOO"
+    },
+    {
+      "code": "PRD-309",
+      "naam": "Omgevingsvergunning"
+    },
+    {
+      "code": "PRD-31",
+      "naam": "Risicodossier"
+    },
+    {
+      "code": "PRD-310",
+      "naam": "Geotechnisch onderzoek - Nader onderzoek"
+    },
+    {
+      "code": "PRD-311",
+      "naam": "Strategienota betrouwbaarheid infraproject"
+    },
+    {
+      "code": "PRD-312",
+      "naam": "RAM-eisen per functie"
+    },
+    {
+      "code": "PRD-314",
+      "naam": "Scoretabel klanttevredenheid"
+    },
+    {
+      "code": "PRD-315",
+      "naam": "Rapport prestatiemeting"
+    },
+    {
+      "code": "PRD-319",
+      "naam": "Risicodossier"
+    },
+    {
+      "code": "PRD-32",
+      "naam": "Risicoregister (intern en extern)"
+    },
+    {
+      "code": "PRD-320",
+      "naam": "Kansendossier"
+    },
+    {
+      "code": "PRD-321",
+      "naam": "Risicodossier"
+    },
+    {
+      "code": "PRD-322",
+      "naam": "Kansendossier"
+    },
+    {
+      "code": "PRD-323",
+      "naam": "Verificatieplan"
+    },
+    {
+      "code": "PRD-324",
+      "naam": "Verificatierapport"
+    },
+    {
+      "code": "PRD-325",
+      "naam": "Verificatierapport"
+    },
+    {
+      "code": "PRD-326",
+      "naam": "Validatiedocument"
+    },
+    {
+      "code": "PRD-327",
+      "naam": "Opleverdossier"
+    },
+    {
+      "code": "PRD-328",
+      "naam": "Documentenlijst"
+    },
+    {
+      "code": "PRD-329",
+      "naam": "Termijnstaat"
+    },
+    {
+      "code": "PRD-33",
+      "naam": "Omgevingsmanagementplan"
+    },
+    {
+      "code": "PRD-330",
+      "naam": "Termijn en verzoek tot PV"
+    },
+    {
+      "code": "PRD-332",
+      "naam": "Systeembeschrijving"
+    },
+    {
+      "code": "PRD-34",
+      "naam": "KES dossier"
+    },
+    {
+      "code": "PRD-36",
+      "naam": "Participatieplan"
+    },
+    {
+      "code": "PRD-37",
+      "naam": "Projectbeheersingsprofiel"
+    },
+    {
+      "code": "PRD-38",
+      "naam": "Dashboard"
+    },
+    {
+      "code": "PRD-39",
+      "naam": "Voortgangsrapportage"
+    },
+    {
+      "code": "PRD-4",
+      "naam": "Annexen"
+    },
+    {
+      "code": "PRD-40",
+      "naam": "Projectmanagementplan / Kwaliteitsmanagementplan"
+    },
+    {
+      "code": "PRD-41",
+      "naam": "Deterministische planning"
+    },
+    {
+      "code": "PRD-42",
+      "naam": "Probabilistische planning"
+    },
+    {
+      "code": "PRD-43",
+      "naam": "Baseline beheer planning"
+    },
+    {
+      "code": "PRD-44",
+      "naam": "Capaciteitsplanning"
+    },
+    {
+      "code": "PRD-45",
+      "naam": "Kwaliteitssysteem"
+    },
+    {
+      "code": "PRD-46",
+      "naam": "Verificatieplan"
+    },
+    {
+      "code": "PRD-47",
+      "naam": "Procesbeschrijvingen"
+    },
+    {
+      "code": "PRD-48",
+      "naam": "Auditverslag"
+    },
+    {
+      "code": "PRD-49",
+      "naam": "Verbeterregister"
+    },
+    {
+      "code": "PRD-5",
+      "naam": "Basisovereenkomst"
+    },
+    {
+      "code": "PRD-50",
+      "naam": "Baselines financieel"
+    },
+    {
+      "code": "PRD-51",
+      "naam": "Financiële rapportage"
+    },
+    {
+      "code": "PRD-52",
+      "naam": "Systems engineering"
+    },
+    {
+      "code": "PRD-53",
+      "naam": "System Breakdown Structure"
+    },
+    {
+      "code": "PRD-54",
+      "naam": "Work Breakdown Structure"
+    },
+    {
+      "code": "PRD-55",
+      "naam": "Product Breakdown Structure"
+    },
+    {
+      "code": "PRD-56",
+      "naam": "Aansturen team"
+    },
+    {
+      "code": "PRD-57",
+      "naam": "Signaleren inzet (capaciteit en expertise) team"
+    },
+    {
+      "code": "PRD-58",
+      "naam": "Voortgangsrapportage"
+    },
+    {
+      "code": "PRD-59",
+      "naam": "Wijzigingen"
+    },
+    {
+      "code": "PRD-6",
+      "naam": "Overeenkomst"
+    },
+    {
+      "code": "PRD-60",
+      "naam": "Besluiten"
+    },
+    {
+      "code": "PRD-61",
+      "naam": "Budget beheersing"
+    },
+    {
+      "code": "PRD-62",
+      "naam": "Budget verantwoording"
+    },
+    {
+      "code": "PRD-63",
+      "naam": "VTW-management"
+    },
+    {
+      "code": "PRD-64",
+      "naam": "Interne financieel management"
+    },
+    {
+      "code": "PRD-65",
+      "naam": "Afstemmen OG"
+    },
+    {
+      "code": "PRD-66",
+      "naam": "Afstemmen intern en extern"
+    },
+    {
+      "code": "PRD-67",
+      "naam": "Stuurgroep"
+    },
+    {
+      "code": "PRD-68",
+      "naam": "Bewaking en bijsturen stakeholder relatie"
+    },
+    {
+      "code": "PRD-7",
+      "naam": "Emissievrij werken eisen"
+    },
+    {
+      "code": "PRD-72",
+      "naam": "Besluiten over maatregelen v.v. OG (plankeuzes, planning)"
+    },
+    {
+      "code": "PRD-73",
+      "naam": "Kritische prestatie-indicatoren (KPI's)"
+    },
+    {
+      "code": "PRD-74",
+      "naam": "Besluiten maatregel GOKIT (interne KPI's)"
+    },
+    {
+      "code": "PRD-75",
+      "naam": "Ontwerp (SO, VO, DO, UO)"
+    },
+    {
+      "code": "PRD-76",
+      "naam": "Circulair ontwerp?"
+    },
+    {
+      "code": "PRD-77",
+      "naam": "Grondstoffenplan"
+    },
+    {
+      "code": "PRD-78",
+      "naam": "Energieplan"
+    },
+    {
+      "code": "PRD-79",
+      "naam": "Technische raakvlakken"
+    },
+    {
+      "code": "PRD-8",
+      "naam": "Interne en externe scopebewaking"
+    },
+    {
+      "code": "PRD-80",
+      "naam": "Procesraakvlakken"
+    },
+    {
+      "code": "PRD-81",
+      "naam": "Bouwwerk Informatie Model (BIM)"
+    },
+    {
+      "code": "PRD-82",
+      "naam": "Kadaster KLIC-gegevens"
+    },
+    {
+      "code": "PRD-83",
+      "naam": "Grondmechanisch? onderzoek"
+    },
+    {
+      "code": "PRD-84",
+      "naam": "MER"
+    },
+    {
+      "code": "PRD-85",
+      "naam": "Communicatieplan/strategie"
+    },
+    {
+      "code": "PRD-86",
+      "naam": "Voorlopig ontwerp"
+    },
+    {
+      "code": "PRD-87",
+      "naam": "Definitief ontwerp"
+    },
+    {
+      "code": "PRD-88",
+      "naam": "Uitvoeringsontwerp"
+    },
+    {
+      "code": "PRD-89",
+      "naam": "Rapportage archeologisch inventariserend veldonderzoek"
+    },
+    {
+      "code": "PRD-9",
+      "naam": "Stuur op rolvastheid"
+    },
+    {
+      "code": "PRD-90",
+      "naam": "Rapportage oriënterend onderzoek OOO"
+    },
+    {
+      "code": "PRD-91",
+      "naam": "Rapportage nader onderzoek OOO"
+    },
+    {
+      "code": "PRD-92",
+      "naam": "Rapportage ecologisch bureau-onderzoek"
+    },
+    {
+      "code": "PRD-93",
+      "naam": "Rapportage ecologisch veldonderzoek"
+    },
+    {
+      "code": "PRD-94",
+      "naam": "Waterparagraaf"
+    },
+    {
+      "code": "PRD-95",
+      "naam": "Rapportage aanvullend milieuhygiënisch (water)bodemonderzoek"
+    },
+    {
+      "code": "PRD-97",
+      "naam": "Rapportage onderzoek proefsleuven kabels en leidingen"
+    },
+    {
+      "code": "PRD-98",
+      "naam": "Akte grondaankoop"
+    },
+    {
+      "code": "PRD-99",
+      "naam": "Dossier grondverwerving"
+    }
+  ],
+  "processen": [
+    {
+      "id": "p_mq2lbbx5_vi5",
+      "naam": "(Nul)-inspectie",
+      "categorie": "ipp_20",
+      "niveau": 2,
+      "volgorde": 30504,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": []
+    },
+    {
+      "id": "p_mq2lbbx6_ng4",
+      "naam": "Aanbestedingsbegeleiding",
+      "categorie": "ipp_2",
+      "niveau": 2,
+      "volgorde": 20500,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_z5f",
+          "naam": "Opstellen nota van Inlichtingen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inschrijvingsleidraad",
+              "bron": "PRD-20"
+            }
+          ],
+          "output": [
+            {
+              "label": "Nota van Inlichtingen",
+              "doel": "PRD-21"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_dlg",
+          "naam": "Nemen gunningsbeslissing",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inschrijvingsleidraad",
+              "bron": "PRD-20"
+            },
+            {
+              "label": "Nota van Inlichtingen",
+              "bron": "PRD-21"
+            }
+          ],
+          "output": [
+            {
+              "label": "Gunningsbeslissing",
+              "doel": "PRD-22"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_7h8",
+          "naam": "Opstellen selectieleidraad",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inkoopplan",
+              "bron": "PRD-2"
+            }
+          ],
+          "output": [
+            {
+              "label": "Selectieleidraad",
+              "doel": "PRD-19"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_a2v",
+          "naam": "Opstellen inschrijvingsleidraad",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Selectieleidraad",
+              "bron": "PRD-19"
+            }
+          ],
+          "output": [
+            {
+              "label": "Inschrijvingsleidraad",
+              "doel": "PRD-20"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_9vb",
+          "naam": "Managen zienswijzen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Zienswijzen",
+              "doel": "PRD-23"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_6uq",
+      "naam": "Communicatie- en verwachtingsmanagement",
+      "categorie": "ipp_1",
+      "niveau": 2,
+      "volgorde": 10200,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_mwk",
+          "naam": "Bewaken en bijsturen stakeholderrelatie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365; MS Teams",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Bewaking en bijsturen stakeholder relatie",
+              "doel": "PRD-68"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_p76",
+          "naam": "Communicatie en verwachtingen afstemmen met OG",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365; MS Teams",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Afstemmen OG",
+              "doel": "PRD-65"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_2ta",
+          "naam": "Communicatie en verwachtingen afstemmen met stuurgroep",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365; MS Teams",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Stuurgroep",
+              "doel": "PRD-67"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_x58",
+          "naam": "Communicatie en verwachtingen afstemmen intern en extern",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365; MS Teams",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Afstemmen intern en extern",
+              "doel": "PRD-66"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_y6n",
+          "naam": "Managen interne communicatie en verwachtingen omtrent financieel management",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365; MS Teams",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Interne financieel management",
+              "doel": "PRD-64"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_p42",
+      "naam": "Conditioneringen",
+      "categorie": "ipp_4",
+      "niveau": 2,
+      "volgorde": 40100,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_o1s",
+          "naam": "Uitvoeren archeologisch onderzoek",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "GIS Connect - Antea World; Bodem-, geologische- en geomorfologische kaart van Nederland; Archis; TopoTijdreis; Kadastrale Minuutplannen; Algemeen Hoogtebestand Nederland; Indicatieve kaart Militair Erfgoed (IKME); Verstoringsbronnenkaart; PDOK; Dinoloket; HISGIS; Omgevingsloket - DSO",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Rapportage verkennend milieuhygiënisch (water)bodemonderzoek",
+              "bron": "PRD-24"
+            },
+            {
+              "label": "Probabilistische planning",
+              "bron": "PRD-42"
+            },
+            {
+              "label": "Definitief ontwerp",
+              "bron": "PRD-87"
+            },
+            {
+              "label": "Rapportage oriënterend onderzoek OOO",
+              "bron": "PRD-90"
+            },
+            {
+              "label": "Rapportage nader onderzoek OOO",
+              "bron": "PRD-91"
+            }
+          ],
+          "output": [
+            {
+              "label": "Rapportage archeologisch bureau-onderzoek",
+              "doel": "PRD-25"
+            },
+            {
+              "label": "Rapportage archeologisch inventariserend veldonderzoek",
+              "doel": "PRD-89"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_6o6",
+          "naam": "Uitvoeren ecologisch onderzoek",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Probabilistische planning",
+              "bron": "PRD-42"
+            },
+            {
+              "label": "Voorlopig ontwerp",
+              "bron": "PRD-86"
+            },
+            {
+              "label": "Uitvoeringsmethodiek",
+              "bron": "PRD-120"
+            }
+          ],
+          "output": [
+            {
+              "label": "Rapportage ecologisch bureau-onderzoek",
+              "doel": "PRD-92"
+            },
+            {
+              "label": "Rapportage ecologisch veldonderzoek",
+              "doel": "PRD-93"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_9q7",
+          "naam": "Uitvoeren milieuhygiënisch materiaalonderzoek",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "GIS Connect - Antea World; Autodesk applicaties - CAD Basis, Infra en Inventor; Terraindex; BDOK",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Uitvoeringsontwerp",
+              "bron": "PRD-88"
+            },
+            {
+              "label": "Uitvoeringsmethodiek",
+              "bron": "PRD-120"
+            }
+          ],
+          "output": [
+            {
+              "label": "Rapportage milieuhygiënisch materiaalonderzoek",
+              "doel": "PRD-121"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_j4w",
+          "naam": "Uitvoeren OOO onderzoek",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "GIS Connect - Antea World; OODOK",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Definitief ontwerp",
+              "bron": "PRD-87"
+            }
+          ],
+          "output": [
+            {
+              "label": "Rapportage oriënterend onderzoek OOO",
+              "doel": "PRD-90"
+            },
+            {
+              "label": "Rapportage nader onderzoek OOO",
+              "doel": "PRD-91"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_vd3",
+          "naam": "Uitvoeren milieuhygiënisch (water)bodemonderzoek",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "GIS Connect - Antea World; Autodesk applicaties - CAD Basis, Infra en Inventor; Terraindex; BDOK",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Uitvoeringsontwerp",
+              "bron": "PRD-88"
+            },
+            {
+              "label": "Uitvoeringsmethodiek",
+              "bron": "PRD-120"
+            }
+          ],
+          "output": [
+            {
+              "label": "Rapportage verkennend milieuhygiënisch (water)bodemonderzoek",
+              "doel": "PRD-24"
+            },
+            {
+              "label": "Rapportage aanvullend milieuhygiënisch (water)bodemonderzoek",
+              "doel": "PRD-95"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_qfl",
+          "naam": "Uitvoeren onderzoek water",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 6,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Waterparagraaf",
+              "doel": "PRD-94"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_46z",
+      "naam": "Contract voorbereiden",
+      "categorie": "ipp_2",
+      "niveau": 2,
+      "volgorde": 20100,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_qwf",
+          "naam": "Houden contractkeuzesessie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Powerpoint 365",
+          "beschrijving": "",
+          "volgorde": 0,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Rapport contractkeuze",
+              "doel": "PRD-109"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_24j",
+          "naam": "Bepalen inkoopstrategie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Rapport contractkeuze",
+              "bron": "PRD-109"
+            }
+          ],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_wvt",
+          "naam": "Opstellen inkoopplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Inkoopplan",
+              "doel": "PRD-2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_2op",
+      "naam": "Contractbeheersing (SCB)",
+      "categorie": "ipp_2",
+      "niveau": 2,
+      "volgorde": 20400,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_msm",
+          "naam": "Opstellen contratbeheersplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Vraagspecificatie",
+              "bron": "PRD-3"
+            },
+            {
+              "label": "Annexen",
+              "bron": "PRD-4"
+            },
+            {
+              "label": "Basisovereenkomst",
+              "bron": "PRD-5"
+            },
+            {
+              "label": "Gunningsbeslissing",
+              "bron": "PRD-22"
+            }
+          ],
+          "output": [
+            {
+              "label": "Contactbeheersplan",
+              "doel": "PRD-13"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_vl4",
+          "naam": "Opstellen toetsplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Vraagspecificatie",
+              "bron": "PRD-3"
+            },
+            {
+              "label": "Annexen",
+              "bron": "PRD-4"
+            },
+            {
+              "label": "Basisovereenkomst",
+              "bron": "PRD-5"
+            },
+            {
+              "label": "Gunningsbeslissing",
+              "bron": "PRD-22"
+            }
+          ],
+          "output": [
+            {
+              "label": "Toetsplan",
+              "doel": "PRD-14"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_tz0",
+          "naam": "Opstellen toetsplanning",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Vraagspecificatie",
+              "bron": "PRD-3"
+            },
+            {
+              "label": "Annexen",
+              "bron": "PRD-4"
+            },
+            {
+              "label": "Basisovereenkomst",
+              "bron": "PRD-5"
+            },
+            {
+              "label": "Gunningsbeslissing",
+              "bron": "PRD-22"
+            }
+          ],
+          "output": [
+            {
+              "label": "Toetsplanning",
+              "doel": "PRD-15"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_2ce",
+          "naam": "Uitvoeren audit",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Toetsplanning",
+              "bron": "PRD-15"
+            }
+          ],
+          "output": [
+            {
+              "label": "Auditverslag",
+              "doel": "PRD-17"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_3ix",
+          "naam": "Uitvoeren toetsen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Toetsplanning",
+              "bron": "PRD-15"
+            }
+          ],
+          "output": [
+            {
+              "label": "Toetsverslag",
+              "doel": "PRD-16"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_sqm",
+          "naam": "Verrichten waarnemingen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 6,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Toetsplanning",
+              "bron": "PRD-15"
+            }
+          ],
+          "output": [
+            {
+              "label": "Waarnemingsformulier",
+              "doel": "PRD-18"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_q5w",
+      "naam": "Definitief ontwerp/Technisch Ontwerp",
+      "categorie": "ipp_16",
+      "niveau": 2,
+      "volgorde": 30104,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_mzu",
+          "naam": "Definitief ontwerp maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Nader bodemonderzoek",
+              "bron": "PRD-306"
+            },
+            {
+              "label": "K&L verleggingen",
+              "bron": "PRD-307"
+            },
+            {
+              "label": "Opsporen OOO",
+              "bron": "PRD-308"
+            },
+            {
+              "label": "Omgevingsvergunning",
+              "bron": "PRD-309"
+            },
+            {
+              "label": "Geotechnisch onderzoek - Nader onderzoek",
+              "bron": "PRD-310"
+            }
+          ],
+          "output": [
+            {
+              "label": "Kostenraming (≤10%)",
+              "doel": "PRD-163"
+            },
+            {
+              "label": "Ontwerpverantwoording DO",
+              "doel": "PRD-166"
+            },
+            {
+              "label": "Verificatierapport DO",
+              "doel": "PRD-197"
+            },
+            {
+              "label": "Uitgangspuntennotitie DO",
+              "doel": "PRD-201"
+            },
+            {
+              "label": "DO-berekening",
+              "doel": "PRD-205"
+            },
+            {
+              "label": "Constructieve berekeningen van alle objecten (behalve inkoopdelen) incl. beschouwing fundatie, hoofdwapening en vermoeiingsgevoelige lassen",
+              "doel": "PRD-207"
+            },
+            {
+              "label": "Berekening aandrijvingen (indien van toepassing). Hierin ook inkoopdelen beschouwen (tandwielkasten)",
+              "doel": "PRD-208"
+            },
+            {
+              "label": "Funderingsberekening",
+              "doel": "PRD-209"
+            },
+            {
+              "label": "Zettingsberekening",
+              "doel": "PRD-210"
+            },
+            {
+              "label": "3D model - uitwerking",
+              "doel": "PRD-211"
+            },
+            {
+              "label": "Clash detectie rapport (indien van toepassing)",
+              "doel": "PRD-212"
+            },
+            {
+              "label": "Kaderbladen DO",
+              "doel": "PRD-213"
+            },
+            {
+              "label": "Ontwerpdocumenten - specifiek",
+              "doel": "PRD-214"
+            },
+            {
+              "label": "Functioneel ontwerp E-installaties incl. systeemschema",
+              "doel": "PRD-215"
+            },
+            {
+              "label": "RAMS analyse & FMECA",
+              "doel": "PRD-216"
+            },
+            {
+              "label": "RI&E - Machineveiligheid",
+              "doel": "PRD-217"
+            },
+            {
+              "label": "Baanberekening",
+              "doel": "PRD-218"
+            },
+            {
+              "label": "Zettingsberekening",
+              "doel": "PRD-219"
+            },
+            {
+              "label": "V&G-plan ontwerpfase (DO)",
+              "doel": "PRD-220"
+            },
+            {
+              "label": "V&G-dossier (DO)",
+              "doel": "PRD-221"
+            },
+            {
+              "label": "Cameraplan",
+              "doel": "PRD-222"
+            },
+            {
+              "label": "Voeding- en telecomplan",
+              "doel": "PRD-223"
+            },
+            {
+              "label": "Bewegwijzerings- en geleidelijnenplan",
+              "doel": "PRD-224"
+            },
+            {
+              "label": "Reisinformatie- en bebordingsplan",
+              "doel": "PRD-225"
+            },
+            {
+              "label": "Verlichtingsplan",
+              "doel": "PRD-226"
+            },
+            {
+              "label": "Waterbergingsberekening nieuwe situatie",
+              "doel": "PRD-227"
+            },
+            {
+              "label": "Zettingsberekening",
+              "doel": "PRD-228"
+            },
+            {
+              "label": "Plan watersysteem & watersysteemkaart nieuwe situatie",
+              "doel": "PRD-230"
+            },
+            {
+              "label": "Uitwerking stuwen en duikers",
+              "doel": "PRD-231"
+            },
+            {
+              "label": "Verhardingsberekeningen",
+              "doel": "PRD-232"
+            },
+            {
+              "label": "Verlichtingsberekening",
+              "doel": "PRD-233"
+            },
+            {
+              "label": "Rioleringsberekening",
+              "doel": "PRD-234"
+            },
+            {
+              "label": "Stabiliteits- en zettingsberekeningen van taluds en terpen",
+              "doel": "PRD-235"
+            },
+            {
+              "label": "Dwarsprofielen (DO)",
+              "doel": "PRD-236"
+            },
+            {
+              "label": "Lengteprofielen (DO)",
+              "doel": "PRD-237"
+            },
+            {
+              "label": "Situatietekeningen (DO)",
+              "doel": "PRD-238"
+            },
+            {
+              "label": "Principedetails (DO)",
+              "doel": "PRD-239"
+            },
+            {
+              "label": "Beplantingsplan (DO)",
+              "doel": "PRD-240"
+            },
+            {
+              "label": "Verlichtingsplan",
+              "doel": "PRD-241"
+            },
+            {
+              "label": "Verkeerregelinstallatie (VRI)",
+              "doel": "PRD-242"
+            },
+            {
+              "label": "Rioleringsplan",
+              "doel": "PRD-243"
+            },
+            {
+              "label": "Hoeveelheden DO",
+              "doel": "PRD-244"
+            },
+            {
+              "label": "Vaststellen geometrie",
+              "doel": "PRD-245"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_k8r",
+          "naam": "Workbreakdownstructure maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "WBS",
+              "doel": "PRD-171"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_omt",
+      "naam": "Financieel Management (PM)",
+      "categorie": "ipp_1",
+      "niveau": 2,
+      "volgorde": 10100,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_cbd",
+          "naam": "Beheersen budget",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Primavera P6 EPPM; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Baselines financieel",
+              "bron": "PRD-50"
+            },
+            {
+              "label": "Financiële rapportage",
+              "bron": "PRD-51"
+            }
+          ],
+          "output": [
+            {
+              "label": "Budget beheersing",
+              "doel": "PRD-61"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_364",
+          "naam": "Verantwoorden budget",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Primavera P6 EPPM; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Baselines financieel",
+              "bron": "PRD-50"
+            },
+            {
+              "label": "Financiële rapportage",
+              "bron": "PRD-51"
+            }
+          ],
+          "output": [
+            {
+              "label": "Budget verantwoording",
+              "doel": "PRD-62"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_b1q",
+          "naam": "Managen VTW's",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "VTW-management",
+              "doel": "PRD-63"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_ty7",
+      "naam": "Financiën (eigen opdracht)",
+      "categorie": "ipp_46",
+      "niveau": 2,
+      "volgorde": 60400,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_250",
+          "naam": "Beheren baselines financieel management",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Work Breakdown Structure",
+              "bron": "PRD-54"
+            },
+            {
+              "label": "Product Breakdown Structure",
+              "bron": "PRD-55"
+            }
+          ],
+          "output": [
+            {
+              "label": "Baselines financieel",
+              "doel": "PRD-50"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_1fj",
+          "naam": "Opstellen financiële rapportage",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Financiële rapportage",
+              "doel": "PRD-51"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_knl",
+          "naam": "Opstellen termijnen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Work Breakdown Structure",
+              "bron": "PRD-54"
+            },
+            {
+              "label": "Product Breakdown Structure",
+              "bron": "PRD-55"
+            },
+            {
+              "label": "Documentenlijst",
+              "bron": "PRD-328"
+            }
+          ],
+          "output": [
+            {
+              "label": "Termijnstaat",
+              "doel": "PRD-329"
+            },
+            {
+              "label": "Termijn en verzoek tot PV",
+              "doel": "PRD-330"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_uk5",
+      "naam": "Financiën (klantvraag)",
+      "categorie": "ipp_47",
+      "niveau": 2,
+      "volgorde": 99999,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_90u",
+          "naam": "Opstellen kostenraming / SSK",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Kostenraming (SSK)",
+              "doel": "PRD-118"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_0qi",
+          "naam": "Opstellen kostennota",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Kostennota",
+              "doel": "PRD-117"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_xbe",
+      "naam": "Geodesie",
+      "categorie": "ipp_20",
+      "niveau": 2,
+      "volgorde": 30503,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": []
+    },
+    {
+      "id": "p_mq2lbbx6_48y",
+      "naam": "Geohydrologie",
+      "categorie": "ipp_20",
+      "niveau": 2,
+      "volgorde": 30501,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": []
+    },
+    {
+      "id": "p_mq2lbbx6_sqa",
+      "naam": "Geotechniek",
+      "categorie": "ipp_20",
+      "niveau": 2,
+      "volgorde": 30502,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": []
+    },
+    {
+      "id": "p_mq2lbbx6_25m",
+      "naam": "Grondverwerving",
+      "categorie": "ipp_4",
+      "niveau": 2,
+      "volgorde": 40300,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_ngb",
+          "naam": "3. (Ondersteunen) aanvragen vergunningen, ontheffingen en toestemmingen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_5y4",
+          "naam": "1. Opstellen (grond)verwervingsplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "(Grond)verwervingsplan",
+              "doel": "PRD-29"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_ez7",
+          "naam": "2. Bepalen omvang planschade(s) en bijbehorende compensatie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Planschaderapport",
+              "doel": "PRD-30"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_s7o",
+          "naam": "4. Verwerven gronden",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Akte grondaankoop",
+              "doel": "PRD-98"
+            },
+            {
+              "label": "Dossier grondverwerving",
+              "doel": "PRD-99"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_d5c",
+      "naam": "Informatie (eigen opdracht)",
+      "categorie": "ipp_46",
+      "niveau": 2,
+      "volgorde": 99999,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_m9a",
+          "naam": "Inrichten informatielandschap",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Sharepoint",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_vjv",
+          "naam": "Opstellen en beheren documenten/productenlijst",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Documentenlijst",
+              "doel": "PRD-328"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_6e3",
+      "naam": "Informatie (klantvraag)",
+      "categorie": "ipp_47",
+      "niveau": 2,
+      "volgorde": 99999,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_a83",
+          "naam": "Beschikbaar stellen producten / overdrachtsdossier",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Sharepoint",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Opleverdossier",
+              "doel": "PRD-327"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_6z0",
+      "naam": "Integrale Veiligheidsmanagement",
+      "categorie": "ipp_1",
+      "niveau": 2,
+      "volgorde": 10300,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_ekh",
+          "naam": "Opstellen integraal veiligheidsplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_1wa",
+          "naam": "Opstellen RI&E per veiligheidsdomein",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_egx",
+          "naam": "Bijhouden veiligheidsdossier",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_6dr",
+      "naam": "Juridische toetsing",
+      "categorie": "ipp_5",
+      "niveau": 2,
+      "volgorde": 50300,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": []
+    },
+    {
+      "id": "p_mq2lbbx6_yn1",
+      "naam": "Kwaliteit / KMS (eigen opdracht)",
+      "categorie": "ipp_46",
+      "niveau": 2,
+      "volgorde": 60500,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_k2k",
+          "naam": "Managen kwaliteitssysteem",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Kwaliteitssysteem",
+              "doel": "PRD-45"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_z4s",
+          "naam": "Opstellen verbetervoorstellen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Verbeterregister",
+              "doel": "PRD-49"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_d59",
+          "naam": "Uitvoeren audits",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Word 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Auditverslag",
+              "doel": "PRD-48"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_bcr",
+          "naam": "Opstellen procesbeschrijvingen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Word 365",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Procesbeschrijvingen",
+              "doel": "PRD-47"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_4hr",
+          "naam": "Verifiëren proceseisen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Verificatieplan",
+              "doel": "PRD-46"
+            },
+            {
+              "label": "Verificatierapport",
+              "doel": "PRD-325"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_oin",
+          "naam": "Evalueren",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 6,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Evaluatieverslag",
+              "doel": "PRD-101"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_raf",
+      "naam": "Kwaliteit / KMS (klantvraag)",
+      "categorie": "ipp_47",
+      "niveau": 2,
+      "volgorde": 99999,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_r80",
+          "naam": "Verifiëren product(eisen)",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Verificatieplan",
+              "doel": "PRD-323"
+            },
+            {
+              "label": "Verificatierapport",
+              "doel": "PRD-324"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_a8t",
+          "naam": "Valideren afbakening / (eind)resultaat",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Validatiedocument",
+              "doel": "PRD-326"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_0vo",
+      "naam": "Opstellen contractendocs",
+      "categorie": "ipp_2",
+      "niveau": 2,
+      "volgorde": 20200,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_j8u",
+          "naam": "Opstellen geïntegreerd contract (UAV-GC)",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Word 365",
+          "beschrijving": "",
+          "volgorde": 0,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inkoopplan",
+              "bron": "PRD-2"
+            }
+          ],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_tgu",
+          "naam": "Opstellen basisovereenkomst",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inkoopplan",
+              "bron": "PRD-2"
+            }
+          ],
+          "output": [
+            {
+              "label": "Basisovereenkomst",
+              "doel": "PRD-5"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_ii6",
+          "naam": "Opstellen vraagspecificatie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inkoopplan",
+              "bron": "PRD-2"
+            }
+          ],
+          "output": [
+            {
+              "label": "Vraagspecificatie",
+              "doel": "PRD-3"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_kfd",
+          "naam": "Opstellen annexen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inkoopplan",
+              "bron": "PRD-2"
+            }
+          ],
+          "output": [
+            {
+              "label": "Annexen",
+              "doel": "PRD-4"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_hm6",
+          "naam": "Opstellen RAW Contract",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Ibis Cloud",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inkoopplan",
+              "bron": "PRD-2"
+            }
+          ],
+          "output": [
+            {
+              "label": "RAW-bestek",
+              "doel": "PRD-113"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_8gl",
+          "naam": "Opstellen bouwteamovereenkomst bouwteam",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Inkoopplan",
+              "bron": "PRD-2"
+            }
+          ],
+          "output": [
+            {
+              "label": "Bouweamovereenkomst",
+              "doel": "PRD-111"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_umk",
+          "naam": "Opstellen (model) aannemingsoverenkomst bouwteam",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 6,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Bouweamovereenkomst",
+              "bron": "PRD-111"
+            }
+          ],
+          "output": [
+            {
+              "label": "Aannemingsovereenkomst (bouwteam)",
+              "doel": "PRD-112"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_z7y",
+          "naam": "Opstellen eisen emissievrij werken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 8,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Emissievrij werken eisen",
+              "doel": "PRD-7"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_5fh",
+          "naam": "Opstellen overeenkomsten",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 9,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Overeenkomst",
+              "doel": "PRD-6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_622",
+      "naam": "Opstellen Planproducten",
+      "categorie": "ipp_5",
+      "niveau": 2,
+      "volgorde": 50200,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_qrx",
+          "naam": "Opstellen MER",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "MER",
+              "doel": "PRD-84"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_jme",
+          "naam": "Opstellen UPN",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Uitgangspuntennotitie (UPN) @planfase@?",
+              "doel": "PRD-100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_iqz",
+      "naam": "Organisatiemanagement",
+      "categorie": "ipp_1",
+      "niveau": 2,
+      "volgorde": 10400,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_6vo",
+          "naam": "Inrichten en aansturen team",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Aansturen team",
+              "doel": "PRD-56"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_dud",
+          "naam": "Managen besluiten",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS PowerBI Professional; MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Besluiten",
+              "doel": "PRD-60"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_vbb",
+          "naam": "Managen wijzigingen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS PowerBI Professional; MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Wijzigingen",
+              "doel": "PRD-59"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_qmr",
+          "naam": "Managen voortgang",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS PowerBI Professional; MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "VTW-management",
+              "bron": "PRD-63"
+            }
+          ],
+          "output": [
+            {
+              "label": "Voortgangsrapportage",
+              "doel": "PRD-58"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_j7q",
+          "naam": "Signaleren inzet (capaciteit en expertise) team",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365; MS Teams",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Probabilistische planning",
+              "bron": "PRD-42"
+            },
+            {
+              "label": "Baseline beheer planning",
+              "bron": "PRD-43"
+            },
+            {
+              "label": "Capaciteitsplanning",
+              "bron": "PRD-44"
+            },
+            {
+              "label": "Planning",
+              "bron": "PRD-116"
+            },
+            {
+              "label": "Planningsnota",
+              "bron": "PRD-119"
+            },
+            {
+              "label": "Deelmanagementplan - Technisch management",
+              "bron": "PRD-130"
+            }
+          ],
+          "output": [
+            {
+              "label": "Signaleren inzet (capaciteit en expertise) team",
+              "doel": "PRD-57"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_gea",
+      "naam": "Participatie- en stakeholdermanagement",
+      "categorie": "ipp_4",
+      "niveau": 2,
+      "volgorde": 40500,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_st4",
+          "naam": "1. Uitvoeren omgevingsanalyse",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; Dialog; Clearly",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Omgevingsmanagementplan",
+              "doel": "PRD-33"
+            },
+            {
+              "label": "Stakeholderdossier",
+              "doel": "PRD-125"
+            },
+            {
+              "label": "Issuedossier",
+              "doel": "PRD-126"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_lua",
+          "naam": "2. Opstellen participatiestrategie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Dialog; Clearly",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Omgevingsmanagementplan",
+              "bron": "PRD-33"
+            },
+            {
+              "label": "Stakeholderdossier",
+              "bron": "PRD-125"
+            },
+            {
+              "label": "Issuedossier",
+              "bron": "PRD-126"
+            }
+          ],
+          "output": [
+            {
+              "label": "Participatieplan",
+              "doel": "PRD-36"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_1mj",
+          "naam": "3. Opstellen communicatieplan/strategie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Dialog; Clearly",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Omgevingsmanagementplan",
+              "bron": "PRD-33"
+            },
+            {
+              "label": "Stakeholderdossier",
+              "bron": "PRD-125"
+            },
+            {
+              "label": "Issuedossier",
+              "bron": "PRD-126"
+            }
+          ],
+          "output": [
+            {
+              "label": "Communicatieplan/strategie",
+              "doel": "PRD-85"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_jbu",
+          "naam": "4. Opstellen KES",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Stakeholderdossier",
+              "bron": "PRD-125"
+            }
+          ],
+          "output": [
+            {
+              "label": "KES dossier",
+              "doel": "PRD-34"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_4nj",
+      "naam": "Planning (eigen opdracht)",
+      "categorie": "ipp_46",
+      "niveau": 2,
+      "volgorde": 60100,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_ll2",
+          "naam": "Opstellen planning",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Project 365; Oracle Primavera Cloud",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Work Breakdown Structure",
+              "bron": "PRD-54"
+            },
+            {
+              "label": "Product Breakdown Structure",
+              "bron": "PRD-55"
+            }
+          ],
+          "output": [
+            {
+              "label": "Planning",
+              "doel": "PRD-116"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_cgn",
+          "naam": "Opstellen capaciteitsplanning",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Project 365; Oracle Primavera Cloud",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Capaciteitsplanning",
+              "doel": "PRD-44"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_kz9",
+          "naam": "Beheren baselines (planning)",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Project 365; Oracle Primavera Cloud",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Baseline beheer planning",
+              "doel": "PRD-43"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_39g",
+      "naam": "Planning (klantopgave)",
+      "categorie": "ipp_47",
+      "niveau": 2,
+      "volgorde": 60300,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_ujh",
+          "naam": "Opstellen deterministische planning",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Project 365; Oracle Primavera Cloud",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Deterministische planning",
+              "doel": "PRD-41"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_jfs",
+          "naam": "Opstellen probabilistische planning (PPI)",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Project 365; Primavera Risk Analysis; Oracle Primavera Cloud",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Probabilistische planning",
+              "doel": "PRD-42"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_747",
+          "naam": "Opstellen planningsnota",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Planningsnota",
+              "doel": "PRD-119"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_ulb",
+      "naam": "Planprocedures inrichten",
+      "categorie": "ipp_5",
+      "niveau": 2,
+      "volgorde": 50100,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": []
+    },
+    {
+      "id": "p_mq2lbbx6_tw4",
+      "naam": "Planstudie",
+      "categorie": "ipp_16",
+      "niveau": 2,
+      "volgorde": 30102,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_jy6",
+          "naam": "Variantenstudie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Trade-off varianten",
+              "doel": "PRD-154"
+            },
+            {
+              "label": "Varianten",
+              "doel": "PRD-155"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_jqm",
+          "naam": "Schetsontwerp maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Rapportage archeologisch bureau-onderzoek",
+              "bron": "PRD-25"
+            },
+            {
+              "label": "Rapportage oriënterend onderzoek OOO",
+              "bron": "PRD-90"
+            },
+            {
+              "label": "Rapportage ecologisch bureau-onderzoek",
+              "bron": "PRD-92"
+            },
+            {
+              "label": "Historisch Milieukundig Onderzoek cf BRL (HO)",
+              "bron": "PRD-127"
+            },
+            {
+              "label": "Integraal veiligheidsplan",
+              "bron": "PRD-278"
+            },
+            {
+              "label": "Kwalitatieve bedoordeling EV",
+              "bron": "PRD-279"
+            },
+            {
+              "label": "K&L Derden inventarisatie",
+              "bron": "PRD-280"
+            },
+            {
+              "label": "K&L ProRail inventarisatie",
+              "bron": "PRD-281"
+            },
+            {
+              "label": "Verkeersanalyse definitieve situatie",
+              "bron": "PRD-282"
+            },
+            {
+              "label": "Analyse trillingen gebruiksfase",
+              "bron": "PRD-283"
+            },
+            {
+              "label": "Vastgoedanalyse",
+              "bron": "PRD-284"
+            },
+            {
+              "label": "Inventarisatie bestaande situatie",
+              "bron": "PRD-285"
+            },
+            {
+              "label": "Geotechnisch onderzoek - Bureaustudie",
+              "bron": "PRD-286"
+            }
+          ],
+          "output": [
+            {
+              "label": "Kostenschatting (≤20%)",
+              "doel": "PRD-161"
+            },
+            {
+              "label": "Ontwerpverantwoording SO",
+              "doel": "PRD-164"
+            },
+            {
+              "label": "LCC-analyse",
+              "doel": "PRD-168"
+            },
+            {
+              "label": "Inpassingsontwerp",
+              "doel": "PRD-172"
+            },
+            {
+              "label": "Vormgevingsvisie",
+              "doel": "PRD-173"
+            },
+            {
+              "label": "Overzichtstekeningen",
+              "doel": "PRD-174"
+            },
+            {
+              "label": "Functioneel Integraal Systeemontwerp (FIS)",
+              "doel": "PRD-175"
+            },
+            {
+              "label": "Kenmerkende dwarsprofielen",
+              "doel": "PRD-176"
+            },
+            {
+              "label": "Grondverwervingstekeningen",
+              "doel": "PRD-177"
+            },
+            {
+              "label": "Safety-case",
+              "doel": "PRD-178"
+            },
+            {
+              "label": "Omgevingsplan",
+              "doel": "PRD-179"
+            },
+            {
+              "label": "Verificatierapport SO",
+              "doel": "PRD-195"
+            },
+            {
+              "label": "Uitgangspuntennotitie SO",
+              "doel": "PRD-199"
+            },
+            {
+              "label": "SO-berekening",
+              "doel": "PRD-203"
+            },
+            {
+              "label": "Strategienota betrouwbaarheid infraproject",
+              "doel": "PRD-311"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_sv3",
+          "naam": "Systeemspecificatie maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "SRS",
+              "doel": "PRD-169"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_str",
+          "naam": "Systeemboom maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "SBS",
+              "doel": "PRD-170"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_x16",
+      "naam": "Raakvlakmanagement",
+      "categorie": "ipp_3",
+      "niveau": 2,
+      "volgorde": 30300,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_e0p",
+          "naam": "Managen technische raakvlakken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Technische raakvlakken",
+              "doel": "PRD-79"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_tzj",
+          "naam": "Managen procesraakvlakken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Procesraakvlakken",
+              "doel": "PRD-80"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_12h",
+          "naam": "Bouwwerk Informatie Managen (BIM-en)",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Bouwwerk Informatie Model (BIM)",
+              "doel": "PRD-81"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_rrn",
+          "naam": "Raakvlakmanagementplan opstellen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Raakvlakmanagementplan",
+              "doel": "PRD-132"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_l0m",
+          "naam": "Raakvlakken specificeren",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Raakvlakinformatieblad",
+              "doel": "PRD-133"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_eul",
+      "naam": "RAMSSHE-aspecten",
+      "categorie": "ipp_3",
+      "niveau": 2,
+      "volgorde": 30400,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_gsf",
+          "naam": "FMECA/FTA",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_eef",
+          "naam": "RAM-analyse",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_gas",
+          "naam": "Veiligheidsanalyse",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_jym",
+          "naam": "Onderhoudsanalyse",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_sd4",
+          "naam": "Integrale veiligheid",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_yae",
+          "naam": "Duurzaamheid",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 6,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_ptw",
+      "naam": "Relatiebeheer",
+      "categorie": "ipp_1",
+      "niveau": 2,
+      "volgorde": 10500,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_hzu",
+          "naam": "Managen klanttevredenheid",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Scoretabel klanttevredenheid",
+              "doel": "PRD-314"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_uw5",
+          "naam": "Managen verwachtingen klant",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_emo",
+          "naam": "Evalueren met klant",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Rapport prestatiemeting",
+              "doel": "PRD-315"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_14b",
+      "naam": "Risico's en kansen (eigen opdracht)",
+      "categorie": "ipp_46",
+      "niveau": 2,
+      "volgorde": 60200,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_43u",
+          "naam": "Opstellen risicodossier",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Risicodossier",
+              "doel": "PRD-319"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_h9h",
+          "naam": "Managen risico's",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Risicodossier",
+              "doel": "PRD-31"
+            },
+            {
+              "label": "Risicoregister (intern en extern)",
+              "doel": "PRD-32"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_mtg",
+          "naam": "Opstellen kansendossier",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Kansendossier",
+              "doel": "PRD-320"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_g3o",
+      "naam": "Risico's en kansen (klantvraag)",
+      "categorie": "ipp_47",
+      "niveau": 2,
+      "volgorde": 99999,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_oyi",
+          "naam": "Opstellen risicodossier",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Risicodossier",
+              "doel": "PRD-321"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_a9n",
+          "naam": "Opstellen kansendossier",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Kansendossier",
+              "doel": "PRD-322"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_jw2",
+      "naam": "Scope & SE (eigen opdracht)",
+      "categorie": "ipp_46",
+      "niveau": 2,
+      "volgorde": 60600,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_15h",
+          "naam": "Opstellen Work Breakdown Structure",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Visio 365; Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Work Breakdown Structure",
+              "doel": "PRD-54"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_3uk",
+          "naam": "Opstellen Product Breakdown Structure",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Visio 365; Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Product Breakdown Structure",
+              "doel": "PRD-55"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_uyb",
+          "naam": "Uitvoeren/begeleiden Systems Engineering",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Systems engineering",
+              "doel": "PRD-52"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_3iw",
+      "naam": "Scope & SE (klantvraag)",
+      "categorie": "ipp_47",
+      "niveau": 2,
+      "volgorde": 99999,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_mtp",
+          "naam": "Opstellen System Breakdown Structure",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Visio 365; Relatics; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "System Breakdown Structure",
+              "doel": "PRD-53"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_jhg",
+          "naam": "Opstellen beschrijving systeem/context",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "MS Word 365; MS Excel 365",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Systeembeschrijving",
+              "doel": "PRD-332"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_vna",
+          "naam": "Uitvoeren/begeleiden Systems Engineering",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_v6a",
+      "naam": "Scopemanagement (CM)",
+      "categorie": "ipp_2",
+      "niveau": 2,
+      "volgorde": 20300,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_c7a",
+          "naam": "Opstellen V&V-plan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics; MS Word 365",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "V&V-plan",
+              "doel": "PRD-10"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_pvj",
+          "naam": "Bewaken interne en externe scope",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Interne en externe scopebewaking",
+              "doel": "PRD-8"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_taq",
+          "naam": "Managen V&V",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "V&V-dossier",
+              "doel": "PRD-12"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_jp5",
+          "naam": "Uitvoeren V&V",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "V&V-rapport",
+              "doel": "PRD-11"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_7sk",
+          "naam": "Sturen op rolvastheid",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Stuur op rolvastheid",
+              "doel": "PRD-9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_jk7",
+      "naam": "Toetsing aan beleidskaders en W&R-geving",
+      "categorie": "ipp_5",
+      "niveau": 2,
+      "volgorde": 50400,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": []
+    },
+    {
+      "id": "p_mq2lbbx6_wsl",
+      "naam": "Uitvoeringsontwerp",
+      "categorie": "ipp_16",
+      "niveau": 2,
+      "volgorde": 30105,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_jeo",
+          "naam": "Uitvoeringsontwerp maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Verificatierapport UO",
+              "doel": "PRD-198"
+            },
+            {
+              "label": "Uitgangspuntennotitie UO",
+              "doel": "PRD-202"
+            },
+            {
+              "label": "UO-berekening",
+              "doel": "PRD-206"
+            },
+            {
+              "label": "UO - berekening - wapening",
+              "doel": "PRD-246"
+            },
+            {
+              "label": "UO - berekening - lassen (niet vermoeiingsgevoelig)",
+              "doel": "PRD-247"
+            },
+            {
+              "label": "Vorm- en wapeningstekeningen",
+              "doel": "PRD-248"
+            },
+            {
+              "label": "Detailtekeningen staal",
+              "doel": "PRD-249"
+            },
+            {
+              "label": "Overige UO documenten",
+              "doel": "PRD-250"
+            },
+            {
+              "label": "Plan waarin een gevolg wordt gegeven aan de uitgangspunten ten aanzien van onderhoud in de ontwerpfase",
+              "doel": "PRD-251"
+            },
+            {
+              "label": "Plan Veilige Transfer",
+              "doel": "PRD-252"
+            },
+            {
+              "label": "Plan Veilige Berijdbaarheid",
+              "doel": "PRD-253"
+            },
+            {
+              "label": "Legplan",
+              "doel": "PRD-254"
+            },
+            {
+              "label": "V&G-plan uitvoeringsfase",
+              "doel": "PRD-255"
+            },
+            {
+              "label": "Keuringsplan",
+              "doel": "PRD-256"
+            },
+            {
+              "label": "Werkplan",
+              "doel": "PRD-257"
+            },
+            {
+              "label": "Maatvoeringswerkplan",
+              "doel": "PRD-258"
+            },
+            {
+              "label": "Plan vrijkomende materialen",
+              "doel": "PRD-259"
+            },
+            {
+              "label": "Draaiboek BDS",
+              "doel": "PRD-260"
+            },
+            {
+              "label": "Detail keuringsplan indienststelling in TVP",
+              "doel": "PRD-261"
+            },
+            {
+              "label": "Calamiteitenplan",
+              "doel": "PRD-262"
+            },
+            {
+              "label": "Licht- en Schiftplots",
+              "doel": "PRD-263"
+            },
+            {
+              "label": "Verleggingstekeningen K&L",
+              "doel": "PRD-264"
+            },
+            {
+              "label": "Hulpconstructies",
+              "doel": "PRD-265"
+            },
+            {
+              "label": "Installatietekeningen",
+              "doel": "PRD-266"
+            },
+            {
+              "label": "Monitoringsplan",
+              "doel": "PRD-267"
+            },
+            {
+              "label": "Dwarsprofielen (UO)",
+              "doel": "PRD-268"
+            },
+            {
+              "label": "Lengteprofielen (UO)",
+              "doel": "PRD-269"
+            },
+            {
+              "label": "Situatietekeningen (UO)",
+              "doel": "PRD-270"
+            },
+            {
+              "label": "Principedetails (UO)",
+              "doel": "PRD-271"
+            },
+            {
+              "label": "Markerings- en bebordingstekeningen",
+              "doel": "PRD-272"
+            },
+            {
+              "label": "Opbreektekeningen -nadenplan",
+              "doel": "PRD-273"
+            },
+            {
+              "label": "Beplantingsplan (UO)",
+              "doel": "PRD-274"
+            },
+            {
+              "label": "K&L-tekeningen (verleggingsplan)",
+              "doel": "PRD-275"
+            },
+            {
+              "label": "Definitief maakbaarheidsplan",
+              "doel": "PRD-276"
+            },
+            {
+              "label": "Hoeveelheden UO",
+              "doel": "PRD-277"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_pbu",
+      "naam": "Vergunningmanagement",
+      "categorie": "ipp_4",
+      "niveau": 2,
+      "volgorde": 40200,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_sg4",
+          "naam": "Inventariseren vergunningen, ontheffingen en toestemmingen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Vergunningenscan",
+              "doel": "PRD-27"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_ado",
+          "naam": "Opstellen en uitvoeren vergunningen strategie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        },
+        {
+          "id": "s_mq2lbbx6_a0l",
+          "naam": "Opstellen, bijhouden en opleveren vergunningen dossier",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Vergunningenregister",
+              "doel": "PRD-28"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_xs9",
+          "naam": "Koppelen vergunning voorwaarden aan vergunning eisen",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": []
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_wia",
+      "naam": "Verifiëren & Valideren",
+      "categorie": "ipp_3",
+      "niveau": 2,
+      "volgorde": 30200,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_xtt",
+          "naam": "Opstellen verificatieplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Verificatieplan",
+              "doel": "PRD-114"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_gfq",
+          "naam": "Uitvoeren verificaties",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Verificatierapport",
+              "doel": "PRD-115"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_3kb",
+          "naam": "Opstellen keuringsplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Keuringsplan",
+              "doel": "PRD-134"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_7b2",
+          "naam": "Opstellen testplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Testplan",
+              "doel": "PRD-135"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_9q3",
+      "naam": "Verkeersmanagement",
+      "categorie": "ipp_4",
+      "niveau": 2,
+      "volgorde": 40400,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_fws",
+          "naam": "2. Opstellen verkeersmanagementplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Streetsmart (Cyclomedia); Inweva; NDW Dexter Verkeerstelcijfers (via derden); Diego regelscenario's (via RWS); TomTom live verkeersdata (via derden)",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Probabilistische planning",
+              "bron": "PRD-42"
+            },
+            {
+              "label": "Ontwerp (SO, VO, DO, UO)",
+              "bron": "PRD-75"
+            },
+            {
+              "label": "Uitvoeringsmethodiek",
+              "bron": "PRD-120"
+            }
+          ],
+          "output": [
+            {
+              "label": "Verkeersmanagementplan",
+              "doel": "PRD-122"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_6o6",
+          "naam": "1. Opstellen BLVC plan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Omgevingsmanagementplan",
+              "bron": "PRD-33"
+            },
+            {
+              "label": "Probabilistische planning",
+              "bron": "PRD-42"
+            },
+            {
+              "label": "Ontwerp (SO, VO, DO, UO)",
+              "bron": "PRD-75"
+            },
+            {
+              "label": "Uitvoeringsmethodiek",
+              "bron": "PRD-120"
+            }
+          ],
+          "output": [
+            {
+              "label": "BLVC plan",
+              "doel": "PRD-124"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_1sb",
+          "naam": "3. Opstellen verkeersmaatregelenplan",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "Streetsmart (Cyclomedia); Inweva; NDW Dexter Verkeerstelcijfers (via derden); Diego regelscenario's (via RWS); TomTom live verkeersdata (via derden)",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Ontwerp (SO, VO, DO, UO)",
+              "bron": "PRD-75"
+            },
+            {
+              "label": "Verkeersmanagementplan",
+              "bron": "PRD-122"
+            }
+          ],
+          "output": [
+            {
+              "label": "Verkeersmaatregelenplan",
+              "doel": "PRD-123"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_at8",
+      "naam": "Verkenning",
+      "categorie": "ipp_16",
+      "niveau": 2,
+      "volgorde": 30101,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_3bb",
+          "naam": "Alternatievenstudie",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Kostenindicatie (≤40%) alternatieven",
+              "doel": "PRD-149"
+            },
+            {
+              "label": "Trade-off matrix alternatieven",
+              "doel": "PRD-150"
+            },
+            {
+              "label": "Alternatieven",
+              "doel": "PRD-153"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_otz",
+          "naam": "Functioneel ontwerp maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Landschapsplan",
+              "doel": "PRD-142"
+            },
+            {
+              "label": "Rijstrokenschema",
+              "doel": "PRD-143"
+            },
+            {
+              "label": "Viltstiftschetsen",
+              "doel": "PRD-144"
+            },
+            {
+              "label": "Ontwerpverantwoording FO",
+              "doel": "PRD-145"
+            },
+            {
+              "label": "Principe dwarsprofielen",
+              "doel": "PRD-146"
+            },
+            {
+              "label": "Knelpuntenanalyse functionele raakvlakken",
+              "doel": "PRD-147"
+            },
+            {
+              "label": "Ruimtelijke inpassing",
+              "doel": "PRD-148"
+            },
+            {
+              "label": "Kostenschatting (≤25%)",
+              "doel": "PRD-159"
+            },
+            {
+              "label": "RAMS-analyse",
+              "doel": "PRD-167"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_7b9",
+          "naam": "Klanteisenspecificatie maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "KES/CRS",
+              "doel": "PRD-152"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_x15",
+          "naam": "Functieboom maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 4,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "FBS",
+              "doel": "PRD-151",
+              "attributen": [
+                "Functienaam",
+                "Onderliggende functie",
+                "Functie beschrijving"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_uex",
+          "naam": "Operationele beschrijving maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 5,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "Operational Concept Description (OCD)",
+              "doel": "PRD-141"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p_mq2lbbx6_zbm",
+      "naam": "Voorlopig ontwerp/Integraal ontwerp",
+      "categorie": "ipp_16",
+      "niveau": 2,
+      "volgorde": 30103,
+      "eigenaar": "",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-06-06",
+      "stappen": [
+        {
+          "id": "s_mq2lbbx6_8ty",
+          "naam": "Voorlopig ontwerp/Integraal ontwerp maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [
+            {
+              "label": "Rapportage verkennend milieuhygiënisch (water)bodemonderzoek",
+              "bron": "PRD-24"
+            },
+            {
+              "label": "Vergunningenscan",
+              "bron": "PRD-27"
+            },
+            {
+              "label": "Rapportage archeologisch inventariserend veldonderzoek",
+              "bron": "PRD-89"
+            },
+            {
+              "label": "Rapportage nader onderzoek OOO",
+              "bron": "PRD-91"
+            },
+            {
+              "label": "Rapportage ecologisch veldonderzoek",
+              "bron": "PRD-93"
+            },
+            {
+              "label": "Rapportage onderzoek proefsleuven kabels en leidingen",
+              "bron": "PRD-97"
+            },
+            {
+              "label": "Dossier grondverwerving",
+              "bron": "PRD-99"
+            },
+            {
+              "label": "Risico-analyse",
+              "bron": "PRD-140"
+            },
+            {
+              "label": "IVO-O: Verkennend booronderzoek",
+              "bron": "PRD-157"
+            },
+            {
+              "label": "IVO-O: karterend booronderzoek",
+              "bron": "PRD-158"
+            },
+            {
+              "label": "IVO-proefsleuf",
+              "bron": "PRD-160"
+            },
+            {
+              "label": "Ballastonderzoek",
+              "bron": "PRD-287"
+            },
+            {
+              "label": "Verhardingsonderzoek",
+              "bron": "PRD-288"
+            },
+            {
+              "label": "Asbestonderzoek gebouwen en objecten",
+              "bron": "PRD-289"
+            },
+            {
+              "label": "Akoestisch onderzoek",
+              "bron": "PRD-290"
+            },
+            {
+              "label": "Boominventarisatie",
+              "bron": "PRD-291"
+            },
+            {
+              "label": "Stikstofberekening",
+              "bron": "PRD-292"
+            },
+            {
+              "label": "Kwalitatieve beoordeling luchtkwaliteit gebruikssituatie",
+              "bron": "PRD-293"
+            },
+            {
+              "label": "Geohydrologisch onderzoek Kunstwerken – Analyse en metingen",
+              "bron": "PRD-294"
+            },
+            {
+              "label": "Uitvoeren watertoets/opstellen waterhuishoudkundig plan",
+              "bron": "PRD-295"
+            },
+            {
+              "label": "Adviesnota bescherming archeologische waarden tijdens uitvoering",
+              "bron": "PRD-296"
+            },
+            {
+              "label": "Verkeersanalyse tijdelijke situatie",
+              "bron": "PRD-297"
+            },
+            {
+              "label": "Analyse trillingen bouwfase",
+              "bron": "PRD-298"
+            },
+            {
+              "label": "Passende beoordeling",
+              "bron": "PRD-299"
+            },
+            {
+              "label": "Bestemmingsplanwijziging",
+              "bron": "PRD-300"
+            },
+            {
+              "label": "Landmeetkundig onderzoek",
+              "bron": "PRD-301"
+            },
+            {
+              "label": "3D laserscannen",
+              "bron": "PRD-302"
+            },
+            {
+              "label": "Obstakelonderzoek",
+              "bron": "PRD-303"
+            },
+            {
+              "label": "Bouwkundige 0-opname",
+              "bron": "PRD-304"
+            },
+            {
+              "label": "Sonderingen en Boringen",
+              "bron": "PRD-305"
+            }
+          ],
+          "output": [
+            {
+              "label": "Kostenraming (≤15%)",
+              "doel": "PRD-162"
+            },
+            {
+              "label": "Ontwerpverantwoording VO",
+              "doel": "PRD-165"
+            },
+            {
+              "label": "Voorontwerptekening - 3D model",
+              "doel": "PRD-181"
+            },
+            {
+              "label": "Voorontwerptekening - kaderbladen",
+              "doel": "PRD-182"
+            },
+            {
+              "label": "Voorontwerptekening - basissituatie",
+              "doel": "PRD-183"
+            },
+            {
+              "label": "Faseringsplan uitvoering",
+              "doel": "PRD-184"
+            },
+            {
+              "label": "V&G-plan ontwerpfase (VO)",
+              "doel": "PRD-185"
+            },
+            {
+              "label": "V&G-dossier (VO)",
+              "doel": "PRD-186"
+            },
+            {
+              "label": "Verleggingsplan K&L",
+              "doel": "PRD-187"
+            },
+            {
+              "label": "TVP-plan",
+              "doel": "PRD-188"
+            },
+            {
+              "label": "Logistiek plan",
+              "doel": "PRD-189"
+            },
+            {
+              "label": "Railverkeerstechnisch ontwerp (RVTO)",
+              "doel": "PRD-190"
+            },
+            {
+              "label": "Hoofdgeometrie",
+              "doel": "PRD-191"
+            },
+            {
+              "label": "Principe oplossing",
+              "doel": "PRD-192"
+            },
+            {
+              "label": "Raakvlakkentekening",
+              "doel": "PRD-193"
+            },
+            {
+              "label": "Hoeveelheden VO",
+              "doel": "PRD-194"
+            },
+            {
+              "label": "Verificatierapport VO",
+              "doel": "PRD-196"
+            },
+            {
+              "label": "Uitgangspuntennotitie VO",
+              "doel": "PRD-200"
+            },
+            {
+              "label": "VO-berekening",
+              "doel": "PRD-204"
+            },
+            {
+              "label": "RAM-eisen per functie",
+              "doel": "PRD-312"
+            }
+          ]
+        },
+        {
+          "id": "s_mq2lbbx6_var",
+          "naam": "Objectenboom maken",
+          "type": "activiteit",
+          "verantwoordelijke": "",
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "status": "concept",
+          "substappen": [],
+          "medeverantwoordelijken": [],
+          "input": [],
+          "output": [
+            {
+              "label": "OBS",
+              "doel": "PRD-180"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1063 @@
+{
+  "versie": "1.0",
+  "project": "IPP Procesmanagement Antea Group",
+  "aangepast": "2026-06-06",
+  "clusters": [
+    {
+      "id": "pm",
+      "label": "Projectmanagementprocessen",
+      "kleur": "#1a3c34",
+      "afkorting": "PM",
+      "volgorde": 1,
+      "subclusters": []
+    },
+    {
+      "id": "klant",
+      "label": "Klantprocessen",
+      "kleur": "#2d6a4f",
+      "afkorting": "KL",
+      "volgorde": 2,
+      "subclusters": []
+    },
+    {
+      "id": "structuur",
+      "label": "Structureringsprocessen",
+      "kleur": "#40916c",
+      "afkorting": "ST",
+      "volgorde": 3,
+      "subclusters": []
+    },
+    {
+      "id": "ontwerp",
+      "label": "Ontwerpprocessen",
+      "kleur": "#52b788",
+      "afkorting": "ON",
+      "volgorde": 4,
+      "subclusters": []
+    },
+    {
+      "id": "onderzoek",
+      "label": "Onderzoekprocessen",
+      "kleur": "#74c69d",
+      "afkorting": "OZ",
+      "volgorde": 5,
+      "subclusters": []
+    },
+    {
+      "id": "beheersing",
+      "label": "Projectbeheersingsprocessen",
+      "kleur": "#95d5b2",
+      "afkorting": "PB",
+      "volgorde": 6,
+      "subclusters": [
+        {
+          "id": "cl_mq0k1a2z_4if",
+          "label": "Projectbeheersing Eigen contract",
+          "afkorting": "PBI",
+          "kleur": "#2d6a4f",
+          "volgorde": 1,
+          "subclusters": []
+        }
+      ]
+    },
+    {
+      "id": "se",
+      "label": "Systemsengineeringprocessen",
+      "kleur": "#b7e4c7",
+      "afkorting": "SE",
+      "volgorde": 7,
+      "subclusters": []
+    }
+  ],
+  "rollen": [
+    "Projectmanager",
+    "Contractmanager",
+    "Senior Adviseur",
+    "Adviseur",
+    "Kwaliteitsmanager",
+    "Systems Engineer",
+    "Omgevingsmanager",
+    "Vergunningenspecialist",
+    "Ontwerper",
+    "Opdrachtgever",
+    "Klant",
+    "Disciplineleider Kunstwerken",
+    "Disciplineleider Wegontwerp",
+    "Manager projectbeheersing",
+    "Risicomanager",
+    "Technisch manager"
+  ],
+  "systemen": [
+    "Relatics",
+    "GIS",
+    "SharePoint",
+    "MS Project",
+    "Teams",
+    "Contractmanager"
+  ],
+  "processen": [
+    {
+      "id": "pm_planning",
+      "naam": "Planningsmanagement",
+      "categorie": "beheersing",
+      "niveau": 2,
+      "volgorde": 1,
+      "eigenaar": "Manager projectbeheersing",
+      "beschrijving": "Beheer en bewaking van de projectplanning gedurende de gehele projectcyclus",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": [
+        {
+          "id": "pp_01",
+          "naam": "Projectopdracht ontvangen",
+          "type": "start",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "",
+          "beschrijving": "De projectopdracht wordt formeel ontvangen en geregistreerd.",
+          "input": [
+            {
+              "label": "Projectopdracht",
+              "bron": "intern"
+            },
+            {
+              "label": "Contractdocument",
+              "bron": "pm_risico"
+            }
+          ],
+          "output": [
+            {
+              "label": "Geregistreerde opdracht",
+              "doel": "intern"
+            }
+          ],
+          "volgorde": 1,
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pp_02",
+          "naam": "Initiële planning opstellen",
+          "type": "activiteit",
+          "verantwoordelijke": "Manager projectbeheersing",
+          "medeverantwoordelijken": [],
+          "systeem": "MS Project",
+          "beschrijving": "Op basis van de projectopdracht wordt een initiële planning opgesteld met mijlpalen.",
+          "volgorde": 2,
+          "input": [
+            {
+              "label": "Geregistreerde opdracht",
+              "bron": "intern"
+            },
+            {
+              "label": "Scope definitie",
+              "bron": "klant_scope"
+            },
+            {
+              "label": "WBS",
+              "bron": "p_mpk3r11f_abn"
+            }
+          ],
+          "output": [
+            {
+              "label": "Concept basisplanning",
+              "doel": "intern"
+            }
+          ],
+          "substappen": []
+        },
+        {
+          "id": "pp_03",
+          "naam": "Planning afstemmen met team",
+          "type": "activiteit",
+          "verantwoordelijke": "Manager projectbeheersing",
+          "systeem": "Teams",
+          "beschrijving": "De concept planning wordt besproken en afgestemd met alle betrokken disciplines.",
+          "volgorde": 3,
+          "input": [
+            {
+              "label": "Concept basisplanning",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Afgestemde planning",
+              "doel": "intern"
+            },
+            {
+              "label": "Actiepuntenlijst",
+              "doel": "intern"
+            }
+          ],
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pp_04",
+          "naam": "Planning akkoord opdrachtgever?",
+          "type": "beslissing",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "",
+          "beschrijving": "De opdrachtgever beoordeelt en accordeert de planning.",
+          "input": [
+            {
+              "label": "Afgestemde planning",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Ja → Basisplanning vastgesteld",
+              "doel": "intern"
+            },
+            {
+              "label": "Nee → Terug naar afstemming",
+              "doel": "intern"
+            }
+          ],
+          "volgorde": 4,
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pp_05",
+          "naam": "Basisplanning vaststellen",
+          "type": "activiteit",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "SharePoint",
+          "beschrijving": "De goedgekeurde planning wordt als baseline vastgesteld en gepubliceerd.",
+          "input": [
+            {
+              "label": "Afgestemde planning",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Vastgestelde basisplanning v1.0",
+              "doel": "intern"
+            },
+            {
+              "label": "Planning baseline",
+              "doel": "pm_risico"
+            }
+          ],
+          "volgorde": 5,
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pp_06",
+          "naam": "Planning bewaken",
+          "type": "activiteit",
+          "verantwoordelijke": "Manager projectbeheersing",
+          "systeem": "MS Project",
+          "beschrijving": "Periodieke bewaking van voortgang versus basisplanning.",
+          "volgorde": 6,
+          "input": [
+            {
+              "label": "Vastgestelde basisplanning",
+              "bron": "intern"
+            },
+            {
+              "label": "Voortgangsrapportages",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Voortgangsanalyse",
+              "doel": "intern"
+            },
+            {
+              "label": "Risicosignalen",
+              "doel": "pm_risico"
+            }
+          ],
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pp_07",
+          "naam": "Afwijking geconstateerd?",
+          "type": "beslissing",
+          "verantwoordelijke": "Manager projectbeheersing",
+          "systeem": "",
+          "beschrijving": "Beoordeling of de voortgangsanalyse een significante afwijking toont.",
+          "volgorde": 7,
+          "input": [
+            {
+              "label": "Voortgangsanalyse",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Ja → Bijsturen",
+              "doel": "intern"
+            },
+            {
+              "label": "Nee → Verder bewaken",
+              "doel": "intern"
+            }
+          ],
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pp_08",
+          "naam": "Correctieve maatregelen bepalen",
+          "type": "activiteit",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "Teams",
+          "beschrijving": "Bepaal en registreer correctieve maatregelen om het project bij te sturen.",
+          "input": [
+            {
+              "label": "Voortgangsanalyse",
+              "bron": "intern"
+            },
+            {
+              "label": "Risicolog",
+              "bron": "pm_risico"
+            }
+          ],
+          "output": [
+            {
+              "label": "Bijgestuurde planning",
+              "doel": "intern"
+            },
+            {
+              "label": "Wijzigingsverzoek",
+              "doel": "intern"
+            }
+          ],
+          "volgorde": 8,
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pp_09",
+          "naam": "Project afgesloten",
+          "type": "einde",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "SharePoint",
+          "beschrijving": "Definitieve afsluiting van het planningsproces bij projecteinde.",
+          "input": [
+            {
+              "label": "Eindrapportage",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Gearchiveerde planning",
+              "doel": "intern"
+            }
+          ],
+          "volgorde": 9,
+          "substappen": [],
+          "medeverantwoordelijken": []
+        }
+      ],
+      "informatiebehoefte": {
+        "gesproken_met": "",
+        "datum": "",
+        "status": "concept",
+        "items": [
+          {
+            "id": "ib_mpk3lq7d_m45",
+            "naam": "Overall planning",
+            "categorie": "produceert",
+            "omschrijving": "",
+            "velden": [],
+            "bestemming": [
+              "intern"
+            ]
+          },
+          {
+            "id": "ib_mpk3m0tb_n4i",
+            "naam": "Detailplanning",
+            "categorie": "produceert",
+            "omschrijving": "",
+            "velden": [],
+            "bestemming": []
+          },
+          {
+            "id": "ib_mpl7z4ii_sww",
+            "naam": "Contract",
+            "categorie": "uitgangspunt",
+            "omschrijving": "",
+            "velden": [],
+            "herkomst": []
+          },
+          {
+            "id": "ib_mpl7zg9d_tgg",
+            "naam": "Plan van aanpak",
+            "categorie": "uitgangspunt",
+            "omschrijving": "",
+            "velden": [],
+            "herkomst": []
+          },
+          {
+            "id": "ib_mpl7zpvz_v6o",
+            "naam": "WBS",
+            "categorie": "uitgangspunt",
+            "omschrijving": "",
+            "velden": [],
+            "herkomst": []
+          },
+          {
+            "id": "ib_mpl7zy9e_e6g",
+            "naam": "Offerte",
+            "categorie": "uitgangspunt",
+            "omschrijving": "",
+            "velden": [],
+            "herkomst": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "pm_risico",
+      "naam": "Risicomanagement",
+      "categorie": "beheersing",
+      "niveau": 2,
+      "volgorde": 2,
+      "eigenaar": "Risicomanager",
+      "beschrijving": "Identificatie, analyse en beheersing van projectrisico's",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": [
+        {
+          "id": "pr_01",
+          "naam": "Risicoworkshop organiseren",
+          "type": "start",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "Teams",
+          "beschrijving": "Organiseer een risicoworkshop met het projectteam.",
+          "input": [
+            {
+              "label": "Planning baseline",
+              "bron": "pm_planning"
+            },
+            {
+              "label": "Scope definitie",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Ruwe risicolijst",
+              "doel": "intern",
+              "attributen": [
+                "Risiconaam",
+                "Risico omschrijving"
+              ]
+            }
+          ],
+          "volgorde": 1,
+          "substappen": [
+            {
+              "id": "s_mphc14av_qcg",
+              "naam": "Deelnemerslijst opstellen",
+              "type": "activiteit",
+              "verantwoordelijke": "Risicomanager",
+              "medeverantwoordelijken": [],
+              "systeem": "",
+              "beschrijving": "",
+              "volgorde": 1,
+              "input": [],
+              "output": [
+                {
+                  "label": "Deelnemerslijst risicosessie",
+                  "doel": "intern"
+                }
+              ],
+              "substappen": []
+            },
+            {
+              "id": "s_mphc21su_uow",
+              "naam": "Accorderen deelnemerslijst",
+              "type": "beslissing",
+              "verantwoordelijke": "Projectmanager",
+              "medeverantwoordelijken": [],
+              "systeem": "",
+              "beschrijving": "",
+              "volgorde": 2,
+              "input": [
+                {
+                  "label": "Deelnemerslijst risicosessie",
+                  "bron": "intern"
+                }
+              ],
+              "output": [],
+              "substappen": []
+            },
+            {
+              "id": "s_mphc3qvw_882",
+              "naam": "Risicosessie inplannen",
+              "type": "activiteit",
+              "verantwoordelijke": "Projectsecretariaat",
+              "systeem": "Teams",
+              "beschrijving": "",
+              "volgorde": 3,
+              "input": [],
+              "output": [],
+              "substappen": [],
+              "medeverantwoordelijken": []
+            }
+          ],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pr_02",
+          "naam": "Risico's analyseren en scoren",
+          "type": "activiteit",
+          "verantwoordelijke": "Senior Adviseur",
+          "medeverantwoordelijken": [
+            "Projectmanager",
+            "Contractmanager",
+            "Technisch manager"
+          ],
+          "systeem": "SharePoint",
+          "beschrijving": "Analyseer kans en impact per risico en bepaal de risicoscore (R = K × I).",
+          "volgorde": 2,
+          "input": [
+            {
+              "label": "Ruwe risicolijst",
+              "bron": "intern"
+            }
+          ],
+          "output": [
+            {
+              "label": "Gescoorde risicolijst",
+              "doel": "intern"
+            }
+          ],
+          "substappen": [
+            {
+              "id": "s_mpk2qbw5_o1f",
+              "naam": "Inventariseren oorzaken van risico's",
+              "type": "activiteit",
+              "verantwoordelijke": "Risicomanager",
+              "medeverantwoordelijken": [
+                "Projectmanager",
+                "Contractmanager",
+                "Technisch manager"
+              ],
+              "systeem": "Relatics",
+              "beschrijving": "",
+              "volgorde": 1,
+              "input": [],
+              "output": [],
+              "substappen": []
+            },
+            {
+              "id": "s_mpk2r7qc_aa4",
+              "naam": "Benoemen gevolgen van risico's",
+              "type": "activiteit",
+              "verantwoordelijke": "Risicomanager",
+              "medeverantwoordelijken": [
+                "Contractmanager",
+                "Projectmanager",
+                "Technisch manager"
+              ],
+              "systeem": "Relatics",
+              "beschrijving": "",
+              "volgorde": 2,
+              "input": [],
+              "output": [],
+              "substappen": []
+            },
+            {
+              "id": "s_mpk2s4uv_61w",
+              "naam": "Inschatten kans van optreden risico",
+              "type": "activiteit",
+              "verantwoordelijke": "Risicomanager",
+              "systeem": "",
+              "beschrijving": "",
+              "volgorde": 3,
+              "input": [],
+              "output": [],
+              "substappen": [],
+              "medeverantwoordelijken": []
+            },
+            {
+              "id": "s_mpk2sp8m_fi1",
+              "naam": "Inventariseren ernst van gevolg risico",
+              "type": "activiteit",
+              "verantwoordelijke": "Risicomanager",
+              "systeem": "",
+              "beschrijving": "",
+              "volgorde": 4,
+              "input": [],
+              "output": [],
+              "substappen": [],
+              "medeverantwoordelijken": []
+            }
+          ]
+        },
+        {
+          "id": "pr_03",
+          "naam": "Hoog risico aanwezig?",
+          "type": "beslissing",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "",
+          "beschrijving": "Beoordeel of er risico's zijn met score ≥ 12 (hoog).",
+          "volgorde": 3,
+          "input": [
+            {
+              "label": "Gescoorde risicolijst",
+              "bron": "intern",
+              "attributen": [
+                "Risiconaam",
+                "Risico omschrijving",
+                "Kans van optreden",
+                "Zwaarte gevolg"
+              ]
+            }
+          ],
+          "output": [
+            {
+              "label": "Ja → Beheersmaatregelen bepalen",
+              "doel": "intern",
+              "attributen": [
+                "Beheersmaatregel mitigerend",
+                "Beheermaatregel voorkomend"
+              ]
+            },
+            {
+              "label": "Nee → Maatregelen overlaten aan team",
+              "doel": "intern",
+              "attributen": [
+                "Beheersmaatregel mitigerend",
+                "Beheersmaatregel voorkomend"
+              ]
+            }
+          ],
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pr_04",
+          "naam": "Beheersmaatregelen bepalen",
+          "type": "activiteit",
+          "verantwoordelijke": "Technisch manager",
+          "medeverantwoordelijken": [
+            "Contractmanager"
+          ],
+          "systeem": "SharePoint",
+          "beschrijving": "Definieer concrete maatregelen voor hoge risico's en wijs eigenaren toe.",
+          "volgorde": 4,
+          "input": [
+            {
+              "label": "Gescoorde risicolijst",
+              "bron": "intern",
+              "attributen": [
+                "Risiconaam",
+                "Risico omschrijving",
+                "Kans van optreden",
+                "Zwaarte gevolg"
+              ]
+            }
+          ],
+          "output": [
+            {
+              "label": "Maatregelenplan",
+              "doel": "intern",
+              "attributen": [
+                "Beheersmaatregel mitigerend",
+                "Beheersmaatregel voorkomend"
+              ]
+            },
+            {
+              "label": "Belangrijkste maatregelen als activiteit voor planning",
+              "doel": "pm_planning"
+            }
+          ],
+          "substappen": []
+        },
+        {
+          "id": "pr_05",
+          "naam": "Risicolog bijwerken",
+          "type": "activiteit",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "SharePoint",
+          "beschrijving": "Actualiseer het risicolog met scores, status en eigenaren.",
+          "input": [
+            {
+              "label": "Gescoorde risicolijst",
+              "bron": "intern",
+              "attributen": [
+                "Risiconaam",
+                "Risico omschrijving",
+                "Kans van optreden",
+                "Zwaarte gevolg"
+              ]
+            },
+            {
+              "label": "Maatregelenplan",
+              "bron": "intern",
+              "attributen": [
+                "Beheersmaatregel mitigerend",
+                "Beheersmaatregel voorkomend"
+              ]
+            }
+          ],
+          "output": [
+            {
+              "label": "Actueel risicolog",
+              "doel": "intern"
+            }
+          ],
+          "volgorde": 5,
+          "substappen": [],
+          "medeverantwoordelijken": []
+        },
+        {
+          "id": "pr_06",
+          "naam": "Periodieke risicobeoordeling",
+          "type": "activiteit",
+          "verantwoordelijke": "Projectmanager",
+          "systeem": "Teams",
+          "beschrijving": "Bespreek het risicolog maandelijks in het projectoverleg.",
+          "input": [
+            {
+              "label": "Actueel risicolog",
+              "bron": "intern"
+            },
+            {
+              "label": "Voortgangsanalyse",
+              "bron": "pm_planning"
+            }
+          ],
+          "output": [
+            {
+              "label": "Bijgewerkt risicolog",
+              "doel": "intern"
+            }
+          ],
+          "volgorde": 6,
+          "substappen": [],
+          "medeverantwoordelijken": []
+        }
+      ],
+      "informatiebehoefte": {
+        "gesproken_met": "",
+        "datum": "",
+        "status": "concept",
+        "items": [
+          {
+            "id": "ib_mpl81wpl_1kl",
+            "naam": "Risicoregister",
+            "categorie": "produceert",
+            "omschrijving": "",
+            "velden": [
+              "Risiconaam",
+              "Risico omschrijving",
+              "Kans van optreden",
+              "Gevolg bij optreden",
+              "Score Kans",
+              "Score Gevolg"
+            ],
+            "bestemming": []
+          },
+          {
+            "id": "ib_mpl82b73_f8p",
+            "naam": "Risicoregister opdrachtgever",
+            "categorie": "uitgangspunt",
+            "omschrijving": "",
+            "velden": [],
+            "herkomst": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "se_requirements",
+      "naam": "Requirements Management (ISO 15288)",
+      "categorie": "se",
+      "niveau": 2,
+      "eigenaar": "Systems Engineer",
+      "beschrijving": "Vaststellen, valideren en beheren van systeemeisen conform ISO 15288",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-22",
+      "stappen": [],
+      "volgorde": 1
+    },
+    {
+      "id": "klant_vergund",
+      "naam": "Vergunningenproces",
+      "categorie": "klant",
+      "niveau": 2,
+      "volgorde": 3,
+      "eigenaar": "Vergunningenspecialist",
+      "beschrijving": "Inventariseren, aanvragen en bewaken van alle benodigde vergunningen en meldingen conform de Omgevingswet. Koppelt aan planning, risico en ontwerp.",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": [
+        {
+          "id": "s_mpllzv95_2op",
+          "naam": "Inventariseren benodigde vergunningen",
+          "type": "activiteit",
+          "verantwoordelijke": "Vergunningenspecialist",
+          "medeverantwoordelijken": [],
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 1,
+          "input": [
+            {
+              "label": "Ontwerp",
+              "bron": "ontwerp_vo_kunstwerk"
+            },
+            {
+              "label": "Ontwerp",
+              "bron": "ontwerp_vo_weg"
+            }
+          ],
+          "output": [
+            {
+              "label": "Vergunningenoverzicht",
+              "doel": "intern"
+            }
+          ],
+          "substappen": []
+        },
+        {
+          "id": "s_mplm1x59_r6a",
+          "naam": "Ophalen vergunningsvereisten",
+          "type": "activiteit",
+          "verantwoordelijke": "Vergunningenspecialist",
+          "medeverantwoordelijken": [
+            "Omgevingsmanager"
+          ],
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 2,
+          "input": [],
+          "output": [],
+          "substappen": []
+        },
+        {
+          "id": "s_mplm6znd_v8b",
+          "naam": "Inventariseren bezwaar risico's",
+          "type": "activiteit",
+          "verantwoordelijke": "Omgevingsmanager",
+          "medeverantwoordelijken": [],
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 3,
+          "input": [],
+          "output": [],
+          "substappen": []
+        },
+        {
+          "id": "s_mplm5aiq_ov0",
+          "naam": "Uitzetten op te stellen documenten",
+          "type": "activiteit",
+          "verantwoordelijke": "Vergunningenspecialist",
+          "medeverantwoordelijken": [],
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 4,
+          "input": [],
+          "output": [
+            {
+              "label": "Verzoek om input vergunningen",
+              "doel": "ontwerp_do_kunstwerk"
+            }
+          ],
+          "substappen": []
+        },
+        {
+          "id": "s_mplm8f07_h72",
+          "naam": "Opstellen vergunningsaanraag",
+          "type": "activiteit",
+          "verantwoordelijke": "Vergunningenspecialist",
+          "medeverantwoordelijken": [
+            "Technisch manager",
+            "Omgevingsmanager"
+          ],
+          "systeem": "",
+          "beschrijving": "",
+          "volgorde": 5,
+          "input": [],
+          "output": [
+            {
+              "label": "Vergunningsaanvraag",
+              "doel": "intern"
+            }
+          ],
+          "substappen": []
+        }
+      ]
+    },
+    {
+      "id": "klant_scope",
+      "naam": "Klantscope proces",
+      "categorie": "klant",
+      "volgorde": 1,
+      "eigenaar": "Projectmanager",
+      "beschrijving": "Vaststellen en beheren van de projectscope in afstemming met de opdrachtgever.",
+      "status": "concept",
+      "niveau": 2,
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "klant_stakeholder",
+      "naam": "Stakeholderproces",
+      "categorie": "klant",
+      "volgorde": 2,
+      "eigenaar": "Omgevingsmanager",
+      "beschrijving": "Identificeren, analyseren en managen van stakeholders en hun belangen gedurende het project.",
+      "status": "concept",
+      "niveau": 2,
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "ontwerp_vo_kunstwerk",
+      "naam": "Proces VO Kunstwerkenontwerp",
+      "categorie": "ontwerp",
+      "niveau": 2,
+      "volgorde": 1,
+      "eigenaar": "Disciplineleider Kunstwerken",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "ontwerp_do_kunstwerk",
+      "naam": "Proces DO Kunstwerkenontwerp",
+      "categorie": "ontwerp",
+      "niveau": 2,
+      "volgorde": 2,
+      "eigenaar": "Disciplineleider Kunstwerken",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "ontwerp_vo_weg",
+      "naam": "Proces VO Wegontwerpproces",
+      "categorie": "ontwerp",
+      "niveau": 2,
+      "volgorde": 3,
+      "eigenaar": "Disciplineleider Wegontwerp",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "ontwerp_contract",
+      "naam": "Proces uitwerken contract",
+      "categorie": "ontwerp",
+      "niveau": 2,
+      "volgorde": 4,
+      "eigenaar": "Contractmanager",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "ontwerp_realisatie",
+      "naam": "Proces uitwerken realisatieprocessen",
+      "categorie": "ontwerp",
+      "volgorde": 5,
+      "eigenaar": "Ontwerper",
+      "beschrijving": "",
+      "status": "concept",
+      "niveau": 2,
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "ontwerp_beheer",
+      "naam": "Proces uitwerken beheerprocessen",
+      "categorie": "ontwerp",
+      "volgorde": 6,
+      "eigenaar": "Ontwerper",
+      "beschrijving": "",
+      "status": "concept",
+      "niveau": 2,
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "ontwerp_bediening",
+      "naam": "Proces uitwerken bedieningsprocessen",
+      "categorie": "ontwerp",
+      "volgorde": 7,
+      "eigenaar": "Ontwerper",
+      "beschrijving": "",
+      "status": "concept",
+      "niveau": 2,
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    },
+    {
+      "id": "p_mpk3r11f_abn",
+      "naam": "Structurering project",
+      "categorie": "structuur",
+      "niveau": 2,
+      "volgorde": 1,
+      "eigenaar": "Systems Engineer",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": [
+        {
+          "id": "s_mpk3st7p_dpc",
+          "naam": "Bepalen WBS",
+          "type": "activiteit",
+          "verantwoordelijke": "Systems Engineer",
+          "medeverantwoordelijken": [],
+          "systeem": "Relatics",
+          "beschrijving": "",
+          "volgorde": 1,
+          "input": [],
+          "output": [
+            {
+              "label": "WBS - Work Breakdown Structure",
+              "doel": "pm_planning"
+            }
+          ],
+          "substappen": []
+        }
+      ]
+    },
+    {
+      "id": "p_mpk3rldy_8ud",
+      "naam": "Structurering systeem",
+      "categorie": "structuur",
+      "niveau": 2,
+      "volgorde": 1,
+      "eigenaar": "Systems Engineer",
+      "beschrijving": "",
+      "status": "concept",
+      "versie": "0.1",
+      "aangepast": "2026-05-24",
+      "stappen": []
+    }
+  ],
+  "documenten": []
+}

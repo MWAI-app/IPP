@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check ipp-procesmanager.html)",
+      "Bash(python -c ' *)",
+      "Bash(node --check _check.js)",
+      "Bash(python -c \"import os; os.remove\\('_check.js'\\)\")",
+      "Bash(python _enc.py)",
+      "Bash(del _enc.py)",
+      "Bash(python -c \"import docx; print\\('python-docx beschikbaar, versie:', docx.__version__\\)\")",
+      "Bash(pip install *)",
+      "Bash(python _lees_doc.py)",
+      "Bash(del _lees_doc.py)",
+      "Bash(python _update_doc.py)",
+      "Bash(del _update_doc.py)",
+      "Bash(python _verify.py)",
+      "Bash(python -c \"print\\('ok'\\)\")",
+      "Bash(python -c \"import os; [os.remove\\(f\\) for f in ['_update_doc.py','_verify.py','_verify_out.txt','_verify_out2.txt'] if os.path.exists\\(f\\)]\")",
+      "Bash(python3 -c ' *)",
+      "Bash(rm _check.js)",
+      "Bash(node --check \"d:/Mijn documenten Marcel/Claud/IPP/ipp-logica.js\")"
+    ]
+  }
+}

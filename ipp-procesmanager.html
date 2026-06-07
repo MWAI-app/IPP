@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPP Procesmanager - Antea Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ipp-stijl.css">
+</head>
+<body>
+<div id="app">
+<header id="hdr">
+  <div class="lm"></div>
+  <h1>IPP <span>Procesmanager</span></h1>
+  <span id="os">Opgeslagen</span>
+  <div class="sp"></div>
+  <div class="ha">
+    <button class="btn bs" onclick="beginOpnieuw()" title="Alles wissen en opnieuw beginnen" style="color:#f87171;border-color:rgba(248,113,113,.35)">Nieuw</button>
+    <button class="btn bs" onclick="laadBestand()">Laden</button>
+    <button class="btn bs" onclick="importeerRelatics()" title="Importeer werksporen uit Relatics CSV-uitdraai">Relatics</button>
+    <button class="btn bsv" id="bos" onclick="opslaanJSON()" disabled>Opslaan</button>
+    <button class="btn bs" id="bos-als" onclick="opslaanAls()" style="display:none;padding:6px 8px;font-size:11px" title="Opslaan naar ander bestand">Opslaan als...</button>
+    <button class="btn bs" onclick="beheerModal()">Beheer</button>
+    <button class="btn bp" onclick="nieuwProcModal()">+ Nieuw proces</button>
+  </div>
+</header>
+<div id="bdy">
+<aside id="sb">
+  <div id="sb-top"><h2>Processen</h2><input id="zoek" type="text" placeholder="Zoeken..." oninput="filterLijst()"></div>
+  <div id="cf"></div>
+  <div id="pl"></div>
+  <div id="sf">
+    <button class="btn bs" style="justify-content:center" onclick="exportPDF()">PDF exporteren</button>
+    <button class="btn bs" style="justify-content:center;background:rgba(240,165,0,.15);border-color:var(--ga);color:var(--ga)" onclick="csvWizard()">CSV import / export</button>
+  </div>
+</aside>
+<main id="main">
+  <div id="wb">
+    <div id="bc"></div>
+    <span id="wbs"></span>
+    <div class="wsp"></div>
+    <div class="vt" id="vt" style="display:none">
+      <button class="vtb a" id="vbv" onclick="setView('v')" title="Verticaal">v</button>
+      <button class="vtb" id="vbt" onclick="setView('t')" title="Tabel">t</button>
+      <button class="vtb" id="vbsl" onclick="setView('sl')" title="Swimlane">s</button>
+    </div>
+    <button class="btn bg" id="bst" style="display:none" onclick="stapModal()">+ Stap</button>
+    <button class="btn bg" id="bbw" style="display:none" onclick="bewerkProc()">Bewerk</button>
+    <button class="btn bg" id="bib" style="display:none;border-color:var(--gg);color:var(--gg)" onclick="toonIB()">IB Inventarisatie</button>
+    <button class="btn bg" id="bea" style="display:none;border-color:var(--gm);color:var(--gm)" onclick="toonEA()">Elementen &amp; Attributen</button>
+  </div>
+  <div id="cw">
+    <div id="ib-canvas" style="display:none;flex:1;overflow:auto;padding:26px 20px;background:var(--gc);flex-direction:column"></div>
+    <div id="ea-canvas" style="display:none;flex:1;overflow:auto;padding:26px 20px;background:var(--gc);flex-direction:column"></div>
+    <div id="canvas">
+      <div id="wlk">
+        <div class="wi">&#x1F504;</div>
+        <h2>IPP Procesmanager</h2>
+        <p>Laad een projectbestand via <strong>Laden</strong>, of maak een nieuw proces aan.</p>
+        <p style="font-size:12px;color:var(--g3)">Alles in één JSON-bestand — deel via OneDrive.</p>
+      </div>
+    </div>
+    <div id="sp">
+      <div id="sp-hdr">
+        <div id="sp-nr"></div>
+        <div id="sp-titel"></div>
+        <button onclick="sluitSP()" style="background:rgba(255,255,255,.12);border:none;color:var(--gw);cursor:pointer;border-radius:50%;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0">x</button>
+      </div>
+      <div id="sp-niv"></div>
+      <div id="sp-body"></div>
+      <div id="sp-ftr"><button class="btn bp" style="width:100%;justify-content:center" id="sp-add" onclick="stapModal()">+ Substap toevoegen</button></div>
+    </div>
+  </div>
+</main>
+</div>
+</div>
+<div id="nf"></div>
+
+<!-- MODALS -->
+<!-- ══ INFORMATIEBEHOEFTE ITEM MODAL ══ -->
+<div id="mib" class="mo" style="display:none">
+  <div class="md" style="max-width:680px">
+    <div class="mdh"><h2 id="mib-t">Informatie-item toevoegen</h2><button class="sl" onclick="sluit('mib')">x</button></div>
+    <div class="mdb">
+      <div class="fr frvol">
+        <div class="fg"><label>Naam *</label><input id="ib-nm" placeholder="bijv. Vergunningenregister"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Categorie *</label>
+          <select id="ib-cat">
+            <option value="bijhoudt">Bijhoudt — beheer ik zelf in dit proces</option>
+            <option value="produceert">Produceert — lever ik aan andere processen</option>
+            <option value="uitgangspunt">Uitgangspunt — heb ik nodig van buiten</option>
+          </select>
+        </div>
+        <div class="fg"><label>Herkomst / bestemming</label>
+          <select id="ib-proc" multiple style="height:72px;padding:4px 8px;border:1.5px solid var(--g1);border-radius:var(--r);font-family:var(--f);font-size:12px;outline:none">
+          </select>
+          <span style="font-size:10px;color:var(--g3);margin-top:2px">Meerdere selecteren met Ctrl/Cmd</span>
+        </div>
+      </div>
+      <div class="fr frvol">
+        <div class="fg"><label>Omschrijving</label>
+          <textarea id="ib-oms" placeholder="Wat is dit precies? Wat staat erin? Waarvoor wordt het gebruikt?" style="min-height:75px"></textarea>
+        </div>
+      </div>
+      <div class="ios">
+        <h3>Velden / attributen (wat zit erin?)</h3>
+        <p style="font-size:11px;color:var(--gs);margin-bottom:8px">Noteer wat de deskundige noemt — ruw en ongestructureerd is prima in deze fase.</p>
+        <div id="ib-velden-lijst"></div>
+        <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="ibVeldToe()">+ Veld toevoegen</button>
+      </div>
+    </div>
+    <div class="mdf">
+      <button class="btn bdel" id="bib-del" style="display:none;margin-right:auto" onclick="ibItemDel()">Verwijder</button>
+      <button class="btn bg" onclick="sluit('mib')">Annuleren</button>
+      <button class="btn bp" onclick="ibItemSla()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="mp" class="mo" style="display:none">
+  <div class="md">
+    <div class="mdh"><h2 id="mpt">Nieuw proces</h2><button class="sl" onclick="sluit('mp')">x</button></div>
+    <div class="mdb">
+      <div class="fr frvol"><div class="fg"><label>Naam *</label><input id="pnm" placeholder="bijv. Planningsmanagement"></div></div>
+      <div class="fr">
+        <div class="fg"><label>Categorie *</label><select id="pcat" onchange="updPNr()"></select></div>
+        <div class="fg"><label>Status</label><select id="pstat"><option value="concept">Concept</option><option value="review">In review</option><option value="definitief">Definitief</option></select></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Eigenaar</label>
+          <select id="peig" onchange="eigChg(this)"></select>
+          <input id="peig-vrij" placeholder="Typ een eigenaar..." style="display:none;margin-top:4px;padding:7px 9px;border:1.5px solid var(--ga);border-radius:var(--r);font-family:var(--f);font-size:13px;color:var(--gt);outline:none;width:100%">
+        </div>
+        <div class="fg"><label>&nbsp;</label><div style="padding:7px 9px;font-size:12px;color:var(--gs);background:var(--gc);border-radius:var(--r);border:1px solid var(--g1);line-height:1.5">Eigenaren beheren via <strong>Beheer</strong> (rechtsboven).</div></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Volgorde in categorie (1=A, 2=B...)</label><input type="number" id="pvol" min="1" max="26" value="1" oninput="updPNr()"></div>
+        <div class="fg"><label>Procesnummer voorbeeld</label><div id="pnr-ex" style="padding:7px 9px;background:var(--gn);border-radius:var(--r);font-family:var(--m);font-size:13px;font-weight:700;color:var(--gd)">PM-A01</div></div>
+      </div>
+      <div class="fr frvol"><div class="fg"><label>Beschrijving</label><textarea id="pbesc" placeholder="Korte omschrijving..."></textarea></div></div>
+    </div>
+    <div class="mdf">
+      <button class="btn bdel" id="bdp" style="display:none;margin-right:auto" onclick="delProc()">Verwijder</button>
+      <button class="btn bg" onclick="sluit('mp')">Annuleren</button>
+      <button class="btn bp" onclick="slaProc()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<div id="ms" class="mo" style="display:none">
+  <div class="md" style="max-width:740px">
+    <div class="mdh"><h2 id="mst">Stap toevoegen</h2><button class="sl" onclick="sluit('ms')">x</button></div>
+    <div class="mdb">
+      <div class="fr">
+        <div class="fg"><label>Naam *</label><input id="snm" placeholder="bijv. Planning opstellen"></div>
+        <div class="fg"><label>Type</label><select id="stp"><option value="activiteit">Activiteit</option><option value="beslissing">Beslissing</option><option value="start">Start</option><option value="einde">Einde</option><option value="document">Document</option></select></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Verantwoordelijke</label>
+          <select id="srol" onchange="rolChg(this)"><option value="">-- Kies --</option></select>
+          <input id="srol-vrij" placeholder="Typ een nieuwe rol...">
+        </div>
+        <div class="fg"><label>Systeem</label>
+          <select id="ssys" onchange="sysChg(this)"><option value="">-- Geen --</option></select>
+          <input id="ssys-vrij" placeholder="Typ een nieuw systeem...">
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Niveau</label><div id="sniv-info" style="padding:7px 9px;background:var(--gn);border-radius:var(--r);font-size:13px;font-weight:600;color:var(--gd)">N1</div></div>
+        <div class="fg"><label>Volgorde</label><input type="number" id="svol" min="1" value="1"></div>
+      </div>
+      <div class="fr frvol"><div class="fg"><label>Beschrijving</label><textarea id="sbesc" placeholder="Wat gebeurt er in deze stap?"></textarea></div></div>
+      <div class="ios">
+        <h3>Medeverantwoordelijken</h3>
+        <p style="font-size:11px;color:var(--gs);margin-bottom:7px">De stap verschijnt in de swimlane voor elke verantwoordelijke.</p>
+        <div id="smedev"></div>
+        <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="medevToe()">+ Toevoegen</button>
+      </div>
+      <div class="ios"><h3>Input</h3><div id="iin"></div><button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="ioToe('in')">+ Input</button></div>
+      <div class="ios"><h3>Output</h3><div id="iout"></div><button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="ioToe('out')">+ Output</button></div>
+    </div>
+    <div class="mdf">
+      <button class="btn bdel" id="bds" style="display:none;margin-right:auto" onclick="delStap()">Verwijder</button>
+      <button class="btn bg" onclick="sluit('ms')">Annuleren</button>
+      <button class="btn bp" onclick="slaStap()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<div id="mdet" class="mo" style="display:none">
+  <div class="md">
+    <div class="mdh"><h2 id="dett">Detail</h2><button class="sl" onclick="sluit('mdet')">x</button></div>
+    <div class="mdb" id="detb"></div>
+    <div class="mdf">
+      <button class="btn bg" onclick="sluit('mdet')">Sluiten</button>
+      <button class="btn bp" onclick="bewerkHuidigeStap()">Bewerken</button>
+    </div>
+  </div>
+</div>
+
+<div id="mbeh" class="mo" style="display:none">
+  <div class="md" style="max-width:620px">
+    <div class="mdh"><h2>Beheer</h2><button class="sl" onclick="sluit('mbeh')">x</button></div>
+    <div class="mdb">
+      <div class="ios"><h3>Clusters &amp; Procesgroepen</h3>
+        <p style="font-size:11px;color:var(--gs);margin-bottom:8px">Tot 3 niveaus. Een cluster is een verzameling van processen of sub-clusters.</p>
+        <div id="beh-clusters"></div>
+        <button class="btn bp" style="margin-top:8px;font-size:11px;padding:4px 10px" onclick="clusterModal()">+ Nieuw cluster</button>
+      </div>
+      <div class="ios" style="margin-top:20px"><h3>Rollen</h3><div id="beh-rollen"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input id="beh-rol-n" placeholder="Nieuwe rol..." style="flex:1;padding:6px 9px;border:1.5px solid var(--g1);border-radius:var(--r);font-family:var(--f);font-size:13px;outline:none" onkeydown="if(event.key==='Enter')rolToe()">
+          <button class="btn bp" onclick="rolToe()">+ Toevoegen</button>
+        </div>
+      </div>
+      <div class="ios" style="margin-top:20px"><h3>Systemen</h3><div id="beh-sys"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input id="beh-sys-n" placeholder="Nieuw systeem..." style="flex:1;padding:6px 9px;border:1.5px solid var(--g1);border-radius:var(--r);font-family:var(--f);font-size:13px;outline:none" onkeydown="if(event.key==='Enter')sysToe()">
+          <button class="btn bp" onclick="sysToe()">+ Toevoegen</button>
+        </div>
+      </div>
+      <div class="ios" style="margin-top:20px"><h3>Documenten</h3>
+        <p style="font-size:12px;color:var(--g3);margin:0 0 8px">Producten en documenten die tussen processen stromen (PRD-codes).</p>
+        <div id="beh-doc"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input id="beh-doc-code" placeholder="Code (bijv. PRD-50)" style="width:150px;flex:none;padding:6px 9px;border:1.5px solid var(--g1);border-radius:var(--r);font-family:var(--f);font-size:13px;outline:none" onkeydown="if(event.key==='Enter')docToe()">
+          <input id="beh-doc-nm" placeholder="Naam (bijv. Projectplan)" style="flex:1;padding:6px 9px;border:1.5px solid var(--g1);border-radius:var(--r);font-family:var(--f);font-size:13px;outline:none" onkeydown="if(event.key==='Enter')docToe()">
+          <button class="btn bp" onclick="docToe()">+ Toevoegen</button>
+        </div>
+      </div>
+    </div>
+    <div class="mdf"><button class="btn bg" onclick="sluit('mbeh')">Sluiten</button></div>
+  </div>
+</div>
+
+<div id="mcsv" class="mo" style="display:none">
+  <div class="md" style="max-width:620px">
+    <div class="mdh"><h2 id="csv-t">CSV Import / Export</h2><button class="sl" onclick="sluit('mcsv')">x</button></div>
+    <div class="mdb">
+      <div id="csv-s1">
+        <p style="color:var(--gs);font-size:13px;margin-bottom:16px;line-height:1.6">Kies een bestaand proces om te exporteren, of maak een nieuw aan als basis voor import.</p>
+        <div class="fr">
+          <div class="fg"><label>Bestaand proces exporteren</label><select id="csv-ps"><option value="">-- Kies --</option></select></div>
+          <div class="fg" style="justify-content:flex-end"><label>&nbsp;</label><button class="btn bp" onclick="csvExport()" style="height:38px">Download CSV</button></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--g3)">
+          <div style="flex:1;height:1px;background:var(--g1)"></div><span style="font-size:12px;font-weight:600">OF</span><div style="flex:1;height:1px;background:var(--g1)"></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label>Naam nieuw proces</label><input id="csv-nn" placeholder="Naam..."></div>
+          <div class="fg"><label>Categorie</label><select id="csv-nc"></select></div>
+        </div>
+        <button class="btn bp" onclick="csvNieuwExport()">Maak aan en download lege CSV</button>
+        <div style="margin-top:16px;padding:12px 14px;background:var(--gn);border-radius:var(--r);border-left:3px solid var(--gg)">
+          <div style="font-size:11px;font-weight:700;color:var(--gm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Relatics tip</div>
+          <p style="font-size:12px;color:var(--gm);line-height:1.6">CSV-structuur is ontworpen voor directe Relatics-import. Exporteer vanuit Relatics in hetzelfde formaat om data terug te laden.</p>
+        </div>
+      </div>
+      <div id="csv-s2" style="display:none">
+        <p style="color:var(--gs);font-size:13px;margin-bottom:14px;line-height:1.6">Selecteer de ingevulde CSV. Bestaande stappen worden bijgewerkt, nieuwe toegevoegd.</p>
+        <div class="fg" style="margin-bottom:14px"><label>CSV-bestand selecteren</label>
+          <input type="file" id="csv-file" accept=".csv,.txt" style="padding:8px;border:1.5px dashed var(--g2);border-radius:var(--r);background:var(--gc);cursor:pointer;font-family:var(--f);font-size:13px">
+        </div>
+        <div id="csv-prev" style="display:none;background:var(--gc);border-radius:var(--r);padding:12px;font-size:12px;color:var(--gs);border:1px solid var(--g1)"></div>
+        <div id="csv-err" style="display:none;background:#fee2e2;border-radius:var(--r);padding:10px 12px;font-size:12px;color:#991b1b;margin-top:8px;border-left:3px solid #dc2626"></div>
+      </div>
+    </div>
+    <div class="mdf">
+      <button class="btn bg" onclick="sluit('mcsv')">Sluiten</button>
+      <button class="btn bp" onclick="csvStap2()">Gegevens importeren...</button>
+      <button class="btn bp" id="csv-do" onclick="csvImport()" style="display:none">Importeren bevestigen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CLUSTER MODAL ══ -->
+<div id="mclust" class="mo" style="display:none">
+  <div class="md" style="max-width:500px">
+    <div class="mdh"><h2 id="mclust-t">Nieuw procescluster</h2><button class="sl" onclick="sluit('mclust')">x</button></div>
+    <div class="mdb">
+      <div class="fr frvol">
+        <div class="fg"><label>Naam *</label><input id="clust-nm" placeholder="bijv. Projectbeheersingsprocessen"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Afkorting * (max 4 tekens)</label><input id="clust-afk" placeholder="bijv. PB" maxlength="4" style="text-transform:uppercase" oninput="updClustNr()"></div>
+        <div class="fg"><label>Kleur</label><input type="color" id="clust-kleur" value="#2d6a4f" style="height:38px;padding:3px 6px;cursor:pointer"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Volgorde</label><input type="number" id="clust-vol" min="1" max="99" value="1"></div>
+        <div class="fg"><label>Voorbeeldnummer</label><div id="clust-nr-ex" style="padding:7px 9px;background:var(--gn);border-radius:var(--r);font-family:var(--m);font-size:13px;font-weight:700;color:var(--gd)">PB-A</div></div>
+      </div>
+      <div class="fr frvol">
+        <div class="fg"><label>Bovenliggend cluster (leeg = top-niveau)</label>
+          <select id="clust-ouder" onchange="updClustNr()"><option value="">-- Top-niveau (geen ouder) --</option></select>
+        </div>
+      </div>
+      <div id="clust-diepte-wrn" style="display:none;padding:8px 12px;background:#fee2e2;border-radius:var(--r);font-size:12px;color:#991b1b;border-left:3px solid #dc2626">Maximum 3 niveaus bereikt voor dit cluster.</div>
+    </div>
+    <div class="mdf">
+      <button class="btn bdel" id="bclust-del" style="display:none;margin-right:auto" onclick="delClust()">Verwijder</button>
+      <button class="btn bg" onclick="sluit('mclust')">Annuleren</button>
+      <button class="btn bp" id="bclust-sla" onclick="slaClust()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<script src="ipp-logica.js"></script>
+
+</body>
+</html>
