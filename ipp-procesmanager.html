@@ -307,6 +307,26 @@
   </div>
 </div>
 
+<!-- ══ EA SOLL PROCESKEUZE MODAL ══ -->
+<div id="meap" class="mo" style="display:none">
+  <div class="md" style="max-width:480px">
+    <div class="mdh"><h2>Processen kiezen voor EA matchen</h2><button class="sl" onclick="sluit('meap')">x</button></div>
+    <div class="mdb">
+      <p style="font-size:12px;color:var(--gs);margin-bottom:10px;line-height:1.6">Kies de processen waarvan je de informatie-elementen samen met het team wilt vergelijken en koppelen (SOLL-brainstorm).</p>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="eapAlles()">Alles selecteren</button>
+        <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="eapAlleenHuidig()">Alleen huidig proces</button>
+        <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="eapNiets()">Niets selecteren</button>
+      </div>
+      <div id="meap-lijst" class="meap-lijst"></div>
+    </div>
+    <div class="mdf">
+      <button class="btn bg" onclick="sluit('meap')">Annuleren</button>
+      <button class="btn bp" onclick="eapStart()">Start matchen &#8594;</button>
+    </div>
+  </div>
+</div>
+
 <script src="ipp-logica.js"></script>
 
 </body>

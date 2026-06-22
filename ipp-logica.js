@@ -2,7 +2,7 @@
 // ── CONSTANTEN & STATE ──
 const IC = {activiteit:'&#9881;', start:'&#9654;', einde:'&#9209;', beslissing:'&#9670;', document:'&#128196;'};
 const CSV_COLS = ['proces_id','proces_naam','stap_nr','ouder_stap_nr','stap_naam','type','verantwoordelijke','systeem','beschrijving','input_1','input_1_bron','input_2','input_2_bron','input_3','input_3_bron','output_1','output_1_doel','output_2','output_2_doel','output_3','output_3_doel','volgorde','status'];
-const S = {data:null, hid:null, pad:[], view:'v', bpid:null, bsid:null, gw:false};
+const S = {data:null, hid:null, pad:[], view:'v', bpid:null, bsid:null, gw:false, eaMode:'ist', eaSollProcs:[], eaGekozen:null};
 let csvBuf = null;
 let jsonFileHandle = null;
 let uitgeklapt = new Set();
@@ -151,6 +151,7 @@ function leeg(){
     rollen:['Projectmanager','Contractmanager','Senior Adviseur','Adviseur','Kwaliteitsmanager','Systems Engineer','Omgevingsmanager','Vergunningenspecialist','Ontwerper','Opdrachtgever','Klant'],
     systemen:['Relatics','GIS','SharePoint','MS Project','Teams','Contractmanager'],
     documenten:[],
+    eaLinks:[],
     processen:[]
   };
 }
@@ -172,6 +173,7 @@ function migr(d){
   });}
   (d.processen||[]).forEach(p=>fix(p.stappen||[]));
   if(!d.documenten)d.documenten=[];
+  if(!Array.isArray(d.eaLinks))d.eaLinks=[];
 }
 function laadUI(){
   allesClusters().forEach(c=>uitCl.add(c.id));
@@ -1004,6 +1006,11 @@ function verwerkRelaticsCSV(csvTekst){
     const wsMap={};
     let huidigId=null,huidigAct=null;
 
+    // Kolom "A - accountable" (RASCI) opzoeken in 2e headerrij — alleen aanwezig in RACI-formaat
+    const headerRij2=(regels[1]||'').split(';').map(h=>h.trim().toLowerCase());
+    const accCol=headerRij2.indexOf('a - accountable');
+    const haalAcc=c=>accCol<0?'':c(accCol).replace(/^rol-\d+\s*/i,'').trim();
+
     // Meerdelige volgordenummers (bv. "3.5.1") vergelijkbaar maken
     function parseVol(s){
       if(!s||!s.trim())return 99999;
@@ -1027,14 +1034,15 @@ function verwerkRelaticsCSV(csvTekst){
         ws.subs.push({id:c(5),volgorde:parseVol(c(6))});
       // Nieuwe activiteit (col 8-10) → processtap
       if(c(8).startsWith('ACT-')&&c(10)){
-        huidigAct={id:c(8),volgorde:c(9)?parseInt(c(9)):null,naam:c(10),systemen:[],inputs:[],outputs:[]};
+        huidigAct={id:c(8),volgorde:c(9)?parseInt(c(9)):null,naam:c(10),systemen:[],inputs:[],outputs:[],verantwoordelijke:haalAcc(c)};
         ws.acts.push(huidigAct);
       }
-      // Tools / output / input toevoegen aan huidige activiteit (ook vervolgrijen)
+      // Tools / output / input / verantwoordelijke toevoegen aan huidige activiteit (ook vervolgrijen)
       if(huidigAct){
         if(c(12)&&!huidigAct.systemen.includes(c(12)))huidigAct.systemen.push(c(12));
         if(c(14))huidigAct.outputs.push({code:c(13),naam:c(14)});
         if(c(16))huidigAct.inputs.push({code:c(15),naam:c(16)});
+        if(!huidigAct.verantwoordelijke&&haalAcc(c))huidigAct.verantwoordelijke=haalAcc(c);
       }
     }
 
@@ -1073,6 +1081,7 @@ function verwerkRelaticsCSV(csvTekst){
 
     // Processen opbouwen
     const alleSystemen=new Set(S.data?.systemen||leeg().systemen);
+    const alleRollen=new Set(S.data?.rollen||leeg().rollen);
     const processen=[];
 
     for(const id in wsMap){
@@ -1090,9 +1099,10 @@ function verwerkRelaticsCSV(csvTekst){
 
       const stappen=sortedActs.map((act,si)=>{
         act.systemen.forEach(s=>alleSystemen.add(s));
+        if(act.verantwoordelijke)alleRollen.add(act.verantwoordelijke);
         const stap={
           id:gid('s'),naam:act.naam,type:'activiteit',
-          verantwoordelijke:'',systeem:act.systemen.join('; '),
+          verantwoordelijke:act.verantwoordelijke||'',systeem:act.systemen.join('; '),
           beschrijving:'',volgorde:act.volgorde??si+1,
           status:'concept',substappen:[],medeverantwoordelijken:[],
           input:act.inputs.map(inp=>({label:inp.naam,bron:inp.code||'intern'})),
@@ -1117,8 +1127,8 @@ function verwerkRelaticsCSV(csvTekst){
     const documenten=Object.entries(docMap).map(([code,naam])=>({code,naam})).sort((a,b)=>a.code.localeCompare(b.code));
 
     S.data={versie:'1.1',project:'IPP Procesmanagement Antea Group',aangepast:td(),
-      clusters,rollen:S.data?.rollen||leeg().rollen,
-      systemen:[...alleSystemen],documenten,processen};
+      clusters,rollen:[...alleRollen],
+      systemen:[...alleSystemen],documenten,eaLinks:[],processen};
 
     S.hid=null;S.pad=[];uitCl=new Set();
     allesClusters().forEach(c=>uitCl.add(c.id));
@@ -1668,6 +1678,8 @@ function toonEA(){
   document.getElementById('bib').style.color = '';
   document.getElementById('bea').style.background = 'var(--gg)';
   document.getElementById('bea').style.color = 'white';
+  S.eaMode='ist';S.eaGekozen=null;
+  document.getElementById('ea-canvas').classList.remove('soll-mode');
   tekenEA(p);
 }
 
@@ -1711,9 +1723,10 @@ function verzamelElementen(p){
   return Object.values(map);
 }
 
-function eaSuggesties(labelKey){
+function eaSuggesties(labelKey, excludeIds){
+  excludeIds = excludeIds || [S.hid];
   const attrs = new Set();
-  (S.data.processen||[]).filter(p=>p.id!==S.hid).forEach(p=>{
+  (S.data.processen||[]).filter(p=>!excludeIds.includes(p.id)).forEach(p=>{
     alleStappenFlat(p.stappen||[]).forEach(s=>{
       [...(s.input||[]),...(s.output||[])].forEach(io=>{
         if(io.label?.trim().toLowerCase()===labelKey){
@@ -1725,12 +1738,33 @@ function eaSuggesties(labelKey){
   return [...attrs];
 }
 
+function eaModeHeader(){
+  return `<div class="ea-toggle">
+    <button class="eatb ${S.eaMode!=='soll'?'a':''}" onclick="eaSetModeIst()">IST &mdash; huidige situatie</button>
+    <button class="eatb ${S.eaMode==='soll'?'a':''}" onclick="eaOpenSollPicker()">SOLL &mdash; EA matchen</button>
+  </div>`;
+}
+function eaSetModeIst(){
+  S.eaMode='ist';S.eaGekozen=null;
+  document.getElementById('ea-canvas').classList.remove('soll-mode');
+  tekenEA(proc(S.hid));
+}
+function eaActieveProcessen(){
+  return S.eaMode==='soll' ? (S.eaSollProcs||[]) : [S.hid];
+}
+function eaRedraw(){
+  if(S.eaMode==='soll') tekenEASoll();
+  else tekenEA(proc(S.hid));
+}
+
 function tekenEA(p){
   const eac = document.getElementById('ea-canvas');
+  eac.classList.remove('soll-mode');
   const elementen = verzamelElementen(p);
   const nr = procNr(p);
 
-  let h = `<div class="ea-hdr">
+  let h = eaModeHeader();
+  h += `<div class="ea-hdr">
     <div>
       <div style="font-family:var(--m);font-size:11px;font-weight:700;color:var(--ga);margin-bottom:2px">${nr}</div>
       <h2>${p.naam} &#8212; Elementen &amp; Attributen</h2>
@@ -1798,49 +1832,296 @@ function eaVoegToe(safeKey, label){
   const inp = document.getElementById('ea-inp-'+safeKey);
   const val = inp?.value.trim();
   if(!val){ notif('Vul een attribuutnaam in','fout'); return; }
-  eaSchrijfAttr(label, val);
-  inp.value = '';
-  tekenEA(proc(S.hid));
+  eaSchrijfAttrIn(eaActieveProcessen(), label, val);
+  eaRedraw();
   notif('"'+val+'" toegevoegd','ok');
 }
 
 function eaVoegSugToe(safeKey, label, attr){
-  eaSchrijfAttr(label, attr);
-  tekenEA(proc(S.hid));
+  eaSchrijfAttrIn(eaActieveProcessen(), label, attr);
+  eaRedraw();
   notif('"'+attr+'" overgenomen','ok');
 }
 
 function eaDelAttr(safeKey, label, attr){
-  eaVerwijderAttr(label, attr);
-  tekenEA(proc(S.hid));
+  eaVerwijderAttrIn(eaActieveProcessen(), label, attr);
+  eaRedraw();
   notif('"'+attr+'" verwijderd','ok');
 }
 
-function eaSchrijfAttr(label, attr){
-  const p = proc(S.hid); if(!p) return;
+function eaSchrijfAttrIn(processIds, label, attr){
   const key = label.toLowerCase();
-  alleStappenFlat(p.stappen||[]).forEach(s=>{
-    [...(s.input||[]),...(s.output||[])].forEach(io=>{
-      if(io.label?.trim().toLowerCase()===key){
-        if(!io.attributen) io.attributen = [];
-        if(!io.attributen.includes(attr)) io.attributen.push(attr);
-      }
+  processIds.forEach(pid=>{
+    const p = proc(pid); if(!p) return;
+    alleStappenFlat(p.stappen||[]).forEach(s=>{
+      [...(s.input||[]),...(s.output||[])].forEach(io=>{
+        if(io.label?.trim().toLowerCase()===key){
+          if(!io.attributen) io.attributen = [];
+          if(!io.attributen.includes(attr)) io.attributen.push(attr);
+        }
+      });
     });
   });
   markeer();
 }
 
-function eaVerwijderAttr(label, attr){
-  const p = proc(S.hid); if(!p) return;
+function eaVerwijderAttrIn(processIds, label, attr){
   const key = label.toLowerCase();
-  alleStappenFlat(p.stappen||[]).forEach(s=>{
-    [...(s.input||[]),...(s.output||[])].forEach(io=>{
-      if(io.label?.trim().toLowerCase()===key && io.attributen){
-        io.attributen = io.attributen.filter(a=>a!==attr);
-      }
+  processIds.forEach(pid=>{
+    const p = proc(pid); if(!p) return;
+    alleStappenFlat(p.stappen||[]).forEach(s=>{
+      [...(s.input||[]),...(s.output||[])].forEach(io=>{
+        if(io.label?.trim().toLowerCase()===key && io.attributen){
+          io.attributen = io.attributen.filter(a=>a!==attr);
+        }
+      });
     });
   });
   markeer();
+}
+
+// ══════════════════════════════════════════════
+// EA SOLL — EA MATCHEN (BRAINSTORM-WERKSCHERM)
+// ══════════════════════════════════════════════
+
+function eaOpenSollPicker(){
+  const lijst = document.getElementById('meap-lijst');
+  const huidige = new Set(S.eaSollProcs && S.eaSollProcs.length ? S.eaSollProcs : (S.hid?[S.hid]:[]));
+  const procsSorted = [...(S.data.processen||[])].sort((a,b)=>procNr(a).localeCompare(procNr(b)));
+  lijst.innerHTML = procsSorted.map(p=>`
+    <label class="meap-rij">
+      <input type="checkbox" value="${p.id}" ${huidige.has(p.id)?'checked':''}>
+      <span class="meap-nr">${procNr(p)}</span>
+      <span class="meap-nm">${p.naam}</span>
+    </label>`).join('');
+  document.getElementById('meap').style.display = 'flex';
+}
+function eapAlles(){document.querySelectorAll('#meap-lijst input[type=checkbox]').forEach(c=>c.checked=true);}
+function eapNiets(){document.querySelectorAll('#meap-lijst input[type=checkbox]').forEach(c=>c.checked=false);}
+function eapAlleenHuidig(){document.querySelectorAll('#meap-lijst input[type=checkbox]').forEach(c=>c.checked=(c.value===S.hid));}
+function eapStart(){
+  const ids = [...document.querySelectorAll('#meap-lijst input[type=checkbox]:checked')].map(c=>c.value);
+  if(!ids.length){ notif('Kies minimaal 1 proces','fout'); return; }
+  S.eaSollProcs = ids; S.eaMode = 'soll'; S.eaGekozen = null;
+  sluit('meap');
+  document.getElementById('ea-canvas').classList.add('soll-mode');
+  tekenEASoll();
+}
+
+function verzamelElementenMulti(processIds){
+  const map = {};
+  processIds.forEach(pid=>{
+    const p = proc(pid); if(!p) return;
+    alleStappenFlat(p.stappen||[]).forEach(s=>{
+      (s.input||[]).forEach(io=>{
+        if(!io.label?.trim()) return;
+        const key = io.label.trim().toLowerCase();
+        if(!map[key]) map[key]={label:io.label.trim(),refs:[],attrs:[]};
+        map[key].refs.push({proc:p,stap:s});
+        (io.attributen||[]).forEach(a=>{ if(a&&!map[key].attrs.includes(a)) map[key].attrs.push(a); });
+      });
+      (s.output||[]).forEach(io=>{
+        if(!io.label?.trim()) return;
+        const key = io.label.trim().toLowerCase();
+        if(!map[key]) map[key]={label:io.label.trim(),refs:[],attrs:[]};
+        map[key].refs.push({proc:p,stap:s});
+        (io.attributen||[]).forEach(a=>{ if(a&&!map[key].attrs.includes(a)) map[key].attrs.push(a); });
+      });
+    });
+  });
+  return map;
+}
+
+function eaPak(safeKey, label){
+  S.eaGekozen = {key:label.toLowerCase(), label:label};
+  eaRedraw();
+}
+function eaAnnuleerKeuze(){
+  S.eaGekozen = null;
+  eaRedraw();
+}
+function eaMaakLink(type, safeKeyB, labelB){
+  if(!S.eaGekozen){ notif('Kies eerst een kaart om te koppelen','fout'); return; }
+  const keyB = labelB.toLowerCase();
+  if(S.eaGekozen.key===keyB){ notif('Kies een andere kaart om mee te koppelen','fout'); return; }
+  let toelichting = '';
+  if(type==='koppeling'){
+    const t = prompt('Toelichting bij deze koppeling (optioneel):','');
+    if(t===null) return;
+    toelichting = t.trim();
+  }
+  const bestaat = (S.data.eaLinks||[]).some(l=>l.type===type && ((l.vanKey===S.eaGekozen.key&&l.naarKey===keyB)||(l.vanKey===keyB&&l.naarKey===S.eaGekozen.key)));
+  if(bestaat){ notif('Deze koppeling bestaat al','fout'); return; }
+  if(!S.data.eaLinks) S.data.eaLinks=[];
+  S.data.eaLinks.push({id:gid('eal'),type,vanKey:S.eaGekozen.key,vanLabel:S.eaGekozen.label,naarKey:keyB,naarLabel:labelB,toelichting,datum:td()});
+  notif(type==='zelfde'?'Gekoppeld als zelfde info':'Koppeling vastgelegd','ok');
+  S.eaGekozen = null;
+  markeer();
+  eaRedraw();
+}
+function eaVerwijderLink(id){
+  S.data.eaLinks = (S.data.eaLinks||[]).filter(l=>l.id!==id);
+  markeer();
+  eaRedraw();
+  notif('Koppeling verwijderd','ok');
+}
+function eaVerwijderGroep(idsCsv){
+  const ids = idsCsv.split(',');
+  S.data.eaLinks = (S.data.eaLinks||[]).filter(l=>!ids.includes(l.id));
+  markeer();
+  eaRedraw();
+  notif('Groep ontkoppeld','ok');
+}
+// Vat "zelfde info"-links transitief samen tot groepen (union-find): A=B en B=C wordt 1 groep {A,B,C}.
+function eaZelfdeGroepen(){
+  const links = (S.data.eaLinks||[]).filter(l=>l.type==='zelfde');
+  const parent = {}, labelOf = {};
+  const find = x=>{ while(parent[x]!==x) x = parent[x] = parent[parent[x]]; return x; };
+  links.forEach(l=>{
+    if(!(l.vanKey in parent)) parent[l.vanKey]=l.vanKey;
+    if(!(l.naarKey in parent)) parent[l.naarKey]=l.naarKey;
+    labelOf[l.vanKey]=l.vanLabel; labelOf[l.naarKey]=l.naarLabel;
+    const ra=find(l.vanKey), rb=find(l.naarKey);
+    if(ra!==rb) parent[ra]=rb;
+  });
+  const groepen = {};
+  Object.keys(parent).forEach(k=>{
+    const r = find(k);
+    (groepen[r] = groepen[r]||[]).push(k);
+  });
+  return Object.values(groepen).map(keys=>({
+    keys, labels: keys.map(k=>labelOf[k]),
+    linkIds: links.filter(l=>keys.includes(l.vanKey)&&keys.includes(l.naarKey)).map(l=>l.id)
+  }));
+}
+function renderEALinksLijst(){
+  const links = S.data.eaLinks||[];
+  if(!links.length) return '<div class="ea-leeg">Nog geen SOLL-koppelingen vastgelegd.</div>';
+  let h = '';
+  eaZelfdeGroepen().forEach(g=>{
+    h += `<div class="ea-link-rij ea-link-rij-groep">
+      <span class="ea-link-type zelfde">Zelfde info</span>
+      <span class="ea-link-groep-leden">${g.labels.map(l=>`<span>${l}</span>`).join('<span class="ea-link-eq">=</span>')}</span>
+      <button class="ea-link-del" onclick="eaVerwijderGroep('${g.linkIds.join(',')}')" title="Verwijder groep">x</button>
+    </div>`;
+  });
+  links.filter(l=>l.type==='koppeling').forEach(l=>{
+    h += `<div class="ea-link-rij">
+      <span class="ea-link-type koppeling">Koppeling</span>
+      <span class="ea-link-van">${l.vanLabel}</span>
+      <span class="ea-link-pijl">&#8594;</span>
+      <span class="ea-link-naar">${l.naarLabel}</span>
+      ${l.toelichting?`<span class="ea-link-toel">&quot;${l.toelichting}&quot;</span>`:''}
+      <button class="ea-link-del" onclick="eaVerwijderLink('${l.id}')" title="Verwijder">x</button>
+    </div>`;
+  });
+  return h;
+}
+
+function renderEAKaart(el, scheiding){
+  const key = el.key;
+  const safeKey = encodeURIComponent(key).replace(/%/g,'_');
+  const procNamen = [...new Set(el.refs.map(r=>r.proc.naam))];
+  const suggesties = eaSuggesties(key, S.eaSollProcs||[]).filter(s=>!el.attrs.includes(s));
+  const isGekozen = S.eaGekozen && S.eaGekozen.key===key;
+  const safeLabel = el.label.replace(/'/g,'&apos;');
+
+  let h = `<div class="ea-kaart ${isGekozen?'gekozen':''} ${scheiding?'scheiding':''}">
+    <div class="ea-kaart-hdr" onclick="eaPak('${safeKey}','${safeLabel}')" title="Klik om als eerste kaart te kiezen">
+      <div class="ea-item-nm">${el.label}</div>
+    </div>
+    <div class="ea-stap-info">Gebruikt in: ${procNamen.join(', ')}</div>
+    <div class="ea-attrs" id="ea-attrs-${safeKey}">`;
+
+  if(!el.attrs.length){
+    h += `<span class="ea-leeg">Nog geen attributen toegevoegd.</span>`;
+  } else {
+    el.attrs.forEach(attr=>{
+      const safeAttr = attr.replace(/'/g,'&apos;').replace(/"/g,'&quot;');
+      h += `<span class="ea-attr">${attr} <button class="ea-attr-del" title="Verwijder" onclick="eaDelAttr('${safeKey}','${safeLabel}','${safeAttr}')">x</button></span>`;
+    });
+  }
+
+  h += `</div>
+    <div class="ea-add">
+      <input id="ea-inp-${safeKey}" placeholder="Nieuw attribuut toevoegen..." onkeydown="if(event.key==='Enter')eaVoegToe('${safeKey}','${safeLabel}')">
+      <button class="btn bp" style="font-size:11px;padding:3px 10px" onclick="eaVoegToe('${safeKey}','${safeLabel}')">+</button>
+    </div>`;
+
+  if(suggesties.length){
+    h += `<div class="ea-suggesties"><div class="ea-sug-titel">Suggesties uit andere processen (klik om over te nemen):</div>`;
+    suggesties.forEach(s=>{
+      const safeS = s.replace(/'/g,'&apos;');
+      h += `<span class="ea-attr ea-attr-sug" onclick="eaVoegSugToe('${safeKey}','${safeLabel}','${safeS}')">${s} +</span> `;
+    });
+    h += `</div>`;
+  }
+
+  h += `<div class="ea-koppel-acties">
+    <button class="ea-koppel-btn zelfde" onclick="eaMaakLink('zelfde','${safeKey}','${safeLabel}')">Bevat zelfde info als &#8594;</button>
+    <button class="ea-koppel-btn koppeling" onclick="eaMaakLink('koppeling','${safeKey}','${safeLabel}')">Moet koppelen aan &#8594;</button>
+  </div>`;
+
+  h += `</div>`;
+  return h;
+}
+
+function tekenEASoll(){
+  const eac = document.getElementById('ea-canvas');
+  eac.classList.add('soll-mode');
+  const ids = S.eaSollProcs||[];
+  const procsLabel = ids.map(id=>pnm(id)).join(' · ');
+  const elMap = verzamelElementenMulti(ids);
+  const elementen = Object.entries(elMap).map(([key,v])=>({key,...v})).sort((a,b)=>a.label.localeCompare(b.label));
+
+  let h = eaModeHeader();
+  h += `<div class="ea-hdr">
+    <div>
+      <div style="font-family:var(--m);font-size:11px;font-weight:700;color:var(--ga2);margin-bottom:2px">SOLL &mdash; BRAINSTORM</div>
+      <h2>EA matchen &#8212; ${ids.length} proces${ids.length!==1?'sen':''}</h2>
+      <div style="font-size:11px;color:var(--gs);margin-top:2px">${procsLabel}</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-left:auto">
+      <button class="btn bg" onclick="eaOpenSollPicker()">Processen wijzigen</button>
+      <button class="btn bg" onclick="sluitEA()">&#8592; Terug naar schema</button>
+    </div>
+  </div>`;
+
+  if(S.eaGekozen){
+    h += `<div class="ea-gekozen-banner">Gekozen: <strong>${S.eaGekozen.label}</strong> &mdash; klik bij een andere kaart op "Bevat zelfde info als" of "Moet koppelen aan". <button class="btn bg" style="margin-left:8px;padding:2px 9px;font-size:11px" onclick="eaAnnuleerKeuze()">Annuleer</button></div>`;
+  }
+
+  if(!elementen.length){
+    h += '<div class="leeg"><div class="li">&#128197;</div><h3>Geen elementen gevonden</h3><p>Kies processen met input/output op de stappen.</p></div>';
+    eac.innerHTML = h;
+    return;
+  }
+
+  const elKeys = new Set(elementen.map(e=>e.key));
+  const elByKey = {}; elementen.forEach(e=>elByKey[e.key]=e);
+  const groepen = eaZelfdeGroepen()
+    .map(g=>({...g, leden: g.keys.filter(k=>elKeys.has(k)).map(k=>elByKey[k])}))
+    .filter(g=>g.leden.length>1);
+  const inGroep = new Set();
+  groepen.forEach(g=>g.leden.forEach(el=>inGroep.add(el.key)));
+
+  const groepKleuren = ['#1a3c34','#f0a500','#2563eb','#9333ea','#0d9488','#dc2626'];
+  groepen.forEach((g,i)=>{
+    const kleur = groepKleuren[i % groepKleuren.length];
+    h += `<div class="ea-groep-rij">
+      <div class="ea-groep-label" style="background:${kleur}">Zelfde info &middot; ${g.leden.length} kaarten</div>
+      <div class="ea-groep-leden" style="border-color:${kleur}">${g.leden.map((el,j)=>renderEAKaart(el, j>0)).join('')}</div>
+    </div>`;
+  });
+
+  const overig = elementen.filter(e=>!inGroep.has(e.key));
+  if(overig.length){
+    h += '<div class="ea-bord">' + overig.map(el=>renderEAKaart(el, false)).join('') + '</div>';
+  }
+
+  h += `<div class="ea-links-blok"><div class="ea-links-titel">SOLL-koppelingen (${(S.data.eaLinks||[]).length})</div>${renderEALinksLijst()}</div>`;
+
+  eac.innerHTML = h;
 }
 
 init();

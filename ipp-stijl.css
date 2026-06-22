@@ -2,6 +2,7 @@
   --gd:#1a3c34;--gm:#2d6a4f;--gg:#40916c;--gl:#74c69d;--gn:#d8f3dc;
   --ga:#f0a500;--ga2:#e76f00;--gw:#ffffff;--gc:#f4f6f4;
   --g1:#e8ece9;--g2:#c8d4cc;--g3:#8aa090;--gt:#1a2820;--gs:#4a6055;
+  --gss:#fbf0df;
   --r:6px;--rl:10px;--sh:0 2px 8px rgba(26,60,52,.10);--shl:0 4px 20px rgba(26,60,52,.15);
   --f:'Source Sans 3',sans-serif;--m:'DM Mono',monospace;
 }
@@ -338,3 +339,51 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .ea-add input:focus{border-color:var(--gg)}
 .ea-suggesties{font-size:10px;color:var(--g3);margin-top:6px;padding-top:6px;border-top:1px solid var(--g1)}
 .ea-sug-titel{font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+
+/* ── EA IST/SOLL SCHAKELAAR ── */
+.ea-toggle{display:flex;border:1px solid var(--g1);border-radius:var(--r);overflow:hidden;width:fit-content;margin-bottom:16px}
+.eatb{padding:6px 14px;background:var(--gw);border:none;cursor:pointer;color:var(--gs);font-family:var(--f);font-size:12px;font-weight:600;transition:all .15s;border-right:1px solid var(--g1)}
+.eatb:last-child{border-right:none}
+.eatb.a{background:var(--gd);color:var(--gw)}
+.eatb:hover:not(.a){background:var(--g1)}
+
+/* ── SOLL WERKSCHERM (EA MATCHEN) ── */
+#ea-canvas.soll-mode{background:var(--gss)}
+.ea-gekozen-banner{background:#fff3da;border:1.5px solid var(--ga);border-radius:var(--r);padding:8px 12px;font-size:12px;color:#7a3f00;margin-bottom:14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.ea-bord{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px}
+.ea-kaart{background:var(--gw);border:1.5px solid var(--g1);border-radius:var(--rl);padding:12px 14px;box-shadow:var(--sh);transition:all .15s}
+.ea-kaart.gekozen{border-color:var(--ga);box-shadow:0 0 0 2px rgba(240,165,0,.3)}
+.ea-kaart-hdr{cursor:pointer;margin-bottom:6px}
+.ea-kaart-hdr:hover .ea-item-nm{color:var(--gg)}
+.ea-koppel-acties{display:flex;gap:5px;margin-top:9px;padding-top:8px;border-top:1px solid var(--g1);flex-wrap:wrap}
+.ea-koppel-btn{padding:3px 9px;border-radius:20px;border:1px solid var(--g2);background:transparent;font-family:var(--f);font-size:10px;font-weight:600;cursor:pointer;color:var(--gs);transition:all .15s;white-space:nowrap}
+.ea-koppel-btn:hover{background:var(--g1)}
+.ea-koppel-btn.zelfde{border-color:var(--gg);color:var(--gg)}.ea-koppel-btn.zelfde:hover{background:var(--gn)}
+.ea-koppel-btn.koppeling{border-color:var(--ga);color:var(--ga2)}.ea-koppel-btn.koppeling:hover{background:#fffbf0}
+.ea-links-blok{background:var(--gw);border:1.5px solid var(--g1);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--sh)}
+.ea-links-titel{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--gs);margin-bottom:10px}
+.ea-link-rij{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--g1);font-size:12px;flex-wrap:wrap}
+.ea-link-rij:last-child{border-bottom:none}
+.ea-link-type{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 7px;border-radius:20px;flex-shrink:0}
+.ea-link-type.zelfde{background:var(--gn);color:var(--gm)}
+.ea-link-type.koppeling{background:#fff3da;color:#7a3f00}
+.ea-link-van,.ea-link-naar{font-weight:600;color:var(--gd)}
+.ea-link-pijl{color:var(--g3)}
+.ea-link-toel{font-size:11px;color:var(--gs);font-style:italic}
+.ea-link-del{margin-left:auto;background:none;border:none;cursor:pointer;color:#dc2626;font-size:13px;padding:0 4px}
+.ea-link-groep-leden{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-weight:600;color:var(--gd)}
+.ea-link-eq{color:var(--g3);font-weight:400}
+
+.ea-groep-rij{margin-bottom:16px}
+.ea-groep-label{display:inline-block;color:#fff;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.ea-groep-leden{display:flex;align-items:stretch;overflow-x:auto;border:1.5px solid var(--g1);border-radius:var(--rl);background:var(--gw);box-shadow:var(--sh)}
+.ea-groep-leden .ea-kaart{border:none;border-radius:0;box-shadow:none;flex:1 0 260px;min-width:260px}
+.ea-groep-leden .ea-kaart.scheiding{border-left:2px solid var(--g1)}
+.ea-groep-leden .ea-kaart.gekozen{box-shadow:0 0 0 2px rgba(240,165,0,.3)}
+
+/* ── EA PROCESKEUZE MODAL ── */
+.meap-lijst{max-height:320px;overflow-y:auto;border:1px solid var(--g1);border-radius:var(--r);padding:4px}
+.meap-rij{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--r);cursor:pointer;font-size:13px}
+.meap-rij:hover{background:var(--gc)}
+.meap-nr{font-family:var(--m);font-size:10px;font-weight:700;color:var(--ga2);width:48px;flex-shrink:0}
+.meap-nm{flex:1}
