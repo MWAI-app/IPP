@@ -757,7 +757,7 @@ function clusterModal(cid, ouderId){
   document.getElementById('bclust-sla').disabled=false;
   document.getElementById('clust-nm').value=c?.label||'';
   document.getElementById('clust-afk').value=c?.afkorting||'';
-  document.getElementById('clust-kleur').value=c?.kleur||'#2d6a4f';
+  document.getElementById('clust-kleur').value=c?.kleur||'#00619b';
   document.getElementById('clust-vol').value=c?.volgorde||1;
   document.getElementById('clust-diepte-wrn').style.display='none';
   // Vul ouder-selector

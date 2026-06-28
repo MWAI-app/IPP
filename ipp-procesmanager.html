@@ -31,7 +31,7 @@
   <div id="pl"></div>
   <div id="sf">
     <button class="btn bs" style="justify-content:center" onclick="exportPDF()">PDF exporteren</button>
-    <button class="btn bs" style="justify-content:center;background:rgba(240,165,0,.15);border-color:var(--ga);color:var(--ga)" onclick="csvWizard()">CSV import / export</button>
+    <button class="btn bs" style="justify-content:center;background:rgba(240,165,0,.15);border-color:var(--ga);color:#7a3f00" onclick="csvWizard()">CSV import / export</button>
   </div>
 </aside>
 <main id="main">
@@ -64,7 +64,7 @@
       <div id="sp-hdr">
         <div id="sp-nr"></div>
         <div id="sp-titel"></div>
-        <button onclick="sluitSP()" style="background:rgba(255,255,255,.12);border:none;color:var(--gw);cursor:pointer;border-radius:50%;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0">x</button>
+        <button onclick="sluitSP()" style="background:var(--g1);border:none;color:var(--gs);cursor:pointer;border-radius:50%;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0">x</button>
       </div>
       <div id="sp-niv"></div>
       <div id="sp-body"></div>
@@ -286,7 +286,7 @@
       </div>
       <div class="fr">
         <div class="fg"><label>Afkorting * (max 4 tekens)</label><input id="clust-afk" placeholder="bijv. PB" maxlength="4" style="text-transform:uppercase" oninput="updClustNr()"></div>
-        <div class="fg"><label>Kleur</label><input type="color" id="clust-kleur" value="#2d6a4f" style="height:38px;padding:3px 6px;cursor:pointer"></div>
+        <div class="fg"><label>Kleur</label><input type="color" id="clust-kleur" value="#00619b" style="height:38px;padding:3px 6px;cursor:pointer"></div>
       </div>
       <div class="fr">
         <div class="fg"><label>Volgorde</label><input type="number" id="clust-vol" min="1" max="99" value="1"></div>

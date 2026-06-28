@@ -79,7 +79,7 @@ CSV-export is ontworpen voor Relatics-import:
 - Informatiebehoefte-CSV voor informatiegesprekken met deskundigen
 
 ## Designrichtlijnen
-- **Huisstijl:** Antea Group — donkergroen (#1a3c34) met oranjegeel accent (#f0a500)
+- **Huisstijl:** Antea Group — donkerblauw (#004874, Calcite-blauwschaal) met oranjegeel accent (#f0a500)
 - **Taal:** Volledig Nederlands
 - **Doelgroep output:** Management (N1), operationeel team (N2), uitvoerend medewerker (N3)
 - **Nooit unicode bullets of emoji in JS strings** — veroorzaakt syntaxfouten
