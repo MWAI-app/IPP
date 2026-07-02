@@ -341,7 +341,7 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .ea-sug-titel{font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
 
 /* ── EA IST/SOLL SCHAKELAAR ── */
-.ea-toggle{display:flex;border:1px solid var(--g1);border-radius:var(--r);overflow:hidden;width:fit-content;margin-bottom:16px}
+.ea-toggle{display:flex;border:1px solid var(--g1);border-radius:var(--r);overflow:hidden;width:fit-content}
 .eatb{padding:6px 14px;background:var(--gw);border:none;cursor:pointer;color:var(--gs);font-family:var(--f);font-size:12px;font-weight:600;transition:all .15s;border-right:1px solid var(--g1)}
 .eatb:last-child{border-right:none}
 .eatb.a{background:var(--gd);color:var(--gw)}

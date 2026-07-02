@@ -419,15 +419,24 @@ function tekenV(cv,st){
     stH+=`<div class="sk-acties">`;
     stH+=`<button class="sa" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
     stH+=`<button class="sa bwrk" onclick="event.stopPropagation();S.pad=[];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
-    if(heeftSub) stH+=`<button class="sa sub heeft" onclick="event.stopPropagation();toggleN2('${s.id}')">${exp?'&#9650; N2 inklappen':'v'+s.substappen.length+' N2 &#8595;'}</button>`;
+    if(heeftSub) stH+=`<button class="sa sub heeft" onclick="event.stopPropagation();toggleN2('${s.id}')">${exp?'&#9650; N2 inklappen':'v'+s.substappen.length+' N2 &#8595;'}</button><button class="sa sub" onclick="event.stopPropagation();openSP('${s.id}')">+ N2</button>`;
     else stH+=`<button class="sa sub" onclick="event.stopPropagation();openSP('${s.id}')">+ N2 toevoegen</button>`;
     stH+=`</div></div></div>`;
-    // OUTPUT blok
+    // OUTPUT blok — eigen N1-outputs + outputs van substappen (N2/N3), gededupliceerd
+    const subOuts=(()=>{
+      const eigen=new Set(out.map(io=>(io.label||'').toLowerCase()));
+      const seen=new Set();const res=[];
+      function verzamel(subs){(subs||[]).forEach(sub=>{(sub.output||[]).forEach(io=>{const k=(io.label||'').toLowerCase();if(k&&!eigen.has(k)&&!seen.has(k)){seen.add(k);res.push(io);}});verzamel(sub.substappen||[]);});}
+      verzamel(s.substappen||[]);return res;
+    })();
     let outH='<div class="sk3-io"><div class="sk3-iol">OUTPUT —</div>';
-    if(out.length) out.forEach(io=>{
-      const e=io.doel&&io.doel!=='intern';
-      outH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;
-    }); else outH+='<span style="font-size:11px;color:var(--g3)">—</span>';
+    if(out.length||subOuts.length){
+      out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
+      if(subOuts.length){
+        if(out.length)outH+='<div style="font-size:9px;color:var(--gs);margin:3px 0 1px;opacity:.8">via substappen:</div>';
+        subOuts.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}" style="font-size:10px;opacity:.8">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
+      }
+    } else outH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     outH+='</div>';
     if(exp){
       const subs=(s.substappen||[]).sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
@@ -445,7 +454,7 @@ function tekenSL(cv,st){
   const p=proc(S.hid);
   const rollen=[...new Set(st.flatMap(s=>alleVerantw(s)))];
   const primaire=new Set(st.map(s=>s.verantwoordelijke).filter(Boolean));
-  const cw=Math.max(120,Math.floor((window.innerWidth-350)/Math.max(st.length,1)));
+  const cw=Math.max(180,Math.floor((window.innerWidth-350)/Math.max(st.length,1)));
   const gtc=`170px repeat(${st.length},${cw}px)`;
   let h=`<div class="slw"><div class="slg" style="grid-template-columns:${gtc}">`;
   h+=`<div class="slhr">Verantwoordelijke</div>`;
@@ -1146,6 +1155,166 @@ function verwerkRelaticsCSV(csvTekst){
   }catch(e){console.error(e);notif('Fout bij Relatics import: '+e.message,'fout');}
 }
 
+// ── RELATICS SE CSV IMPORT ──
+// Kolommen (0-based, puntkomma-gescheiden):
+// 0=PRC-id  1=Code  2=Naam  3=ouderPRC-id  4=ouderCode  5=ouderNaam
+// 6=subPRC-id  7=subCode  8=subNaam  9=inputDocCode  10=inputDocNaam
+// 11=outputDocCode  12=outputDocNaam
+// Niveau bepaald door aantal numerieke segmenten in Code na het koppelteken:
+//   1 segment (KP-1)        → cluster
+//   2 segmenten (KP-1.1)    → proces
+//   3 segmenten (KP-1.1.1)  → N1-stap
+//   4 segmenten (KP-1.1.1.1)→ N2-substap
+async function importeerRelaticsSE(){
+  if('showOpenFilePicker' in window){
+    try{
+      const [fh]=await window.showOpenFilePicker({types:[{description:'CSV bestand',accept:{'text/csv':['.csv']}}]});
+      verwerkRelaticsSECSV(await(await fh.getFile()).text());
+    }catch(e){if(e.name!=='AbortError')notif('Kon CSV niet openen','fout');}
+  }else{
+    const inp=document.createElement('input');inp.type='file';inp.accept='.csv';
+    inp.onchange=async()=>{if(inp.files[0])verwerkRelaticsSECSV(await inp.files[0].text());};
+    inp.click();
+  }
+}
+
+function verwerkRelaticsSECSV(csvTekst){
+  try{
+    const regels=csvTekst.replace(/^﻿/,'').replace(/\r/g,'').split('\n');
+    // rijen 0 en 1 zijn headers — sla over
+    const recs={}; // prcId → record
+    const volg=[]; // volgorde van prcIds
+    let hid=null;
+
+    for(let i=2;i<regels.length;i++){
+      const r=regels[i].split(';');
+      const c=n=>(r[n]||'').trim();
+      if(r.every(v=>!v.trim()))continue;
+
+      if(c(0).startsWith('PRC-')){
+        hid=c(0);
+        if(!recs[hid]){
+          recs[hid]={prcId:c(0),code:c(1),naam:c(2),ouderPrcId:c(3),
+            subProcs:[],inputDocs:[],outputDocs:[]};
+          volg.push(hid);
+        }
+      }
+      if(!hid||!recs[hid])continue;
+      const rc=recs[hid];
+      if(c(6).startsWith('PRC-')&&!rc.subProcs.find(s=>s.prcId===c(6)))
+        rc.subProcs.push({prcId:c(6),code:c(7),naam:c(8)});
+      if(c(10)&&!rc.inputDocs.find(d=>d.naam===c(10)))
+        rc.inputDocs.push({code:c(9),naam:c(10)});
+      if(c(12)&&!rc.outputDocs.find(d=>d.naam===c(12)))
+        rc.outputDocs.push({code:c(11),naam:c(12)});
+    }
+
+    // Aantal numerieke segmenten in code bepaalt het niveau
+    function seNiv(code){
+      const d=code.indexOf('-');if(d<0)return 0;
+      const rest=code.slice(d+1);
+      if(!/^[\d.]+$/.test(rest))return 0; // bijv. SE-AG → overslaan
+      return rest.split('.').length;
+    }
+    // Sorteersleutel op basis van code-segmenten
+    function seVol(code){
+      const d=code.indexOf('-');if(d<0)return[999];
+      return code.slice(d+1).split('.').map(n=>parseInt(n)||0);
+    }
+    function seVolCmp(a,b){
+      const av=seVol(a.code),bv=seVol(b.code);
+      for(let i=0;i<Math.max(av.length,bv.length);i++){
+        const df=(av[i]||0)-(bv[i]||0);if(df)return df;
+      }
+      return 0;
+    }
+
+    const n1=[],n2=[],n3=[],n4=[];
+    volg.forEach(id=>{
+      const r=recs[id],niv=seNiv(r.code);
+      if(niv===1)n1.push(r);
+      else if(niv===2)n2.push(r);
+      else if(niv===3)n3.push(r);
+      else if(niv>=4)n4.push(r);
+    });
+
+    const seKleuren=['#004874','#00619b','#007ac2','#00619b','#004874','#80bde1','#f0a500','#007ac2','#004874','#00619b'];
+    let ki=0;
+    function afk(naam){
+      const sw=new Set(['en','van','de','het','der','aan','bij','met','in','voor','op','als','om','of']);
+      const wrd=naam.replace(/[()\/&\-]/g,' ').split(/\s+/).filter(w=>w.length>1&&!sw.has(w.toLowerCase()));
+      if(wrd.length>=3)return(wrd[0][0]+wrd[1][0]+wrd[2][0]).toUpperCase();
+      if(wrd.length===2)return(wrd[0].slice(0,2)+wrd[1][0]).toUpperCase();
+      return(wrd[0]||naam).slice(0,3).toUpperCase();
+    }
+
+    // Clusters uit niveau-1 records
+    const clusters=n1.slice().sort(seVolCmp).map((r,idx)=>({
+      id:'se_'+r.prcId.toLowerCase().replace('-','_'),
+      label:r.naam,
+      afkorting:r.code.split('-')[0]||afk(r.naam),
+      kleur:seKleuren[ki++%seKleuren.length],
+      volgorde:idx+1,
+      subclusters:[]
+    }));
+
+    // Processen uit niveau-2 records
+    const processen=[];
+    n2.slice().sort(seVolCmp).forEach((r,pi)=>{
+      const ouderRec=recs[r.ouderPrcId];
+      const categorieId=ouderRec?'se_'+r.ouderPrcId.toLowerCase().replace('-','_'):(clusters[0]?.id||'');
+
+      // N1-stappen: niveau-3 records met dit proces als parent
+      const stappen=n3.filter(s=>s.ouderPrcId===r.prcId).slice().sort(seVolCmp).map((s,si)=>{
+        // N2-substappen: niveau-4 records met deze stap als parent
+        const substappen=n4.filter(ss=>ss.ouderPrcId===s.prcId).slice().sort(seVolCmp).map((ss,ssi)=>({
+          id:gid('s'),naam:ss.naam,type:'activiteit',volgorde:ssi+1,
+          verantwoordelijke:'',systeem:'',beschrijving:'',status:'concept',
+          substappen:[],medeverantwoordelijken:[],
+          input:ss.inputDocs.map(d=>({label:d.naam,bron:'intern'})),
+          output:ss.outputDocs.map(d=>({label:d.naam,doel:'intern'}))
+        }));
+        return{
+          id:gid('s'),naam:s.naam,type:'activiteit',volgorde:si+1,
+          verantwoordelijke:'',systeem:'',beschrijving:'',status:'concept',
+          substappen,medeverantwoordelijken:[],
+          input:s.inputDocs.map(d=>({label:d.naam,bron:'intern'})),
+          output:s.outputDocs.map(d=>({label:d.naam,doel:'intern'}))
+        };
+      });
+
+      processen.push({id:gid('p'),naam:r.naam,categorie:categorieId,
+        niveau:2,volgorde:pi+1,eigenaar:'',beschrijving:'',
+        status:'concept',versie:'0.1',aangepast:td(),stappen});
+    });
+
+    // Unieke documenten verzamelen
+    const docMap={};
+    [...n3,...n4].forEach(s=>{
+      [...s.inputDocs,...s.outputDocs].forEach(d=>{if(d.code&&!docMap[d.code])docMap[d.code]=d.naam;});
+    });
+    const documenten=Object.entries(docMap).map(([code,naam])=>({code,naam})).sort((a,b)=>a.code.localeCompare(b.code));
+
+    S.data={versie:'1.1',project:'SE Procesmanagement Antea Group',aangepast:td(),
+      clusters,rollen:[...leeg().rollen],systemen:[...leeg().systemen],
+      documenten,eaLinks:[],processen};
+
+    S.hid=null;S.pad=[];uitCl=new Set();
+    allesClusters().forEach(c=>uitCl.add(c.id));
+    jsonFileHandle=null;
+    document.getElementById('bos-als').style.display='none';
+    laadUI();
+    try{localStorage.setItem('ipp_v2',JSON.stringify(S.data));}catch(e){}
+    setGw(true);
+    document.getElementById('canvas').innerHTML='<div id="wlk"><div class="wi">&#10003;</div><h2>Relatics SE ge&iuml;mporteerd</h2><p>'+processen.length+' processen &middot; '+clusters.length+' clusters &middot; '+documenten.length+' documenten geladen.<br>Gebruik <strong>Opslaan</strong> om op te slaan als JSON.</p></div>';
+    document.getElementById('vt').style.display='none';
+    ['bst','bbw','bib','bea'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('wbs').textContent='';
+    notif('Relatics SE: '+processen.length+' processen geladen','ok');
+
+  }catch(e){console.error(e);notif('Fout bij SE-import: '+e.message,'fout');}
+}
+
 async function opslaanJSON(){
   if(!S.data)return;
   S.data.aangepast=td();
@@ -1680,6 +1849,7 @@ function toonEA(){
   document.getElementById('bea').style.color = 'white';
   S.eaMode='ist';S.eaGekozen=null;
   document.getElementById('ea-canvas').classList.remove('soll-mode');
+  document.getElementById('ea-canvas').scrollTop=0;
   tekenEA(p);
 }
 
@@ -1763,13 +1933,13 @@ function tekenEA(p){
   const elementen = verzamelElementen(p);
   const nr = procNr(p);
 
-  let h = eaModeHeader();
-  h += `<div class="ea-hdr">
+  let h = `<div class="ea-hdr">
     <div>
       <div style="font-family:var(--m);font-size:11px;font-weight:700;color:var(--ga);margin-bottom:2px">${nr}</div>
       <h2>${p.naam} &#8212; Elementen &amp; Attributen</h2>
     </div>
-    <div style="display:flex;gap:8px;margin-left:auto">
+    <div style="display:flex;gap:8px;margin-left:auto;align-items:center">
+      ${eaModeHeader()}
       <button class="btn bg" onclick="sluitEA()">&#8592; Terug naar schema</button>
     </div>
   </div>`;
@@ -2074,14 +2244,14 @@ function tekenEASoll(){
   const elMap = verzamelElementenMulti(ids);
   const elementen = Object.entries(elMap).map(([key,v])=>({key,...v})).sort((a,b)=>a.label.localeCompare(b.label));
 
-  let h = eaModeHeader();
-  h += `<div class="ea-hdr">
+  let h = `<div class="ea-hdr">
     <div>
       <div style="font-family:var(--m);font-size:11px;font-weight:700;color:var(--ga2);margin-bottom:2px">SOLL &mdash; BRAINSTORM</div>
       <h2>EA matchen &#8212; ${ids.length} proces${ids.length!==1?'sen':''}</h2>
       <div style="font-size:11px;color:var(--gs);margin-top:2px">${procsLabel}</div>
     </div>
-    <div style="display:flex;gap:8px;margin-left:auto">
+    <div style="display:flex;gap:8px;margin-left:auto;align-items:center">
+      ${eaModeHeader()}
       <button class="btn bg" onclick="eaOpenSollPicker()">Processen wijzigen</button>
       <button class="btn bg" onclick="sluitEA()">&#8592; Terug naar schema</button>
     </div>
