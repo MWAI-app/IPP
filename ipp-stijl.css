@@ -17,6 +17,8 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 #hdr h1 span{color:var(--ga2)}
 #os{font-size:11px;color:var(--gs);font-style:italic;white-space:nowrap}
 #os.gw{color:var(--ga2);font-style:normal;font-weight:600}
+#fn{font-size:11px;color:var(--g3);font-family:var(--m);white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;padding:2px 7px;background:var(--gn);border-radius:var(--r);display:none}
+#fn.zb{display:inline-block}
 .sp{flex:1}
 .ha{display:flex;gap:7px;align-items:center}
 /* BODY */
@@ -387,3 +389,34 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .meap-rij:hover{background:var(--gc)}
 .meap-nr{font-family:var(--m);font-size:10px;font-weight:700;color:var(--ga2);width:48px;flex-shrink:0}
 .meap-nm{flex:1}
+
+/* ── IMPORTEER PROCESSEN WIZARD ── */
+.pi-hdr{font-size:11px;font-weight:700;color:var(--gm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--g1)}
+.pi-rij{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:var(--r);cursor:pointer;font-size:13px}
+.pi-rij:hover{background:var(--gn)}
+.pi-nm{flex:1;color:var(--gd)}
+.pi-meta{font-size:11px;color:var(--g3);flex-shrink:0}
+.pi-gedaan{opacity:.65}
+.pi-kaart{background:var(--gw);border:1.5px solid var(--g1);border-radius:var(--rl);padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.pi-kaart-nm{font-size:14px;font-weight:700;color:var(--gd);margin-bottom:3px}
+.pi-kaart-stap{font-size:11px;color:var(--g3);margin-bottom:10px}
+.pi-match-kop{font-size:10px;font-weight:700;color:var(--gs);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.pi-match-opties{display:flex;flex-direction:column;gap:3px;font-size:12px}
+.pi-mo{display:flex;align-items:center;gap:6px;padding:3px 0;cursor:pointer}
+.pi-csel,.pi-ksel{font-family:var(--f);font-size:12px;padding:4px 6px;border:1.5px solid var(--g1);border-radius:var(--r);color:var(--gd);background:var(--gw);margin:4px 0 4px 18px;max-width:100%;display:block}
+.pi-diff{margin-top:10px;border-top:1px solid var(--g1);padding-top:10px}
+.pi-diff-kop{font-size:10px;font-weight:700;color:var(--gs);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.pi-diff-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.pi-diff-tbl th{text-align:left;font-size:10px;font-weight:700;color:var(--g3);text-transform:uppercase;letter-spacing:.4px;padding:4px 6px;border-bottom:1px solid var(--g1)}
+.pi-diff-tbl td{padding:5px 6px;border-bottom:1px solid var(--g1);vertical-align:middle}
+.pi-diff-nm{color:var(--gd)}
+.pi-diff-r.nieuw>td{background:#f0fdf4}
+.pi-diff-r.vervalt>td{background:#fff1f2}
+.pi-diff-r.wijzigt>td{background:#fffbeb}
+.pi-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;display:inline-block}
+.pi-badge.nieuw{background:#dcfce7;color:#15803d}
+.pi-badge.vervalt{background:#fee2e2;color:#991b1b}
+.pi-badge.wijzigt{background:#fef9c3;color:#854d0e}
+.pi-badge.gelijk{background:var(--gn);color:var(--gm)}
+.pi-diff-tbl select{font-family:var(--f);font-size:11px;padding:2px 4px;border:1px solid var(--g1);border-radius:var(--r);color:var(--gd);background:var(--gw)}
+.pi-geen-actie{font-size:11px;color:var(--g3)}

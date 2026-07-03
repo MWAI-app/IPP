@@ -1,4 +1,4 @@
-
+﻿
 // ── CONSTANTEN & STATE ──
 const IC = {activiteit:'&#9881;', start:'&#9654;', einde:'&#9209;', beslissing:'&#9670;', document:'&#128196;'};
 const CSV_COLS = ['proces_id','proces_naam','stap_nr','ouder_stap_nr','stap_naam','type','verantwoordelijke','systeem','beschrijving','input_1','input_1_bron','input_2','input_2_bron','input_3','input_3_bron','output_1','output_1_doel','output_2','output_2_doel','output_3','output_3_doel','volgorde','status'];
@@ -10,6 +10,7 @@ let uitCl = new Set();
 let bewClId = null;
 let _iorCnt = 0;
 let bewClOuderId = null;
+let _impBron=null, _impBeslis={}, _impGedaan=new Set(), _impHuidig=null;
 
 // ── HULPFUNCTIES ──
 function td(){return new Date().toISOString().split('T')[0];}
@@ -137,7 +138,7 @@ function beginOpnieuw(){
   if(!confirm('Alles wissen en opnieuw beginnen?\n\nAlle geladen data, processen en clusters worden verwijderd.'))return;
   try{localStorage.removeItem('ipp_v2');}catch(e){}
   S.data=leeg();S.hid=null;S.pad=[];S.bpid=null;S.bsid=null;
-  uitCl=new Set();jsonFileHandle=null;acf='alle';
+  uitCl=new Set();jsonFileHandle=null;acf='alle';_toonBestand('');
   document.getElementById('bos-als').style.display='none';
   document.getElementById('vt').style.display='none';
   ['bst','bbw','bib','bea'].forEach(id=>document.getElementById(id).style.display='none');
@@ -174,6 +175,9 @@ function migr(d){
   (d.processen||[]).forEach(p=>fix(p.stappen||[]));
   if(!d.documenten)d.documenten=[];
   if(!Array.isArray(d.eaLinks))d.eaLinks=[];
+  if(!Array.isArray(d.rollen))d.rollen=['Projectmanager','Contractmanager','Senior Adviseur','Adviseur','Kwaliteitsmanager','Systems Engineer','Omgevingsmanager','Vergunningenspecialist','Ontwerper','Opdrachtgever','Klant'];
+  if(!Array.isArray(d.systemen))d.systemen=['Relatics','GIS','SharePoint','MS Project','Teams','Contractmanager'];
+  d.versie='1.1';
 }
 function laadUI(){
   allesClusters().forEach(c=>uitCl.add(c.id));
@@ -766,7 +770,7 @@ function clusterModal(cid, ouderId){
   document.getElementById('bclust-sla').disabled=false;
   document.getElementById('clust-nm').value=c?.label||'';
   document.getElementById('clust-afk').value=c?.afkorting||'';
-  document.getElementById('clust-kleur').value=c?.kleur||'#00619b';
+  const _ck=c?.kleur||'#00619b';document.getElementById('clust-kleur').value=_ck;document.getElementById('clust-kleur-hex').value=_ck;
   document.getElementById('clust-vol').value=c?.volgorde||1;
   document.getElementById('clust-diepte-wrn').style.display='none';
   // Vul ouder-selector
@@ -792,6 +796,8 @@ function clusterModal(cid, ouderId){
   document.getElementById('mclust').style.display='flex';
 }
 
+function clustKleurSync(v){document.getElementById('clust-kleur-hex').value=v;}
+function clustHexSync(v){if(/^#[0-9a-f]{6}$/i.test(v))document.getElementById('clust-kleur').value=v;}
 function updClustNr(){
   const afk=(document.getElementById('clust-afk').value||'PB').toUpperCase();
   document.getElementById('clust-nr-ex').textContent=afk+'-A';
@@ -964,17 +970,23 @@ function docNaam(code){
 }
 
 // ── LADEN & OPSLAAN ──
-function verwerkLaadData(tekst, handle){
+function _toonBestand(nm){const el=document.getElementById('fn');if(nm){el.textContent=nm;el.title=nm;el.classList.add('zb');}else{el.textContent='';el.title='';el.classList.remove('zb');}}
+function verwerkLaadData(tekst, handle, bestandsNaam){
   try{
     const d=JSON.parse(tekst);
     if((d.clusters||d.categorieen)&&d.processen){
-      migr(d);S.data=d;S.hid=null;S.pad=[];
+      migr(d);S.data=d;S.hid=null;S.pad=[];acf='alle';_toonBestand(handle?.name||bestandsNaam||'');
       uitCl=new Set();allesClusters().forEach(c=>uitCl.add(c.id));
       jsonFileHandle=handle||null;
       document.getElementById('bos-als').style.display=handle?'':'none';
       laadUI();try{localStorage.setItem('ipp_v2',JSON.stringify(S.data));}catch(e){}setGw(false);
       document.getElementById('canvas').innerHTML='<div class="leeg"><div class="wi">ok</div><h2>Project geladen</h2><p>Selecteer een proces in de sidebar.</p></div>';
       document.getElementById('vt').style.display='none';['bst','bbw','bib','bea'].forEach(id=>document.getElementById(id).style.display='none');document.getElementById('wbs').textContent='';
+      const _allClIds=new Set(allesClusters().map(c=>c.id));
+      const _orphans=(d.processen||[]).filter(p=>p.categorie&&!_allClIds.has(p.categorie));
+      if(_orphans.length){
+        setTimeout(()=>notif('Let op: '+_orphans.length+' proces(sen) staan onder een onbekend cluster en zijn niet zichtbaar. Controleer de clusters.','fout'),600);
+      }
       notif('Geladen: '+d.processen.length+' processen','ok');
     }else notif('Onbekend bestandsformaat','fout');
   }catch{notif('Ongeldig JSON-bestand','fout');}
@@ -990,7 +1002,7 @@ async function laadBestand(){
     const inp=document.createElement('input');inp.type='file';inp.accept='.json';
     inp.onchange=e=>{
       const f=e.target.files[0];if(!f)return;
-      const r=new FileReader();r.onload=ev=>verwerkLaadData(ev.target.result,null);r.readAsText(f);
+      const r=new FileReader();r.onload=ev=>verwerkLaadData(ev.target.result,null,f.name);r.readAsText(f);
     };inp.click();
   }
 }
@@ -2292,6 +2304,182 @@ function tekenEASoll(){
   h += `<div class="ea-links-blok"><div class="ea-links-titel">SOLL-koppelingen (${(S.data.eaLinks||[]).length})</div>${renderEALinksLijst()}</div>`;
 
   eac.innerHTML = h;
+}
+
+// ── IMPORTEER PROCESSEN WIZARD ──
+async function importeerProcWizard(){
+  _impBron=null;
+  if('showOpenFilePicker' in window){
+    try{
+      const [fh]=await window.showOpenFilePicker({types:[{description:'JSON bestand',accept:{'application/json':['.json']}}]});
+      const d=JSON.parse(await(await fh.getFile()).text());migr(d);_impBron=d;
+    }catch(e){if(e.name!=='AbortError')notif('Kon JSON niet openen','fout');return;}
+  }else{
+    await new Promise(res=>{
+      const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+      inp.onchange=async()=>{if(!inp.files[0])return res();try{const d=JSON.parse(await inp.files[0].text());migr(d);_impBron=d;}catch(e){notif('Ongeldige JSON','fout');}res();};
+      inp.click();
+    });
+    if(!_impBron)return;
+  }
+  _impBeslis={};_impGedaan=new Set();_impHuidig=null;
+  _impLijst();
+}
+
+function _impLijst(){
+  const procs=(_impBron.processen||[]);
+  const clusters=allesClusters(_impBron.clusters||[]);
+  const byCluster={};
+  procs.forEach(p=>{const cid=p.categorie||'';if(!byCluster[cid])byCluster[cid]=[];byCluster[cid].push(p);});
+  let h='<div class="pi-hdr">Kies een proces om te importeren</div>';
+  if(_impGedaan.size)h+=`<p style="font-size:12px;color:var(--gm);margin-bottom:10px">&#10003; ${_impGedaan.size} proces(sen) geïmporteerd. Kies het volgende of sluit de wizard.</p>`;
+  if(!procs.length)h+='<p style="color:var(--g3);font-size:13px">Geen processen gevonden in dit bestand.</p>';
+  Object.entries(byCluster).forEach(([cid,procList])=>{
+    const cl=clusters.find(c=>c.id===cid);
+    h+=`<div style="font-size:11px;font-weight:700;color:var(--gm);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.5px">${cl?cl.label:cid||'Overig'}</div>`;
+    procList.forEach(p=>{
+      const n=(p.stappen||[]).length;
+      if(_impGedaan.has(p.id)){
+        h+=`<div class="pi-rij pi-gedaan"><span style="color:#15803d;font-size:13px;margin-right:4px">&#10003;</span><span class="pi-nm" style="color:var(--g3);text-decoration:line-through">${p.naam}</span><span class="pi-meta">geïmporteerd</span></div>`;
+      }else{
+        h+=`<div class="pi-rij"><span class="pi-nm">${p.naam}</span><span class="pi-meta">${n} stap${n!==1?'pen':''}</span><button class="btn bp" style="font-size:11px;padding:3px 10px;flex-shrink:0" onclick="_impKiesProc('${p.id}')">Uitwerken &#8594;</button></div>`;
+      }
+    });
+  });
+  document.getElementById('mpi-body').innerHTML=h;
+  document.getElementById('mpi-tg').style.display='none';
+  document.getElementById('mpi-uit').style.display='none';
+  document.getElementById('mpi').style.display='flex';
+}
+
+function _impSim(a,b){
+  const bg=s=>{const r=new Set();for(let i=0;i<s.length-1;i++)r.add(s.slice(i,i+2));return r;};
+  const sa=bg(a.toLowerCase()),sb=bg(b.toLowerCase());
+  let n=0;sa.forEach(x=>{if(sb.has(x))n++;});
+  return(sa.size+sb.size)?2*n/(sa.size+sb.size):0;
+}
+
+function _impKiesProc(srcId){
+  _impHuidig=srcId;
+  if(!_impBeslis[srcId]){
+    const srcP=(_impBron.processen||[]).find(p=>p.id===srcId);if(!srcP)return;
+    const bestaand=S.data.processen||[];
+    const sims=bestaand.map(ep=>({id:ep.id,sim:_impSim(srcP.naam,ep.naam)})).sort((a,b)=>b.sim-a.sim);
+    const best=sims[0];
+    _impBeslis[srcId]={
+      actie:best&&best.sim>=0.3?'koppel':'nieuw',
+      doelId:best&&best.sim>=0.3?best.id:null,
+      clusterDoel:(S.data.clusters&&S.data.clusters.length)?S.data.clusters[0].id:null,
+      stapActies:{}
+    };
+  }
+  _impRenderEen();
+}
+
+function _impRenderEen(){
+  const srcId=_impHuidig;
+  const srcP=(_impBron.processen||[]).find(p=>p.id===srcId);if(!srcP)return;
+  const beslis=_impBeslis[srcId];
+  const bestaand=S.data.processen||[];
+  const allC=allesClusters();
+  let h=`<div class="pi-kaart" style="margin-bottom:0">`;
+  h+=`<div class="pi-kaart-nm">${srcP.naam}</div>`;
+  h+=`<div class="pi-kaart-stap">${(srcP.stappen||[]).length} stap(pen) in bronbestand</div>`;
+  h+=`<div class="pi-match-kop">Koppeling:</div><div class="pi-match-opties">`;
+  h+=`<label class="pi-mo"><input type="radio" name="ia-${srcId}" value="skip" ${beslis.actie==='skip'?'checked':''} onchange="_impSetActie('${srcId}','skip')"> Overslaan</label>`;
+  h+=`<div><label class="pi-mo"><input type="radio" name="ia-${srcId}" value="nieuw" ${beslis.actie==='nieuw'?'checked':''} onchange="_impSetActie('${srcId}','nieuw')"> Nieuw importeren onder cluster:</label>`;
+  h+=`<select class="pi-csel" onchange="_impSetCluster('${srcId}',this.value)">`;
+  allC.forEach(c=>{h+=`<option value="${c.id}" ${beslis.clusterDoel===c.id?'selected':''}>${'  '.repeat(c._level||0)}${c.label}</option>`;});
+  h+=`</select></div>`;
+  h+=`<div><label class="pi-mo"><input type="radio" name="ia-${srcId}" value="koppel" ${beslis.actie==='koppel'?'checked':''} onchange="_impSetActie('${srcId}','koppel')"> Koppelen aan bestaand:</label>`;
+  if(bestaand.length){
+    h+=`<select class="pi-ksel" onchange="_impSetDoel('${srcId}',this.value)">`;
+    bestaand.map(ep=>({id:ep.id,naam:ep.naam,sim:_impSim(srcP.naam,ep.naam)})).sort((a,b)=>b.sim-a.sim).forEach(ep=>{h+=`<option value="${ep.id}" ${beslis.doelId===ep.id?'selected':''}>${ep.naam} (${Math.round(ep.sim*100)}%)</option>`;});
+    h+=`</select>`;
+  }else h+=`<span style="font-size:11px;color:var(--g3);margin-left:18px">Geen bestaande processen.</span>`;
+  h+=`</div></div>`;
+  if(beslis.actie==='koppel'&&beslis.doelId){
+    const doelP=bestaand.find(p=>p.id===beslis.doelId);
+    if(doelP)h+=_impRenderDiff(srcP,doelP,srcId,beslis.stapActies||{});
+  }
+  h+=`</div>`;
+  document.getElementById('mpi-body').innerHTML=h;
+  document.getElementById('mpi-tg').style.display='';
+  const buit=document.getElementById('mpi-uit');buit.style.display='';buit.textContent='Importeren';
+}
+
+function _impSetActie(srcId,actie){_impBeslis[srcId].actie=actie;_impRenderEen();}
+function _impSetDoel(srcId,id){_impBeslis[srcId].doelId=id;_impBeslis[srcId].stapActies={};_impRenderEen();}
+function _impSetCluster(srcId,cid){_impBeslis[srcId].clusterDoel=cid;}
+function _impSetStapActie(srcId,key,actie){if(!_impBeslis[srcId].stapActies)_impBeslis[srcId].stapActies={};_impBeslis[srcId].stapActies[key]=actie;}
+
+function _impDiffRows(srcP,doelP,srcId){
+  const norm=nm=>(nm||'').toLowerCase().replace(/\s+/g,' ').trim();
+  const doelSt=doelP.stappen||[];const srcSt=srcP.stappen||[];
+  const usedIdx=new Set();const rows=[];
+  srcSt.forEach((ss,si)=>{
+    const idx=doelSt.findIndex((ds,di)=>!usedIdx.has(di)&&norm(ds.naam)===norm(ss.naam));
+    if(idx>=0){const ds=doelSt[idx];usedIdx.add(idx);
+      const diff=JSON.stringify({n:ss.naam,b:ss.beschrijving,t:ss.type})!==JSON.stringify({n:ds.naam,b:ds.beschrijving,t:ds.type});
+      rows.push({type:diff?'wijzigt':'gelijk',srcS:ss,doelS:ds,doelIdx:idx,key:`${srcId}_s_${si}`});
+    }else rows.push({type:'nieuw',srcS:ss,doelS:null,doelIdx:-1,key:`${srcId}_n_${si}`});
+  });
+  doelSt.forEach((ds,di)=>{if(!usedIdx.has(di))rows.push({type:'vervalt',srcS:null,doelS:ds,doelIdx:di,key:`${srcId}_v_${di}`});});
+  return rows;
+}
+
+function _impRenderDiff(srcP,doelP,srcId,sa){
+  const rows=_impDiffRows(srcP,doelP,srcId);
+  if(!rows.length)return'';
+  let h=`<div class="pi-diff"><div class="pi-diff-kop">Processtappen (vergelijking met bestaand):</div><table class="pi-diff-tbl"><thead><tr><th>Status</th><th>Stap</th><th>Actie</th></tr></thead><tbody>`;
+  rows.forEach(r=>{
+    const nm=(r.srcS?.naam||r.doelS?.naam||'');const cur=sa[r.key];
+    let badge='',opties='';
+    if(r.type==='nieuw'){const def=cur||'toevoegen';
+      badge='<span class="pi-badge nieuw">Nieuw</span>';
+      opties=`<select onchange="_impSetStapActie('${srcId}','${r.key}',this.value)"><option value="toevoegen" ${def==='toevoegen'?'selected':''}>Toevoegen</option><option value="nietniet" ${def==='nietniet'?'selected':''}>Niet toevoegen</option></select>`;
+    }else if(r.type==='vervalt'){const def=cur||'behouden';
+      badge='<span class="pi-badge vervalt">Vervalt</span>';
+      opties=`<select onchange="_impSetStapActie('${srcId}','${r.key}',this.value)"><option value="behouden" ${def==='behouden'?'selected':''}>Behouden</option><option value="verwijderen" ${def==='verwijderen'?'selected':''}>Verwijderen</option></select>`;
+    }else if(r.type==='wijzigt'){const def=cur||'vervangen';
+      badge='<span class="pi-badge wijzigt">Wijzigt</span>';
+      opties=`<select onchange="_impSetStapActie('${srcId}','${r.key}',this.value)"><option value="vervangen" ${def==='vervangen'?'selected':''}>Vervangen</option><option value="behouden" ${def==='behouden'?'selected':''}>Behouden</option><option value="toevoegen-naast" ${def==='toevoegen-naast'?'selected':''}>Toevoegen naast</option></select>`;
+    }else{badge='<span class="pi-badge gelijk">Gelijk</span>';opties='<span class="pi-geen-actie">&#8212;</span>';}
+    h+=`<tr class="pi-diff-r ${r.type}"><td>${badge}</td><td class="pi-diff-nm">${nm}</td><td>${opties}</td></tr>`;
+  });
+  h+=`</tbody></table></div>`;return h;
+}
+
+function _impUitvoeren(){
+  const srcId=_impHuidig;if(!srcId)return;
+  const beslis=_impBeslis[srcId];if(!beslis)return;
+  const srcP=(_impBron.processen||[]).find(p=>p.id===srcId);if(!srcP)return;
+  function fixIds(st){(st||[]).forEach(s=>{s.id=gid('stap');fixIds(s.substappen||[]);});}
+  if(beslis.actie==='skip'){
+    _impGedaan.add(srcId);_impLijst();return;
+  }else if(beslis.actie==='nieuw'){
+    const np=JSON.parse(JSON.stringify(srcP));
+    np.id=gid('proc');np.categorie=beslis.clusterDoel||srcP.categorie;np.volgorde=(S.data.processen||[]).length+1;
+    fixIds(np.stappen||[]);S.data.processen.push(np);
+  }else if(beslis.actie==='koppel'&&beslis.doelId){
+    const doelP=S.data.processen.find(p=>p.id===beslis.doelId);if(!doelP){notif('Doelproces niet gevonden','fout');return;}
+    const rows=_impDiffRows(srcP,doelP,srcId);const sa=beslis.stapActies||{};
+    const origStaps=doelP.stappen||[];
+    const removeIdx=new Set();const replaceMap=new Map();const extra=[];
+    rows.forEach(r=>{
+      const actie=sa[r.key]||(r.type==='nieuw'?'toevoegen':r.type==='vervalt'?'behouden':r.type==='wijzigt'?'vervangen':'behouden');
+      if(r.type==='nieuw'&&actie==='toevoegen'){const ns=JSON.parse(JSON.stringify(r.srcS));fixIds([ns]);extra.push(ns);}
+      else if(r.type==='vervalt'&&actie==='verwijderen'){removeIdx.add(r.doelIdx);}
+      else if(r.type==='wijzigt'&&actie==='vervangen'){const ns=JSON.parse(JSON.stringify(r.srcS));ns.id=r.doelS.id;replaceMap.set(r.doelIdx,ns);}
+      else if(r.type==='wijzigt'&&actie==='toevoegen-naast'){const ns=JSON.parse(JSON.stringify(r.srcS));fixIds([ns]);extra.push(ns);}
+    });
+    const rebuiltStaps=origStaps.map((s,i)=>replaceMap.has(i)?replaceMap.get(i):JSON.parse(JSON.stringify(s))).filter((_,i)=>!removeIdx.has(i));
+    doelP.stappen=[...rebuiltStaps,...extra];
+  }
+  _prdIdx=null;markeer();bouwLijst();if(S.hid)teken();
+  _impGedaan.add(srcId);
+  notif(`'${srcP.naam}' geïmporteerd`,'ok');
+  _impLijst();
 }
 
 init();

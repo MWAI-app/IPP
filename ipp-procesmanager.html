@@ -13,12 +13,14 @@
   <div class="lm"></div>
   <h1>IPP <span>Procesmanager</span></h1>
   <span id="os">Opgeslagen</span>
+  <span id="fn"></span>
   <div class="sp"></div>
   <div class="ha">
     <button class="btn bs" onclick="beginOpnieuw()" title="Alles wissen en opnieuw beginnen" style="color:#f87171;border-color:rgba(248,113,113,.35)">Nieuw</button>
     <button class="btn bs" onclick="laadBestand()">Laden</button>
     <button class="btn bs" onclick="importeerRelatics()" title="Importeer werksporen uit Relatics IPP CSV-uitdraai">Relatics IPP</button>
     <button class="btn bs" onclick="importeerRelaticsSE()" title="Importeer SE-processen uit Relatics SE CSV-uitdraai">Relatics SE</button>
+    <button class="btn bs" onclick="importeerProcWizard()" title="Importeer processen vanuit een ander JSON-bestand">Importeer processen</button>
     <button class="btn bsv" id="bos" onclick="opslaanJSON()" disabled>Opslaan</button>
     <button class="btn bs" id="bos-als" onclick="opslaanAls()" style="display:none;padding:6px 8px;font-size:11px" title="Opslaan naar ander bestand">Opslaan als...</button>
     <button class="btn bs" onclick="beheerModal()">Beheer</button>
@@ -287,7 +289,7 @@
       </div>
       <div class="fr">
         <div class="fg"><label>Afkorting * (max 4 tekens)</label><input id="clust-afk" placeholder="bijv. PB" maxlength="4" style="text-transform:uppercase" oninput="updClustNr()"></div>
-        <div class="fg"><label>Kleur</label><input type="color" id="clust-kleur" value="#00619b" style="height:38px;padding:3px 6px;cursor:pointer"></div>
+        <div class="fg"><label>Kleur</label><div style="display:flex;align-items:center;gap:6px"><input type="color" id="clust-kleur" value="#00619b" style="height:38px;padding:3px 6px;cursor:pointer;flex-shrink:0" oninput="clustKleurSync(this.value)"><input type="text" id="clust-kleur-hex" value="#00619b" maxlength="7" placeholder="#rrggbb" style="font-family:var(--m);font-size:13px;width:82px;padding:7px 9px;border:1.5px solid var(--g1);border-radius:var(--r)" oninput="clustHexSync(this.value)"></div></div>
       </div>
       <div class="fr">
         <div class="fg"><label>Volgorde</label><input type="number" id="clust-vol" min="1" max="99" value="1"></div>
@@ -324,6 +326,19 @@
     <div class="mdf">
       <button class="btn bg" onclick="sluit('meap')">Annuleren</button>
       <button class="btn bp" onclick="eapStart()">Start matchen &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IMPORTEER PROCESSEN WIZARD ══ -->
+<div id="mpi" class="mo" style="display:none">
+  <div class="md" style="max-width:660px">
+    <div class="mdh"><h2>Importeer processen</h2><button class="sl" onclick="sluit('mpi')">x</button></div>
+    <div class="mdb" id="mpi-body" style="max-height:68vh;overflow-y:auto"></div>
+    <div class="mdf">
+      <button class="btn bg" onclick="sluit('mpi')">Gereed</button>
+      <button class="btn bg" id="mpi-tg" onclick="_impLijst()" style="display:none">&#8592; Terug naar lijst</button>
+      <button class="btn bp" id="mpi-uit" onclick="_impUitvoeren()" style="display:none">Uitvoeren</button>
     </div>
   </div>
 </div>
