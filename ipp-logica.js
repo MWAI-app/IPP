@@ -6,11 +6,13 @@ const S = {data:null, hid:null, pad:[], view:'v', bpid:null, bsid:null, gw:false
 let csvBuf = null;
 let jsonFileHandle = null;
 let uitgeklapt = new Set();
+let uitgeklaptN3 = new Set();
 let uitCl = new Set();
 let bewClId = null;
 let _iorCnt = 0;
 let bewClOuderId = null;
 let _impBron=null, _impBeslis={}, _impGedaan=new Set(), _impHuidig=null;
+let _eaAlleObjs=[];
 
 // ── HULPFUNCTIES ──
 function td(){return new Date().toISOString().split('T')[0];}
@@ -127,7 +129,9 @@ function init(){
       // Sla lege standaard-staat over (clusters aanwezig maar geen processen én geen handmatige clusters)
       const heeftInhoud=d&&d.processen&&(d.processen.length>0||(d.clusters||[]).some(c=>(c.subclusters||[]).length>0));
       if(heeftInhoud){
-        migr(d);S.data=d;uitCl=new Set();allesClusters().forEach(c=>uitCl.add(c.id));laadUI();setGw(false);return;
+        migr(d);S.data=d;uitCl=new Set();allesClusters().forEach(c=>uitCl.add(c.id));laadUI();setGw(false);
+        try{const fn=localStorage.getItem('ipp_fn');if(fn)_toonBestand(fn);}catch(e){}
+        return;
       }
     }
   }catch(e){}
@@ -177,6 +181,9 @@ function migr(d){
   if(!Array.isArray(d.eaLinks))d.eaLinks=[];
   if(!Array.isArray(d.rollen))d.rollen=['Projectmanager','Contractmanager','Senior Adviseur','Adviseur','Kwaliteitsmanager','Systems Engineer','Omgevingsmanager','Vergunningenspecialist','Ontwerper','Opdrachtgever','Klant'];
   if(!Array.isArray(d.systemen))d.systemen=['Relatics','GIS','SharePoint','MS Project','Teams','Contractmanager'];
+  if(typeof d.attrKard!=='object'||Array.isArray(d.attrKard))d.attrKard={};
+  if(typeof d.attrRef!=='object'||Array.isArray(d.attrRef))d.attrRef={};
+  if(typeof d.eaGroepConfig!=='object'||Array.isArray(d.eaGroepConfig))d.eaGroepConfig={};
   d.versie='1.1';
 }
 function laadUI(){
@@ -368,6 +375,11 @@ function toggleN2(sid){
   document.getElementById('sp').classList.remove('open');
   teken();
 }
+function toggleN3(n1sid,n2sid){
+  const key=n1sid+':'+n2sid;
+  if(uitgeklaptN3.has(key)) uitgeklaptN3.delete(key); else uitgeklaptN3.add(key);
+  teken();
+}
 
 function n2Kolom(subs,n1nr,n1sid){
   const typeNm={activiteit:'Activiteit',start:'Start',einde:'Einde',beslissing:'Beslissing',document:'Document'};
@@ -375,6 +387,9 @@ function n2Kolom(subs,n1nr,n1sid){
   subs.forEach((s,i)=>{
     const tc=tcls(s.type),nr=n1nr+'.'+String(i+1).padStart(2,'0');
     const inp=s.input||[],out=s.output||[];
+    const heeftN3=(s.substappen||[]).length>0;
+    const key=n1sid+':'+s.id;
+    const expN3=heeftN3&&uitgeklaptN3.has(key);
     let inH='<div class="sk2-io"><div class="sk2-iol">— INPUT</div>';
     if(inp.length) inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}" style="font-size:10px;padding:2px 5px">${io.label}${e?` <span class="ioe">&#8593; ${bronNm(io.bron)}</span>`:''}</div>`;});
     else inH+='<span style="font-size:10px;color:var(--g3)">—</span>';
@@ -383,13 +398,50 @@ function n2Kolom(subs,n1nr,n1sid){
     stH+=`<div class="sk2-body"><div class="skn" style="font-size:12px">${s.naam}</div>`;
     stH+=`<div class="skr" style="margin-top:3px;font-size:10px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks">${s.systeem}</span>`:''}</div>`;
     if(s.beschrijving) stH+=`<div style="font-size:10px;color:var(--gs);margin-top:4px;line-height:1.4">${s.beschrijving}</div>`;
-    stH+=`<div class="sk-acties" style="margin-top:6px;padding-top:6px"><button class="sa" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button><button class="sa bwrk" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();S.pad=['${n1sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button></div></div></div>`;
+    stH+=`<div class="sk-acties" style="margin-top:6px;padding-top:6px">`;
+    stH+=`<button class="sa" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
+    stH+=`<button class="sa bwrk" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();S.pad=['${n1sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
+    if(heeftN3) stH+=`<button class="sa sub heeft" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();toggleN3('${n1sid}','${s.id}')">${expN3?'&#9650; N3 inklappen':'v'+s.substappen.length+' N3 &#8595;'}</button><button class="sa sub" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();openSP2('${n1sid}','${s.id}')">+ N3</button>`;
+    else stH+=`<button class="sa sub" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();openSP2('${n1sid}','${s.id}')">+ N3 toevoegen</button>`;
+    stH+=`</div></div></div>`;
     let outH='<div class="sk2-io"><div class="sk2-iol">OUTPUT —</div>';
     if(out.length) out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}" style="font-size:10px;padding:2px 5px">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
     else outH+='<span style="font-size:10px;color:var(--g3)">—</span>';
     outH+='</div>';
     if(i>0) h+='<div class="n2-kpijl"></div>';
-    h+=`<div class="sk2row">${inH}${stH}${outH}</div>`;
+    if(expN3){
+      const n3subs=(s.substappen||[]).sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
+      h+=`<div class="n2-exp-wrap"><div class="sk2row">${inH}${stH}${outH}</div><div class="n3-col-wrap"><div class="n2-harrow" style="font-size:16px;margin-top:24px">&#8594;</div>${n3Kolom(n3subs,nr,n1sid,s.id)}</div></div>`;
+    } else {
+      h+=`<div class="sk2row">${inH}${stH}${outH}</div>`;
+    }
+  });
+  return h+'</div>';
+}
+function n3Kolom(subs,n2nr,n1sid,n2sid){
+  const typeNm={activiteit:'Activiteit',start:'Start',einde:'Einde',beslissing:'Beslissing',document:'Document'};
+  let h='<div class="n3-col">';
+  subs.forEach((s,i)=>{
+    const tc=tcls(s.type),nr=n2nr+'.'+String(i+1).padStart(2,'0');
+    const inp=s.input||[],out=s.output||[];
+    let inH='<div class="sk1-io"><div class="sk2-iol">— INPUT</div>';
+    if(inp.length) inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}" style="font-size:9px;padding:1px 4px">${io.label}</div>`;});
+    else inH+='<span style="font-size:9px;color:var(--g3)">—</span>';
+    inH+='</div>';
+    let stH=`<div class="sk1-step ${tc}"><div class="sk2-thdr" style="font-size:9px;padding:4px 8px"><span class="sk2-ico" style="font-size:11px">${IC[s.type]||'?'}</span><span>${typeNm[s.type]||s.type}</span><span style="margin-left:auto;font-family:var(--m);font-size:9px">${nr}</span></div>`;
+    stH+=`<div class="sk2-body" style="padding:5px 8px"><div class="skn" style="font-size:11px">${s.naam}</div>`;
+    stH+=`<div class="skr" style="margin-top:2px;font-size:9px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks" style="font-size:9px">${s.systeem}</span>`:''}</div>`;
+    if(s.beschrijving) stH+=`<div style="font-size:9px;color:var(--gs);margin-top:3px;line-height:1.35">${s.beschrijving}</div>`;
+    stH+=`<div class="sk-acties" style="margin-top:4px;padding-top:4px">`;
+    stH+=`<button class="sa" style="font-size:9px;padding:1px 5px" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
+    stH+=`<button class="sa bwrk" style="font-size:9px;padding:1px 5px" onclick="event.stopPropagation();S.pad=['${n1sid}','${n2sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
+    stH+=`</div></div></div>`;
+    let outH='<div class="sk1-io"><div class="sk2-iol">OUTPUT —</div>';
+    if(out.length) out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}" style="font-size:9px;padding:1px 4px">${io.label}</div>`;});
+    else outH+='<span style="font-size:9px;color:var(--g3)">—</span>';
+    outH+='</div>';
+    if(i>0) h+='<div class="n3-kpijl"></div>';
+    h+=`<div class="sk1row">${inH}${stH}${outH}</div>`;
   });
   return h+'</div>';
 }
@@ -970,7 +1022,7 @@ function docNaam(code){
 }
 
 // ── LADEN & OPSLAAN ──
-function _toonBestand(nm){const el=document.getElementById('fn');if(nm){el.textContent=nm;el.title=nm;el.classList.add('zb');}else{el.textContent='';el.title='';el.classList.remove('zb');}}
+function _toonBestand(nm){const el=document.getElementById('fn');if(nm){el.textContent=nm;el.title=nm;el.classList.add('zb');try{localStorage.setItem('ipp_fn',nm);}catch(e){}}else{el.textContent='';el.title='';el.classList.remove('zb');try{localStorage.removeItem('ipp_fn');}catch(e){}}}
 function verwerkLaadData(tekst, handle, bestandsNaam){
   try{
     const d=JSON.parse(tekst);
@@ -1935,11 +1987,13 @@ function eaActieveProcessen(){
   return S.eaMode==='soll' ? (S.eaSollProcs||[]) : [S.hid];
 }
 function eaRedraw(){
+  _eaAlleObjs=eaAlleObjLabels();
   if(S.eaMode==='soll') tekenEASoll();
   else tekenEA(proc(S.hid));
 }
 
 function tekenEA(p){
+  if(!_eaAlleObjs.length)_eaAlleObjs=eaAlleObjLabels();
   const eac = document.getElementById('ea-canvas');
   eac.classList.remove('soll-mode');
   const elementen = verzamelElementen(p);
@@ -1985,7 +2039,9 @@ function tekenEA(p){
     } else {
       el.attrs.forEach(attr=>{
         const safeAttr = attr.replace(/'/g,'&apos;').replace(/"/g,'&quot;');
-        h += `<span class="ea-attr">${attr} <button class="ea-attr-del" title="Verwijder" onclick="eaDelAttr('${safeKey}','${el.label.replace(/'/g,'&apos;')}','${safeAttr}')">x</button></span>`;
+        const kard = eaGetKard(key, attr);
+        const safeObjKey = key.replace(/'/g,'&apos;');
+        h += `<span class="ea-attr">${attr} <button class="ea-kard-btn${kard==='N'?' n':''}" title="Kardinaliteit (klik om te wisselen)" onclick="eaToggleKard('${safeObjKey}','${safeAttr}')">${kard}</button><button class="ea-attr-del" title="Verwijder" onclick="eaDelAttr('${safeKey}','${el.label.replace(/'/g,'&apos;')}','${safeAttr}')">x</button></span>`;
       });
     }
 
@@ -2004,6 +2060,7 @@ function tekenEA(p){
       h += `</div>`;
     }
 
+    h += eaTypeRefHTML(key, el.attrs);
     h += `</div>`;
   });
 
@@ -2029,6 +2086,100 @@ function eaDelAttr(safeKey, label, attr){
   eaVerwijderAttrIn(eaActieveProcessen(), label, attr);
   eaRedraw();
   notif('"'+attr+'" verwijderd','ok');
+}
+
+function eaGetKard(objKey,attr){return(S.data.attrKard?.[objKey]?.[attr])||'1';}
+function eaSetKard(objKey,attr,kard){
+  if(!S.data.attrKard)S.data.attrKard={};
+  if(!S.data.attrKard[objKey])S.data.attrKard[objKey]={};
+  S.data.attrKard[objKey][attr]=kard;
+  markeer();eaRedraw();
+}
+function eaToggleKard(objKey,attr){eaSetKard(objKey,attr,eaGetKard(objKey,attr)==='N'?'1':'N');}
+function eaGetRef(objKey,attr){return(S.data.attrRef?.[objKey]?.[attr])||'';}
+function eaSetRef(objKey,attr,refKey){
+  if(!S.data.attrRef)S.data.attrRef={};
+  if(!S.data.attrRef[objKey])S.data.attrRef[objKey]={};
+  if(refKey)S.data.attrRef[objKey][attr]=refKey;
+  else delete S.data.attrRef[objKey][attr];
+  markeer();
+}
+function eaAlleObjLabels(){
+  const map=verzamelElementenMulti((S.data.processen||[]).map(p=>p.id));
+  return Object.entries(map).map(([key,v])=>({key,label:v.label})).sort((a,b)=>a.label.localeCompare(b.label,'nl'));
+}
+function eaTypeRefHTML(objKey,attrs){
+  const nAttrs=attrs.filter(a=>eaGetKard(objKey,a)==='N');
+  if(!nAttrs.length)return'';
+  let h=`<div class="ea-typeref"><div class="ea-sug-titel">Typekoppelingen (N-attributen &#8594; object):</div>`;
+  nAttrs.forEach(attr=>{
+    const ref=eaGetRef(objKey,attr);
+    const safeOK=objKey.replace(/'/g,'&apos;');
+    const safeA=attr.replace(/'/g,'&apos;').replace(/"/g,'&quot;');
+    const opts=`<option value="">&#8212; geen &#8212;</option>`+(_eaAlleObjs||[]).filter(o=>o.key!==objKey).map(o=>`<option value="${o.key}"${ref===o.key?' selected':''}>${o.label}</option>`).join('');
+    h+=`<div class="ea-typeref-rij"><span class="ea-typeref-nm">${attr}</span><span class="ea-typeref-pijl">&#8594;</span><select class="ea-ref-sel" onchange="eaSetRef('${safeOK}','${safeA}',this.value)">${opts}</select></div>`;
+  });
+  return h+`</div>`;
+}
+
+function eaGroepId(keys){return keys.slice().sort().join('|');}
+function eaSetGroepNaam(gid,naam){
+  if(!S.data.eaGroepConfig)S.data.eaGroepConfig={};
+  if(!S.data.eaGroepConfig[gid])S.data.eaGroepConfig[gid]={};
+  S.data.eaGroepConfig[gid].naam=naam.trim();
+  markeer();
+}
+function eaSetGroepAttrMap(gid,attrKey,canonNaam){
+  if(!S.data.eaGroepConfig)S.data.eaGroepConfig={};
+  if(!S.data.eaGroepConfig[gid])S.data.eaGroepConfig[gid]={};
+  if(!S.data.eaGroepConfig[gid].attrMap)S.data.eaGroepConfig[gid].attrMap={};
+  const trimmed=canonNaam.trim();
+  if(trimmed&&trimmed.toLowerCase()!==attrKey)S.data.eaGroepConfig[gid].attrMap[attrKey]=trimmed;
+  else delete S.data.eaGroepConfig[gid].attrMap[attrKey];
+  // propageer hernoemen naar io.attributen + attrKard/attrRef voor alle leden
+  if(trimmed&&trimmed.toLowerCase()!==attrKey){
+    const gr=eaZelfdeGroepen().find(g=>g.keys.slice().sort().join('|')===gid);
+    if(gr){
+      const memberKeys=new Set(gr.keys);
+      (S.data.processen||[]).forEach(proc=>{
+        alleStappenFlat(proc.stappen||[]).forEach(stap=>{
+          [...(stap.input||[]),...(stap.output||[])].forEach(io=>{
+            if(!io.label)return;
+            const ek=io.label.trim().toLowerCase();
+            if(!memberKeys.has(ek)||!io.attributen)return;
+            const idx=io.attributen.findIndex(a=>a.toLowerCase().trim()===attrKey);
+            if(idx<0||io.attributen[idx]===trimmed)return;
+            const oudNaam=io.attributen[idx];
+            io.attributen[idx]=trimmed;
+            if(S.data.attrKard?.[ek]?.[oudNaam]!==undefined){
+              if(!S.data.attrKard[ek])S.data.attrKard[ek]={};
+              S.data.attrKard[ek][trimmed]=S.data.attrKard[ek][oudNaam];
+              delete S.data.attrKard[ek][oudNaam];
+            }
+            if(S.data.attrRef?.[ek]?.[oudNaam]!==undefined){
+              if(!S.data.attrRef[ek])S.data.attrRef[ek]={};
+              S.data.attrRef[ek][trimmed]=S.data.attrRef[ek][oudNaam];
+              delete S.data.attrRef[ek][oudNaam];
+            }
+          });
+        });
+      });
+    }
+  }
+  markeer();eaRedraw();
+}
+function eaAdopteerAttrInLid(memberKey,attrNaam){
+  (S.data.processen||[]).forEach(proc=>{
+    alleStappenFlat(proc.stappen||[]).forEach(stap=>{
+      [...(stap.input||[]),...(stap.output||[])].forEach(io=>{
+        if(!io.label||io.label.trim().toLowerCase()!==memberKey)return;
+        if(!io.attributen)io.attributen=[];
+        if(!io.attributen.some(a=>a.toLowerCase().trim()===attrNaam.toLowerCase().trim()))
+          io.attributen.push(attrNaam);
+      });
+    });
+  });
+  markeer();eaRedraw();
 }
 
 function eaSchrijfAttrIn(processIds, label, attr){
@@ -2220,7 +2371,9 @@ function renderEAKaart(el, scheiding){
   } else {
     el.attrs.forEach(attr=>{
       const safeAttr = attr.replace(/'/g,'&apos;').replace(/"/g,'&quot;');
-      h += `<span class="ea-attr">${attr} <button class="ea-attr-del" title="Verwijder" onclick="eaDelAttr('${safeKey}','${safeLabel}','${safeAttr}')">x</button></span>`;
+      const kard = eaGetKard(key, attr);
+      const safeObjKey = key.replace(/'/g,'&apos;');
+      h += `<span class="ea-attr">${attr} <button class="ea-kard-btn${kard==='N'?' n':''}" title="Kardinaliteit (klik om te wisselen)" onclick="eaToggleKard('${safeObjKey}','${safeAttr}')">${kard}</button><button class="ea-attr-del" title="Verwijder" onclick="eaDelAttr('${safeKey}','${safeLabel}','${safeAttr}')">x</button></span>`;
     });
   }
 
@@ -2239,6 +2392,8 @@ function renderEAKaart(el, scheiding){
     h += `</div>`;
   }
 
+  h += eaTypeRefHTML(key, el.attrs);
+
   h += `<div class="ea-koppel-acties">
     <button class="ea-koppel-btn zelfde" onclick="eaMaakLink('zelfde','${safeKey}','${safeLabel}')">Bevat zelfde info als &#8594;</button>
     <button class="ea-koppel-btn koppeling" onclick="eaMaakLink('koppeling','${safeKey}','${safeLabel}')">Moet koppelen aan &#8594;</button>
@@ -2249,6 +2404,7 @@ function renderEAKaart(el, scheiding){
 }
 
 function tekenEASoll(){
+  if(!_eaAlleObjs.length)_eaAlleObjs=eaAlleObjLabels();
   const eac = document.getElementById('ea-canvas');
   eac.classList.add('soll-mode');
   const ids = S.eaSollProcs||[];
@@ -2290,9 +2446,40 @@ function tekenEASoll(){
   const groepKleuren = ['#1a3c34','#f0a500','#2563eb','#9333ea','#0d9488','#dc2626'];
   groepen.forEach((g,i)=>{
     const kleur = groepKleuren[i % groepKleuren.length];
+    const gid = eaGroepId(g.keys);
+    const conf = S.data.eaGroepConfig?.[gid]||{};
+    const attrMap = conf.attrMap||{};
+    const allAttrs = new Map();
+    g.leden.forEach(el=>(el.attrs||[]).forEach(attr=>{
+      const ak=attr.toLowerCase().trim();
+      if(!allAttrs.has(ak))allAttrs.set(ak,{orig:attr,leden:[]});
+      if(!allAttrs.get(ak).leden.includes(el.label))allAttrs.get(ak).leden.push(el.label);
+    }));
+    const safeGid = gid.replace(/'/g,'&apos;');
+    let attrRows='';
+    allAttrs.forEach((info,ak)=>{
+      const canonical=attrMap[ak]||info.orig;
+      const safeAk=ak.replace(/'/g,'&apos;').replace(/"/g,'&quot;');
+      const partieel=info.leden.length<g.leden.length?' <span class="ea-gc-partieel">niet in alle</span>':'';
+      const safeCanon=canonical.replace(/'/g,'&apos;');
+      const ledenChips=g.leden.map(el=>{
+        const heeft=el.attrs.some(a=>a.toLowerCase().trim()===ak);
+        const safeMK=el.key.replace(/'/g,'&apos;');
+        if(heeft)return`<span class="ea-gc-led ea-gc-led-heeft">${el.label}</span>`;
+        return`<span class="ea-gc-led ea-gc-led-ontbreekt" onclick="eaAdopteerAttrInLid('${safeMK}','${safeCanon}')" title="Klik om over te nemen">+ ${el.label}</span>`;
+      }).join('');
+      attrRows+=`<tr><td>${info.orig}${partieel}</td><td><input class="ea-gc-attr-inp" value="${canonical.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}" placeholder="${info.orig.replace(/"/g,'&quot;')}" onchange="eaSetGroepAttrMap('${safeGid}','${safeAk}',this.value)"></td><td class="ea-gc-leden-cel">${ledenChips}</td></tr>`;
+    });
+    const attrSectie=allAttrs.size>0?`<div class="ea-gc-sub">Attributen harmoniseren</div><table class="ea-gc-tbl"><thead><tr><th>Attribuutnaam</th><th>Canonieke naam &#8594;</th><th>Voorkomt in</th></tr></thead><tbody>${attrRows}</tbody></table>`:'';
+    const canonNaam=(conf.naam||'').replace(/"/g,'&quot;');
+    const placeholderNaam=(g.leden[0]?.label||'').replace(/"/g,'&quot;');
     h += `<div class="ea-groep-rij">
       <div class="ea-groep-label" style="background:${kleur}">Zelfde info &middot; ${g.leden.length} kaarten</div>
       <div class="ea-groep-leden" style="border-color:${kleur}">${g.leden.map((el,j)=>renderEAKaart(el, j>0)).join('')}</div>
+      <div class="ea-groep-conf" style="border-color:${kleur}">
+        <div class="ea-gc-rij"><label class="ea-gc-lbl">Canonieke naam in informatiemodel:</label><input class="ea-gc-naam-inp" value="${canonNaam}" placeholder="${placeholderNaam}" onchange="eaSetGroepNaam('${safeGid}',this.value)"></div>
+        ${attrSectie}
+      </div>
     </div>`;
   });
 
@@ -2480,6 +2667,397 @@ function _impUitvoeren(){
   _impGedaan.add(srcId);
   notif(`'${srcP.naam}' geïmporteerd`,'ok');
   _impLijst();
+}
+
+// ── INFORMATIEMODEL EXPORT ──
+function exporteerInformatieModel(){
+  if(!S.data||!S.data.processen){notif('Geen data geladen','fout');return;}
+  const norm=s=>(s||'').toLowerCase().replace(/\s+/g,' ').trim();
+  const datumStr=new Date().toLocaleDateString('nl-NL',{year:'numeric',month:'long',day:'numeric'});
+  const datumFile=new Date().toISOString().split('T')[0];
+  const projectNaam=S.data.project||'IPP Procesmanagement';
+
+  // ── helpers ──
+  function vindRootCluster(id){
+    function inSubs(subs,id){for(const s of subs){if(s.id===id)return true;if(inSubs(s.subclusters||[],id))return true;}return false;}
+    for(const c of S.data.clusters||[]){if(c.id===id)return c;if(inSubs(c.subclusters||[],id))return c;}
+    return null;
+  }
+  function clLabelById(id){return allesClusters().find(c=>c.id===id)?.label||id;}
+  function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  // ── 1. verzamel informatieobjecten ──
+  const OBJ={};
+  function verwerkIO(io,proc,stap,richting){
+    const key=norm(io.label);
+    if(!key||key==='intern')return;
+    if(!OBJ[key])OBJ[key]={label:io.label,key,attr:new Set(),attrKard:{},procRefs:[],systemen:new Set(),eaRel:[]};
+    const o=OBJ[key];
+    (io.attributen||[]).forEach(a=>{
+      o.attr.add(a);
+      const k=(S.data.attrKard?.[key]?.[a])||'1';
+      if(k==='N'||!o.attrKard[a])o.attrKard[a]=k;
+    });
+    if(stap.systeem)o.systemen.add(stap.systeem);
+    if(!o.procRefs.find(r=>r.procId===proc.id&&r.richting===richting))
+      o.procRefs.push({procId:proc.id,procNaam:proc.naam,stapNaam:stap.naam,categorie:proc.categorie,richting});
+  }
+  function verwerkStap(stap,proc){
+    (stap.input||[]).forEach(io=>verwerkIO(io,proc,stap,'gebruikt'));
+    (stap.output||[]).forEach(io=>verwerkIO(io,proc,stap,'produceert'));
+    (stap.substappen||[]).forEach(sub=>verwerkStap(sub,proc));
+  }
+  (S.data.processen||[]).forEach(proc=>(proc.stappen||[]).forEach(stap=>verwerkStap(stap,proc)));
+
+  // ── 2. koppel eaLinks ──
+  (S.data.eaLinks||[]).forEach(lnk=>{
+    const vk=norm(lnk.vanKey||lnk.vanLabel),nk=norm(lnk.naarKey||lnk.naarLabel);
+    if(OBJ[vk])OBJ[vk].eaRel.push({type:lnk.type,andereLabel:lnk.naarLabel,andereKey:nk,toelichting:lnk.toelichting,richting:'van'});
+    if(OBJ[nk]&&vk!==nk)OBJ[nk].eaRel.push({type:lnk.type,andereLabel:lnk.vanLabel,andereKey:vk,toelichting:lnk.toelichting,richting:'naar'});
+  });
+
+  // ── 2b. detecteer impliciete lijstobjecten (N-attribuut zonder eigen object of expliciete ref) ──
+  const implicieteObjs={};
+  Object.values(OBJ).forEach(o=>{
+    [...o.attr].forEach(a=>{
+      if((o.attrKard[a]||'1')!=='N')return;
+      const refKey=(S.data.attrRef?.[o.key]?.[a])||'';
+      if(refKey&&OBJ[refKey]){
+        // expliciete koppeling aan bestaand object: voeg EA-relatie toe in export
+        if(!o.eaRel.find(r=>r.andereKey===refKey&&r.type==='typeref'))
+          o.eaRel.push({type:'typeref',andereLabel:OBJ[refKey].label,andereKey:refKey,toelichting:`Meervoudig attribuut "${a}"`,richting:'van'});
+        return;
+      }
+      const ak=norm(a);
+      if(OBJ[ak])return;
+      if(!implicieteObjs[ak])implicieteObjs[ak]={label:a,key:ak,isImpliciet:true,afgeleidVan:[],attr:new Set(),attrKard:{},procRefs:[],systemen:new Set(),eaRel:[]};
+      if(!implicieteObjs[ak].afgeleidVan.includes(o.label))implicieteObjs[ak].afgeleidVan.push(o.label);
+    });
+  });
+
+  // ── 2c. fuseer "zelfde info"-groepen tot één canoniek object ──
+  eaZelfdeGroepen().forEach(g=>{
+    const gid=g.keys.slice().sort().join('|');
+    const conf=S.data.eaGroepConfig?.[gid]||{};
+    const attrMap=conf.attrMap||{};
+    const aanwezig=g.keys.filter(k=>OBJ[k]);
+    if(aanwezig.length<2)return;
+    const canonLabel=conf.naam||(OBJ[aanwezig[0]]?.label)||aanwezig[0];
+    const canonKey=norm(canonLabel);
+    const merged={label:canonLabel,key:canonKey,attr:new Set(),attrKard:{},procRefs:[],systemen:new Set(),eaRel:[],groepLeden:aanwezig.map(k=>OBJ[k]?.label||k)};
+    aanwezig.forEach(k=>{
+      const o=OBJ[k]; if(!o)return;
+      [...o.attr].forEach(a=>{
+        const ak=a.toLowerCase().trim();
+        const canon=attrMap[ak]||a;
+        merged.attr.add(canon);
+        const kard=o.attrKard?.[a]||'1';
+        if(kard==='N'||!merged.attrKard[canon])merged.attrKard[canon]=kard;
+      });
+      o.procRefs.forEach(ref=>{
+        if(!merged.procRefs.find(r=>r.procId===ref.procId&&r.richting===ref.richting))merged.procRefs.push({...ref});
+      });
+      [...o.systemen].forEach(s=>merged.systemen.add(s));
+      o.eaRel.forEach(r=>{
+        if(aanwezig.includes(r.andereKey))return;
+        if(!merged.eaRel.find(er=>er.andereKey===r.andereKey&&er.type===r.type))merged.eaRel.push({...r});
+      });
+      delete OBJ[k];
+    });
+    if(OBJ[canonKey]&&!aanwezig.includes(canonKey)){
+      const ex=OBJ[canonKey];
+      [...ex.attr].forEach(a=>merged.attr.add(a));
+      ex.procRefs.forEach(ref=>{if(!merged.procRefs.find(r=>r.procId===ref.procId&&r.richting===ref.richting))merged.procRefs.push({...ref});});
+      [...ex.systemen].forEach(s=>merged.systemen.add(s));
+    }
+    OBJ[canonKey]=merged;
+  });
+
+  // ── 3. groepeer per (root)cluster ──
+  const perCluster={};
+  Object.values(OBJ).forEach(o=>{
+    const cnt={};
+    o.procRefs.forEach(r=>{const root=vindRootCluster(r.categorie);const cid=root?.id||r.categorie;cnt[cid]=(cnt[cid]||0)+1;});
+    o.primairCluster=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]?.[0]||'_geen';
+    o.alleClusters=[...new Set(o.procRefs.map(r=>{const root=vindRootCluster(r.categorie);return root?.id||r.categorie;}))];
+    if(!perCluster[o.primairCluster])perCluster[o.primairCluster]=[];
+    perCluster[o.primairCluster].push(o);
+  });
+  Object.values(perCluster).forEach(arr=>arr.sort((a,b)=>a.label.localeCompare(b.label,'nl')));
+
+  const topClusters=(S.data.clusters||[]).slice().sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
+  const totObj=Object.keys(OBJ).length;
+  const totRel=(S.data.eaLinks||[]).length;
+  const totMetAttr=Object.values(OBJ).filter(o=>o.attr.size>0).length;
+  const totMetRel=Object.values(OBJ).filter(o=>o.eaRel.length>0).length;
+
+  // ── 4. zelfde-info groepen (union-find) ──
+  const ufP={};
+  function ufF(k){if(!ufP[k])ufP[k]=k;if(ufP[k]!==k)ufP[k]=ufF(ufP[k]);return ufP[k];}
+  function ufU(a,b){ufP[ufF(a)]=ufF(b);}
+  const k2l={};
+  Object.values(OBJ).forEach(o=>{k2l[o.key]=o.label;});
+  const zLinks=(S.data.eaLinks||[]).filter(l=>l.type==='zelfde');
+  const kLinks=(S.data.eaLinks||[]).filter(l=>l.type==='koppeling');
+  zLinks.forEach(l=>{
+    const vk=norm(l.vanKey||l.vanLabel),nk=norm(l.naarKey||l.naarLabel);
+    k2l[vk]=k2l[vk]||l.vanLabel;k2l[nk]=k2l[nk]||l.naarLabel;
+    ufU(vk,nk);
+  });
+  const zGroepen={};
+  zLinks.forEach(l=>{
+    const vk=norm(l.vanKey||l.vanLabel),nk=norm(l.naarKey||l.naarLabel);
+    const root=ufF(vk);
+    if(!zGroepen[root])zGroepen[root]=new Set();
+    zGroepen[root].add(vk);zGroepen[root].add(nk);
+  });
+
+  // ── 5. systemen per object ──
+  const sysObj={};
+  Object.values(OBJ).forEach(o=>o.systemen.forEach(s=>{if(!sysObj[s])sysObj[s]=[];sysObj[s].push(o);}));
+
+  // ══════════════════════════════════════════════════════════
+  // CSS
+  // ══════════════════════════════════════════════════════════
+  const CSS=`
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;color:#1a2035;background:#f0f4f8;line-height:1.55}
+a{color:#00619b;text-decoration:none}a:hover{text-decoration:underline}
+.hdr{background:linear-gradient(135deg,#004874 0%,#00619b 100%);color:#fff;padding:22px 40px;display:flex;align-items:center;gap:18px;box-shadow:0 3px 12px rgba(0,0,0,.2);print-color-adjust:exact;-webkit-print-color-adjust:exact;position:sticky;top:0;z-index:300}
+.hdr-logo{width:40px;height:40px;background:#f0a500;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);flex-shrink:0}
+.hdr-info{flex:1}.hdr-info h1{font-size:22px;font-weight:700;letter-spacing:.3px}
+.hdr-info p{font-size:13px;opacity:.8;margin-top:3px}
+.hdr-meta{text-align:right;font-size:12px;opacity:.75;line-height:1.9}
+nav{background:#fff;border-bottom:2px solid #c8def0;padding:0 40px;display:flex;gap:0;position:sticky;top:var(--nav-top,84px);z-index:200;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+nav a{display:inline-block;padding:13px 18px;font-size:12px;font-weight:600;color:#00619b;border-bottom:3px solid transparent;margin-bottom:-2px;transition:border-color .15s}
+nav a:hover{border-bottom-color:#007ac2;text-decoration:none}
+.wrap{max-width:1280px;margin:0 auto;padding:36px 28px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:32px}
+.stat{background:#fff;border:1.5px solid #c8def0;border-radius:10px;padding:16px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.stat-n{font-size:30px;font-weight:700;color:#004874}
+.stat-l{font-size:11px;color:#80bde1;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.sec{margin-bottom:52px;scroll-margin-top:140px}
+.sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:10px;border-bottom:2.5px solid #c8def0}
+.sec-hdr h2{font-size:19px;font-weight:700;color:#004874}
+.badge{background:#d1e7f4;color:#004874;font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px}
+.ovz{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+.ovz th{background:#004874;color:#fff;padding:11px 16px;text-align:left;font-size:12px;font-weight:600;letter-spacing:.3px}
+.ovz td{padding:10px 16px;border-bottom:1px solid #eef3f8;font-size:13px}
+.ovz tr:last-child td{border-bottom:none}
+.ovz tr:hover td{background:#f5f9fd}
+.cl-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:middle;flex-shrink:0}
+.cl-blok{margin-bottom:32px;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.09);scroll-margin-top:140px}
+.cl-hdr{display:flex;align-items:center;gap:10px;padding:12px 18px;color:#fff;font-weight:700;font-size:15px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.cl-afk{font-size:11px;font-family:monospace;background:rgba(255,255,255,.22);padding:2px 7px;border-radius:4px}
+.cl-cnt{margin-left:auto;font-size:12px;opacity:.85}
+.cl-body{background:#fff;padding:20px}
+.sub-lbl{font-size:11px;font-weight:700;color:#004874;text-transform:uppercase;letter-spacing:.6px;margin:20px 0 10px;padding-bottom:6px;border-bottom:1.5px dashed #c8def0;display:flex;align-items:center;gap:8px}
+.sub-lbl .sub-afk{font-family:monospace;background:#d1e7f4;color:#004874;padding:1px 6px;border-radius:3px;font-size:10px}
+.obj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.obj-k{border:1.5px solid #d1e7f4;border-radius:8px;padding:15px;background:#fafcff;transition:box-shadow .15s;break-inside:avoid}
+.obj-k:hover{box-shadow:0 4px 14px rgba(0,73,116,.13)}
+.obj-nm{font-size:14px;font-weight:700;color:#004874;margin-bottom:4px}
+.obj-ook-als{font-size:10px;color:#6b9ab8;margin-bottom:8px}.obj-ook-als em{font-style:normal;font-weight:600;color:#5585a0}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tag{font-size:11px;padding:2px 7px;border-radius:10px;font-weight:500;white-space:nowrap}
+.t-sys{background:#e3f2fd;color:#1565c0}
+.t-cl{background:#f3e5f5;color:#6a1b9a}
+.sub-tit{font-size:11px;font-weight:700;color:#004874;text-transform:uppercase;letter-spacing:.4px;margin:10px 0 4px}
+.m-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.m-tbl th{background:#eef5fb;color:#004874;padding:4px 8px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.m-tbl td{padding:4px 8px;border-bottom:1px solid #f0f5fb;color:#333}
+.m-tbl tr:last-child td{border-bottom:none}
+.p-lst{margin-top:4px}
+.p-item{font-size:11px;color:#444;padding:3px 0;border-bottom:1px dotted #dde8f0;display:flex;gap:6px;align-items:baseline}
+.p-item:last-child{border-bottom:none}
+.p-richt{font-size:10px;padding:1px 5px;border-radius:3px;font-weight:700;flex-shrink:0}
+.r-prod{background:#dcfce7;color:#15803d}
+.r-geb{background:#fef9c3;color:#854d0e}
+.ea-lst{margin-top:4px}
+.ea-item{font-size:12px;padding:5px 8px;border-radius:5px;margin-bottom:4px;display:flex;align-items:flex-start;gap:7px;line-height:1.4}
+.ea-item.zelfde{background:#f0fdf4;border-left:3px solid #4caf50}
+.ea-item.koppeling{background:#eff6ff;border-left:3px solid #3b82f6}
+.ea-ico{font-size:14px;flex-shrink:0;margin-top:1px}
+.ea-toel{font-size:11px;color:#888;margin-top:2px}
+.leeg{color:#bbb;font-size:12px;font-style:italic;padding:6px 0}
+.rel-box{background:#fff;border:1px solid #c8def0;border-radius:10px;padding:24px;overflow-x:auto;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.rel-groep{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #eef3f8}
+.rel-groep:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.rel-gtit{font-size:12px;font-weight:700;color:#004874;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.rel-gtit::after{content:'';flex:1;height:1px;background:#d1e7f4}
+.rel-lijn{font-family:'Consolas','Courier New',monospace;font-size:13px;padding:4px 0;white-space:pre}
+.r-zelfde{color:#15803d}
+.r-koppel{color:#1565c0}
+.dd-wrap{overflow-x:auto}
+.dd{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.08);font-size:12px}
+.dd th{background:#004874;color:#fff;padding:10px 14px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.3px;position:sticky;top:50px}
+.dd td{padding:9px 14px;border-bottom:1px solid #eef3f8;vertical-align:top}
+.dd tr:hover td{background:#f5f9fd}
+.dd .cl-nm{font-size:11px;color:#80bde1}
+.dd .attr-t{font-size:11px;color:#555;line-height:1.6}
+.dd .sys-chips{display:flex;flex-wrap:wrap;gap:3px}
+.sys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.sys-k{background:#fff;border:1.5px solid #c8def0;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.sys-kh{background:#004874;color:#fff;padding:11px 16px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.sys-kb{padding:12px 14px}
+.sys-item{font-size:12px;padding:4px 0;border-bottom:1px dotted #dde8f0;color:#333;display:flex;align-items:center;gap:7px}
+.sys-item:last-child{border-bottom:none}
+.sys-dot{width:6px;height:6px;border-radius:50%;background:#007ac2;flex-shrink:0}
+footer{background:#004874;color:rgba(255,255,255,.65);text-align:center;padding:16px;font-size:11px;margin-top:48px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.back-top{color:rgba(255,255,255,.65);font-size:20px;margin-left:12px;text-decoration:none;line-height:1;padding:1px 6px;border-radius:4px;transition:background .15s,color .15s;flex-shrink:0}
+.back-top:hover{color:#fff;background:rgba(255,255,255,.2);text-decoration:none}
+@media print{nav{display:none}.cl-blok{box-shadow:none;border:1px solid #ccc}.obj-k{border:1px solid #ccc}}
+`;
+
+  // ── renderers ──
+  function renderObjKaart(o){
+    const andereCl=(o.alleClusters||[]).filter(c=>c!==o.primairCluster);
+    const clTags=andereCl.map(c=>`<span class="tag t-cl">${esc(clLabelById(c))}</span>`).join('');
+    const sysTags=[...o.systemen].map(s=>`<span class="tag t-sys">${esc(s)}</span>`).join('');
+    const attrHTML=o.attr.size>0
+      ?`<div class="sub-tit">Attributen</div><table class="m-tbl"><thead><tr><th>Attribuutnaam</th><th style="text-align:center;width:36px">Kard.</th></tr></thead><tbody>${[...o.attr].map(a=>{const k=o.attrKard?.[a]||'1';return`<tr><td>${esc(a)}</td><td style="text-align:center"><span style="font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;${k==='N'?'background:#004874;color:#fff':'background:#d1e7f4;color:#004874'}">${k}</span></td></tr>`;}).join('')}</tbody></table>`:'';
+    const procHTML=o.procRefs.length>0
+      ?`<div class="sub-tit">Verschijnt in processen</div><div class="p-lst">${o.procRefs.slice(0,8).map(r=>`<div class="p-item"><span class="p-richt ${r.richting==='produceert'?'r-prod':'r-geb'}">${r.richting==='produceert'?'&#9650; output':'&#9660; input'}</span><span>${esc(r.procNaam)}</span><span style="color:#bbb;font-size:10px">&#8212; ${esc(r.stapNaam)}</span></div>`).join('')}${o.procRefs.length>8?`<div style="font-size:11px;color:#bbb;padding:3px 0">+${o.procRefs.length-8} meer</div>`:''}</div>`:'';
+    const relHTML=o.eaRel.length>0
+      ?`<div class="sub-tit">Relaties</div><div class="ea-lst">${o.eaRel.map(r=>{const ico=r.type==='zelfde'?'&#8801;':r.type==='typeref'?'&#9654;':'&#8594;';const lbl=r.type==='zelfde'?'Zelfde info als':r.type==='typeref'?'Bevat meerdere &#8594;':'Koppeling naar';return`<div class="ea-item ${r.type==='typeref'?'koppeling':r.type}"><span class="ea-ico">${ico}</span><div><div>${lbl} <strong>${esc(r.andereLabel)}</strong></div>${r.toelichting?`<div class="ea-toel">${esc(r.toelichting)}</div>`:''}</div></div>`;}).join('')}</div>`:'';
+    const ledenHTML=o.groepLeden?.length>1?`<div class="obj-ook-als">Samengesteld uit: ${o.groepLeden.map(l=>`<em>${esc(l)}</em>`).join(' &amp; ')}</div>`:'';
+    const anid='obj-'+o.key.replace(/[^a-z0-9]+/g,'-');
+    return`<div class="obj-k" id="${anid}"><div class="obj-nm">${esc(o.label)}</div>${ledenHTML}${clTags?`<div class="tags" style="margin-bottom:6px">${clTags}</div>`:''}${sysTags?`<div class="tags">${sysTags}</div>`:''}${attrHTML}${procHTML}${relHTML}</div>`;
+  }
+
+  function renderClusterBlok(cl){
+    const directObjs=perCluster[cl.id]||[];
+    const subs=(cl.subclusters||[]).slice().sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
+    const totClObj=subs.reduce((n,s)=>n+(perCluster[s.id]||[]).length,0)+directObjs.length;
+    if(totClObj===0&&subs.every(s=>!(perCluster[s.id]||[]).length))return'';
+    const kleur=cl.kleur||'#004874';
+    let h=`<div class="cl-blok" id="cl-${cl.id}"><div class="cl-hdr" style="background:${kleur}">${esc(cl.label)}<span class="cl-afk">${esc(cl.afkorting||'')}</span><span class="cl-cnt">${totClObj} informatieobject${totClObj!==1?'en':''}</span><a href="#overzicht" class="back-top" title="Terug naar boven">&#8679;</a></div><div class="cl-body">`;
+    if(directObjs.length>0)h+=`<div class="obj-grid">${directObjs.map(renderObjKaart).join('')}</div>`;
+    subs.forEach(sub=>{
+      const subObjs=perCluster[sub.id]||[];if(!subObjs.length)return;
+      h+=`<div class="sub-lbl">${esc(sub.label)}<span class="sub-afk">${esc(sub.afkorting||'')}</span><span class="badge" style="margin-left:4px">${subObjs.length}</span></div><div class="obj-grid">${subObjs.map(renderObjKaart).join('')}</div>`;
+    });
+    if(totClObj===0)h+=`<p class="leeg">Geen informatieobjecten gevonden in dit cluster.</p>`;
+    return h+`</div></div>`;
+  }
+
+  // ── stats ──
+  const statsH=`<div class="stats"><div class="stat"><div class="stat-n">${totObj}</div><div class="stat-l">Informatieobjecten</div></div><div class="stat"><div class="stat-n">${topClusters.length}</div><div class="stat-l">Clusters / Domeinen</div></div><div class="stat"><div class="stat-n">${(S.data.processen||[]).length}</div><div class="stat-l">Processen</div></div><div class="stat"><div class="stat-n">${totRel}</div><div class="stat-l">EA-koppelingen</div></div><div class="stat"><div class="stat-n">${totMetAttr}</div><div class="stat-l">Met attributen</div></div><div class="stat"><div class="stat-n">${totMetRel}</div><div class="stat-l">Met relaties</div></div></div>`;
+
+  // ── overzicht ──
+  let ovzRows='';
+  topClusters.forEach(cl=>{
+    const subs=allesClusters(cl.subclusters||[]);
+    const clIds=[cl.id,...subs.map(s=>s.id)];
+    const n=clIds.reduce((acc,id)=>acc+(perCluster[id]||[]).length,0);
+    ovzRows+=`<tr><td><span class="cl-dot" style="background:${cl.kleur||'#888'}"></span><a href="#cl-${cl.id}">${esc(cl.label)}</a></td><td style="font-family:monospace;font-size:12px">${esc(cl.afkorting||'')}</td><td style="text-align:center;font-weight:700;color:#004874">${n}</td><td style="font-size:12px;color:#666">${subs.length>0?subs.map(s=>esc(s.label)).join(', '):'<span style="color:#ccc">&#8212;</span>'}</td></tr>`;
+  });
+  const ovzH=`<section class="sec" id="overzicht"><div class="sec-hdr"><h2>Overzicht</h2></div>${statsH}<table class="ovz"><thead><tr><th>Cluster / Domein</th><th>Afk.</th><th>Objecten</th><th>Sub-clusters</th></tr></thead><tbody>${ovzRows}</tbody></table></section>`;
+
+  // ── per cluster ──
+  const geenObjs=perCluster['_geen']||[];
+  const geenBlok=geenObjs.length>0?`<div class="cl-blok" id="cl-geen"><div class="cl-hdr" style="background:#888">Zonder cluster <span class="cl-cnt">${geenObjs.length}</span></div><div class="cl-body"><div class="obj-grid">${geenObjs.map(renderObjKaart).join('')}</div></div></div>`:'';
+  const clSectieH=`<section class="sec" id="per-cluster"><div class="sec-hdr"><h2>Informatieobjecten per cluster</h2><span class="badge">${totObj} objecten</span></div>${topClusters.map(renderClusterBlok).join('')}${geenBlok}</section>`;
+
+  // ── relaties ──
+  let relInhoud='';
+  if(Object.keys(zGroepen).length>0)
+    relInhoud+=`<div class="rel-groep"><div class="rel-gtit">&#8801; Zelfde informatie (verschillende naam of systeem)</div>${Object.values(zGroepen).map(groep=>{const lbls=[...groep].map(k=>k2l[k]||k);return`<div class="rel-lijn r-zelfde">${lbls.join(' &#8801; ')}</div>`;}).join('')}</div>`;
+  if(kLinks.length>0)
+    relInhoud+=`<div class="rel-groep"><div class="rel-gtit">&#8594; Koppelingen (gegevensafhankelijkheid)</div>${kLinks.map(l=>`<div class="rel-lijn r-koppel">${esc(l.vanLabel)} &#8594; ${esc(l.naarLabel)}${l.toelichting?'&nbsp;&nbsp;<span style="color:#888;font-size:11px">('+esc(l.toelichting)+')</span>':''}</div>`).join('')}</div>`;
+  if(!relInhoud)relInhoud=`<p class="leeg">Nog geen EA-koppelingen gedefinieerd. Gebruik de SOLL-module om relaties vast te leggen.</p>`;
+  const relH=`<section class="sec" id="relaties"><div class="sec-hdr"><h2>Relatieoverzicht</h2><span class="badge">${totRel} koppelingen</span></div><div class="rel-box">${relInhoud}</div></section>`;
+
+  // ── data dictionary ──
+  const sortedObjs=Object.values(OBJ).sort((a,b)=>a.label.localeCompare(b.label,'nl'));
+  let ddRows='';
+  sortedObjs.forEach(o=>{
+    const clNm=esc(clLabelById(o.primairCluster));
+    const sysH=[...o.systemen].map(s=>`<span class="tag t-sys">${esc(s)}</span>`).join('');
+    const attrT=[...o.attr].join(', ')||'&#8212;';
+    const uniqProcs=[...new Set(o.procRefs.map(r=>r.procNaam))];
+    const procT=uniqProcs.slice(0,3).map(esc).join(', ')+(uniqProcs.length>3?` +${uniqProcs.length-3}`:'');
+    const relT=o.eaRel.length>0?o.eaRel.map(r=>`${r.type==='zelfde'?'&#8801;':'&#8594;'} ${esc(r.andereLabel)}`).join('; '):'&#8212;';
+    const anid='obj-'+o.key.replace(/[^a-z0-9]+/g,'-');
+    ddRows+=`<tr><td style="font-weight:600"><a href="#${anid}">${esc(o.label)}</a></td><td><span class="cl-nm">${clNm}</span></td><td><div class="sys-chips">${sysH||'<span style="color:#ccc">&#8212;</span>'}</div></td><td class="attr-t">${attrT}</td><td style="font-size:11px;color:#555">${procT||'&#8212;'}</td><td style="font-size:11px;color:#555">${relT}</td></tr>`;
+  });
+  const ddH=`<section class="sec" id="data-dictionary"><div class="sec-hdr"><h2>Data dictionary</h2><span class="badge">${sortedObjs.length} objecten</span></div><div class="dd-wrap"><table class="dd"><thead><tr><th>Informatieobject</th><th>Cluster</th><th>Systemen</th><th>Attributen</th><th>Processen</th><th>Relaties</th></tr></thead><tbody>${ddRows}</tbody></table></div></section>`;
+
+  // ── systemen ──
+  const alleSystemen=(S.data.systemen||[]).slice();
+  Object.keys(sysObj).forEach(s=>{if(!alleSystemen.includes(s))alleSystemen.push(s);});
+  const sysH=`<section class="sec" id="systemen"><div class="sec-hdr"><h2>Systeemoverzicht</h2><span class="badge">${alleSystemen.length} systemen</span></div><div class="sys-grid">${alleSystemen.map(sys=>{const objs=(sysObj[sys]||[]).sort((a,b)=>a.label.localeCompare(b.label,'nl'));return`<div class="sys-k"><div class="sys-kh">&#128449; ${esc(sys)}<span style="margin-left:auto;font-size:11px;opacity:.7">${objs.length} object${objs.length!==1?'en':''}</span></div><div class="sys-kb">${objs.length>0?objs.map(o=>{const anid='obj-'+o.key.replace(/[^a-z0-9]+/g,'-');return`<div class="sys-item"><span class="sys-dot"></span><a href="#${anid}">${esc(o.label)}</a></div>`;}).join(''):`<p class="leeg">Geen objecten gekoppeld.</p>`}</div></div>`;}).join('')}</div></section>`;
+
+  // ── afgeleide objecten sectie ──
+  const afgeleideLijst=Object.values(implicieteObjs).sort((a,b)=>a.label.localeCompare(b.label,'nl'));
+  const afgelH=afgeleideLijst.length>0?`<section class="sec" id="afgeleid">
+    <div class="sec-hdr"><h2>Afgeleide lijstobjecten</h2><span class="badge">${afgeleideLijst.length} objecten</span></div>
+    <p style="font-size:13px;color:#555;margin-bottom:18px">Deze objecten komen voor als meervoudig attribuut (N) maar zijn nog niet als zelfstandig informatieobject gedefinieerd. Overweeg ze toe te voegen als apart object in de processtappen.</p>
+    <div class="obj-grid">${afgeleideLijst.map(o=>`<div class="obj-k" style="border-style:dashed;background:#fffdf0">
+      <div style="font-size:10px;font-weight:700;color:#9a5a00;background:#fff3cd;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:6px">Afgeleid</div>
+      <div class="obj-nm">${esc(o.label)}</div>
+      <div class="sub-tit">Afgeleid uit attribuut van</div>
+      <div class="p-lst">${o.afgeleidVan.map(p=>`<div class="p-item"><span style="color:#bbb">&#8627;</span> ${esc(p)}</div>`).join('')}</div>
+    </div>`).join('')}</div>
+  </section>`:'';
+
+  // ── volledig HTML-document ──
+  const HTML=`<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Informatiemodel — ${esc(projectNaam)} — ${datumFile}</title>
+<style>${CSS}</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-logo"></div>
+  <div class="hdr-info"><h1>Informatiemodel</h1><p>${esc(projectNaam)}</p></div>
+  <div class="hdr-meta">Gegenereerd op ${datumStr}<br>${totObj}&nbsp;objecten &middot; ${topClusters.length}&nbsp;clusters &middot; ${(S.data.processen||[]).length}&nbsp;processen</div>
+</header>
+<nav>
+  <a href="#overzicht">Overzicht</a>
+  <a href="#per-cluster">Per cluster</a>
+  <a href="#relaties">Relaties</a>
+  <a href="#data-dictionary">Data dictionary</a>
+  <a href="#systemen">Systemen</a>
+  ${afgeleideLijst.length>0?'<a href="#afgeleid">Afgeleide objecten</a>':''}
+</nav>
+<div class="wrap">
+${ovzH}
+${clSectieH}
+${relH}
+${ddH}
+${sysH}
+${afgelH}
+</div>
+<footer>Gegenereerd door IPP Procesmanager &middot; Antea Group &middot; ${datumStr}</footer>
+<script>
+(function(){
+  var hdr=document.querySelector('.hdr');
+  var nav=document.querySelector('nav');
+  function fixOffsets(){
+    var hh=hdr.offsetHeight;
+    document.documentElement.style.setProperty('--nav-top',hh+'px');
+    var tot=hh+nav.offsetHeight+16;
+    document.querySelectorAll('.cl-blok,.sec').forEach(function(el){el.style.scrollMarginTop=tot+'px';});
+  }
+  fixOffsets();
+  window.addEventListener('resize',fixOffsets);
+})();
+</script>
+</body>
+</html>`;
+
+  // ── download ──
+  const blob=new Blob([HTML],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='informatiemodel-'+datumFile+'.html';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1200);
+  notif('Informatiemodel geëxporteerd ('+totObj+' objecten)','ok');
 }
 
 init();
