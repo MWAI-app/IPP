@@ -160,7 +160,7 @@
     <div class="mdb">
       <div class="fr">
         <div class="fg"><label>Naam *</label><input id="snm" placeholder="bijv. Planning opstellen"></div>
-        <div class="fg"><label>Type</label><select id="stp"><option value="activiteit">Activiteit</option><option value="beslissing">Beslissing</option><option value="start">Start</option><option value="einde">Einde</option><option value="document">Document</option></select></div>
+        <div class="fg"><label>Type</label><select id="stp" onchange="typeChg(this)"><option value="activiteit">Activiteit</option><option value="beslissing">Beslissing</option><option value="start">Start</option><option value="einde">Einde</option><option value="document">Document</option></select></div>
       </div>
       <div class="fr">
         <div class="fg"><label>Verantwoordelijke</label>
@@ -183,8 +183,20 @@
         <div id="smedev"></div>
         <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="medevToe()">+ Toevoegen</button>
       </div>
+      <div class="ios" id="sec-start-bron" style="display:none">
+        <h3>Geïnitieerd vanuit</h3>
+        <p style="font-size:11px;color:var(--gs);margin-bottom:7px">Welke stap(pen) in andere processen starten dit proces? Verschijnt op de inputkant van de startkaart.</p>
+        <div id="ibron"></div>
+        <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="bronToe()">+ Bron toevoegen</button>
+      </div>
       <div class="ios"><h3>Input</h3><div id="iin"></div><button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="ioToe('in')">+ Input</button></div>
-      <div class="ios"><h3>Output</h3><div id="iout"></div><button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="ioToe('out')">+ Output</button></div>
+      <div class="ios" id="sec-branches" style="display:none">
+        <h3 id="branches-lbl">Beslissingspaden</h3>
+        <p id="branches-hint" style="font-size:11px;color:var(--gs);margin-bottom:7px">De mogelijke uitkomsten van deze beslissing. Geen informatie-elementen — verschijnen niet in het elementenoverzicht.</p>
+        <div id="ibranches"></div>
+        <button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="branchToe()">+ Pad toevoegen</button>
+      </div>
+      <div class="ios"><h3 id="out-lbl">Output</h3><div id="iout"></div><button class="btn bg" style="font-size:11px;padding:3px 9px" onclick="ioToe('out')">+ Output</button></div>
     </div>
     <div class="mdf">
       <button class="btn bdel" id="bds" style="display:none;margin-right:auto" onclick="delStap()">Verwijder</button>
