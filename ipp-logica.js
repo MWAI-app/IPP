@@ -338,7 +338,10 @@ function renderPOCluster(c,depth){
   h+=`<span class="po-cnt">${totaal} proces${totaal!==1?'sen':''}</span></div>`;
   if(subs.length)h+=`<div class="po-subs">${subs.map(sc=>renderPOCluster(sc,depth+1)).join('')}</div>`;
   if(procs.length){
-    h+=`<div class="po-procs">${procs.map(p=>`<div class="po-proc" onclick="sel('${p.id}')"><span class="po-proc-nr">${procNr(p)}</span><span class="po-proc-nm">${p.naam}</span></div>`).join('')}</div>`;
+    h+=`<div class="po-procs">${procs.map(p=>{
+      const nSt=telSt(p.stappen||[]);
+      return`<div class="po-proc" onclick="sel('${p.id}')"><div class="po-proc-top"><span class="po-proc-nr">${procNr(p)}</span><span class="po-proc-nm">${p.naam}</span></div><span class="po-proc-st">${nSt} processtap${nSt!==1?'pen':''}</span></div>`;
+    }).join('')}</div>`;
   }
   if(!subs.length&&!procs.length)h+='<p class="po-leeg">Geen processen in dit cluster.</p>';
   h+='</div>';

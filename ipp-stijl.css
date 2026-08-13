@@ -94,8 +94,10 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .po-procs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
 .po-proc{border:1px solid var(--g1);border-radius:var(--r);padding:8px 10px;background:var(--gc);cursor:pointer;transition:all .15s}
 .po-proc:hover{border-color:var(--ga);box-shadow:var(--sh);background:var(--gw)}
+.po-proc-top{margin-bottom:3px}
 .po-proc-nr{font-family:var(--m);font-size:10px;font-weight:700;color:var(--ga2);margin-right:5px}
 .po-proc-nm{font-size:12.5px;font-weight:600;color:var(--gd)}
+.po-proc-st{font-size:10.5px;color:var(--gs)}
 .po-leeg{font-size:11px;color:var(--g3);font-style:italic}
 /* KNOPPEN */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--r);font-family:var(--f);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
