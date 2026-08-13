@@ -1204,126 +1204,160 @@ async function importeerRelatics(){
   }
 }
 
+// CSV-tekst naar rijen van velden, met respect voor "aanhalingstekens" (velden met
+// ingesloten ; of newlines, zoals lange beschrijvingsteksten uit Relatics).
+function parseCSV(tekst,delim){
+  const rows=[];let row=[];let field='';let inQuotes=false;
+  for(let i=0;i<tekst.length;i++){
+    const ch=tekst[i];
+    if(ch==='\r')continue;
+    if(inQuotes){
+      if(ch==='"'){if(tekst[i+1]==='"'){field+='"';i++;}else inQuotes=false;}
+      else field+=ch;
+    }else{
+      if(ch==='"')inQuotes=true;
+      else if(ch===delim){row.push(field);field='';}
+      else if(ch==='\n'){row.push(field);field='';rows.push(row);row=[];}
+      else field+=ch;
+    }
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  return rows;
+}
+
 function verwerkRelaticsCSV(csvTekst){
   try{
-    const regels=csvTekst.replace(/\r/g,'').split('\n');
-    const wsMap={};
-    let huidigId=null,huidigAct=null;
+    const regels=parseCSV(csvTekst,';');
+    if(regels.length<3)throw new Error('CSV bevat geen data-rijen');
 
-    // Kolom "A - accountable" (RASCI) opzoeken in 2e headerrij — alleen aanwezig in RACI-formaat
-    const headerRij2=(regels[1]||'').split(';').map(h=>h.trim().toLowerCase());
-    const accCol=headerRij2.indexOf('a - accountable');
-    const haalAcc=c=>accCol<0?'':c(accCol).replace(/^rol-\d+\s*/i,'').trim();
+    // Rij1 = groepstitels (samengevoegde cellen → voorwaarts vullen), rij2 = subkoppen.
+    // Kolomgroepen worden op naam gezocht (niet op vast kolomnummer), zodat een nieuwe
+    // kolomverschuiving in de Relatics-export dit niet meteen weer breekt.
+    const rij1=regels[0]||[];
+    let laatsteGroep='';
+    const groep=rij1.map(g=>{g=g.trim();if(g)laatsteGroep=g;return laatsteGroep.toLowerCase();});
 
-    // Meerdelige volgordenummers (bv. "3.5.1") vergelijkbaar maken
+    const groepStart=deel=>groep.findIndex(g=>g.includes(deel));
+    const gCl=groepStart('werkspoor');            // Cluster: id, volgorde, naam
+    const gPr=groepStart('processen');            // Proces: id, volgorde, naam
+    const gAc=groepStart('activiteiten');         // Processtap: id, volgorde, naam, beschrijving
+    const gTl=groepStart('tools');                // Software: id, naam
+    const gOut=groepStart('output');              // Output-product: id, naam
+    const gIn=groepStart('input');                // Input-product: id, naam
+    const gRol=groepStart('ipp-rollen');          // Rol: id, afkorting, naam
+
+    if([gCl,gPr,gAc,gTl,gOut,gIn,gRol].some(i=>i<0))
+      throw new Error('Onbekende kolomstructuur — dit lijkt geen Relatics IPP-Werkspoor export te zijn');
+
+    const clId=gCl,clVol=gCl+1,clNm=gCl+2;
+    const prId=gPr,prVol=gPr+1,prNm=gPr+2;
+    const acId=gAc,acVol=gAc+1,acNm=gAc+2,acBesch=gAc+3;
+    const tlNm=gTl+1;
+    const outId=gOut,outNm=gOut+1;
+    const inId=gIn,inNm=gIn+1;
+    const rolNm=gRol+2;
+
+    // Meerdelige volgordenummers (bv. "1.10") vergelijkbaar maken
     function parseVol(s){
       if(!s||!s.trim())return 99999;
       const p=s.trim().split('.').map(n=>parseInt(n)||0);
       return p[0]*10000+(p[1]||0)*100+(p[2]||0);
     }
 
-    // CSV inlezen (sla 2 headerrijen over)
-    for(let i=2;i<regels.length;i++){
-      const r=regels[i].split(';');
-      const c=n=>(r[n]||'').trim();
-      // Nieuwe werkspoor-rij
-      if(c(0).startsWith('IPP-')){
-        huidigId=c(0);huidigAct=null;
-        if(!wsMap[huidigId])wsMap[huidigId]={id:huidigId,naam:c(1),parentId:c(2)||null,subs:[],acts:[]};
-      }
-      if(!huidigId)continue;
-      const ws=wsMap[huidigId];
-      // Sub-werkspoor (col 5-6) → dit werkspoor is een cluster
-      if(c(5).startsWith('IPP-')&&!ws.subs.find(s=>s.id===c(5)))
-        ws.subs.push({id:c(5),volgorde:parseVol(c(6))});
-      // Nieuwe activiteit (col 8-10) → processtap
-      if(c(8).startsWith('ACT-')&&c(10)){
-        huidigAct={id:c(8),volgorde:c(9)?parseInt(c(9)):null,naam:c(10),systemen:[],inputs:[],outputs:[],verantwoordelijke:haalAcc(c)};
-        ws.acts.push(huidigAct);
-      }
-      // Tools / output / input / verantwoordelijke toevoegen aan huidige activiteit (ook vervolgrijen)
-      if(huidigAct){
-        if(c(12)&&!huidigAct.systemen.includes(c(12)))huidigAct.systemen.push(c(12));
-        if(c(14))huidigAct.outputs.push({code:c(13),naam:c(14)});
-        if(c(16))huidigAct.inputs.push({code:c(15),naam:c(16)});
-        if(!huidigAct.verantwoordelijke&&haalAcc(c))huidigAct.verantwoordelijke=haalAcc(c);
-      }
-    }
-
-    // Cluster vs proces: werkspoor met sub-werksporen = cluster
-    const isCluster={};
-    for(const id in wsMap)isCluster[id]=wsMap[id].subs.length>0;
-
     // IPP-6 → ipp_6  (deterministisch, geen lookup nodig)
     const aId=id=>(id||'').toLowerCase().replace(/-/g,'_');
 
-    // 2-3-letter afkorting afleiden uit naam
+    // 2-3-letter afkorting afleiden uit naam (fallback als clusterId ontbreekt)
     function afk(naam){
       const sw=new Set(['en','van','de','het','der','aan','bij','met','in','voor','op','als','om']);
-      const wrd=naam.replace(/[()\/&-]/g,' ').split(/\s+/).filter(w=>w.length>1&&!sw.has(w.toLowerCase()));
+      const wrd=(naam||'').replace(/[()\/&-]/g,' ').split(/\s+/).filter(w=>w.length>1&&!sw.has(w.toLowerCase()));
       if(wrd.length>=3)return(wrd[0][0]+wrd[1][0]+wrd[2][0]).toUpperCase();
       if(wrd.length===2)return(wrd[0].slice(0,2)+wrd[1][0]).toUpperCase();
-      return(wrd[0]||naam).slice(0,3).toUpperCase();
+      return(wrd[0]||naam||'??').slice(0,3).toUpperCase();
     }
 
     const kleuren=['#1a3c34','#2d6a4f','#40916c','#52b788','#74c69d','#b7e4c7','#8ecae6','#219ebc','#6a4c93','#023047','#e63946','#ffb703'];
-    let ki=0;
+    const clusterMap={};   // IPP-id → {id,naam,volgorde}
+    const procesMap={};    // PRC-id → {id,naam,volgorde,clusterId,stappen:[]}
+    let huidigCluster=null,huidigProces=null,huidigStap=null;
 
-    function bouwCluster(id,vol){
-      const ws=wsMap[id];if(!ws)return null;
-      const cl={id:aId(id),label:ws.naam,kleur:kleuren[ki++%kleuren.length],afkorting:afk(ws.naam),volgorde:vol,subclusters:[]};
-      ws.subs.slice().sort((a,b)=>a.volgorde-b.volgorde).forEach(sub=>{
-        if(isCluster[sub.id]){const sc=bouwCluster(sub.id,sub.volgorde);if(sc)cl.subclusters.push(sc);}
-      });
-      return cl;
+    // CSV inlezen (sla 2 headerrijen over)
+    for(let i=2;i<regels.length;i++){
+      const r=regels[i];
+      if(!r.some(v=>v&&v.trim()))continue;   // lege regel overslaan
+      const c=n=>(r[n]||'').trim();
+
+      if(c(clId).startsWith('IPP-')){
+        const id=c(clId);
+        if(!clusterMap[id]){
+          const rawVol=c(clVol);
+          clusterMap[id]={id,naam:c(clNm),volgorde:rawVol!==''?parseInt(rawVol):(Object.keys(clusterMap).length+1)};
+        }
+        huidigCluster=clusterMap[id];huidigProces=null;huidigStap=null;
+      }
+      if(c(prId).startsWith('PRC-')){
+        const id=c(prId);
+        if(!procesMap[id])procesMap[id]={id,naam:c(prNm),volgorde:parseVol(c(prVol)),clusterId:huidigCluster?.id,stappen:[]};
+        huidigProces=procesMap[id];huidigStap=null;
+      }
+      if(!huidigProces)continue;
+      // Nieuwe processtap (N1-niveau)
+      if(c(acId).startsWith('ACT-')&&c(acNm)){
+        huidigStap={naam:c(acNm),beschrijving:c(acBesch),volgorde:c(acVol)?parseInt(c(acVol)):null,systemen:[],inputs:[],outputs:[],verantwoordelijke:''};
+        huidigProces.stappen.push(huidigStap);
+      }
+      // Tools / output / input / verantwoordelijke toevoegen aan huidige stap (ook vervolgrijen)
+      if(huidigStap){
+        if(c(tlNm)&&!huidigStap.systemen.includes(c(tlNm)))huidigStap.systemen.push(c(tlNm));
+        if(c(outNm))huidigStap.outputs.push({code:c(outId),naam:c(outNm)});
+        if(c(inNm))huidigStap.inputs.push({code:c(inId),naam:c(inNm)});
+        if(!huidigStap.verantwoordelijke&&c(rolNm))huidigStap.verantwoordelijke=c(rolNm);
+      }
     }
 
-    // Root-clusters: werksporen waarvan de parent NIET in wsMap zit
-    const heeftParentInMap=new Set(Object.values(wsMap).filter(w=>w.parentId&&wsMap[w.parentId]).map(w=>w.id));
-    const roots=Object.keys(wsMap).filter(id=>!heeftParentInMap.has(id)&&isCluster[id]);
-    const clusters=roots.map((id,i)=>bouwCluster(id,i+1)).filter(Boolean);
+    // Clusters opbouwen — afkorting komt letterlijk uit de Relatics-code (bv. "IPP-30"),
+    // want de codering wordt in dit import-pad afgedwongen door de bron-export.
+    let ki=0;
+    const clusters=Object.values(clusterMap)
+      .sort((a,b)=>a.volgorde-b.volgorde)
+      .map(ws=>({id:aId(ws.id),label:ws.naam,kleur:kleuren[ki++%kleuren.length],afkorting:ws.id||afk(ws.naam),volgorde:ws.volgorde,subclusters:[]}));
 
     // Processen opbouwen
     const alleSystemen=new Set(S.data?.systemen||leeg().systemen);
     const alleRollen=new Set(S.data?.rollen||leeg().rollen);
     const processen=[];
 
-    for(const id in wsMap){
-      if(isCluster[id])continue;           // clusters overslaan
-      const ws=wsMap[id];
-      if(!ws.parentId)continue;            // werksporen zonder parent overslaan
-      const parentWs=wsMap[ws.parentId];
-      const subEntry=parentWs?.subs.find(s=>s.id===id);
-      const vol=subEntry?subEntry.volgorde:99999;
+    for(const id in procesMap){
+      const pr=procesMap[id];
+      if(!pr.clusterId)continue;   // proces zonder cluster overslaan
 
-      // Activiteiten sorteren: op volgorde als aanwezig, anders volgorde in bestand
-      const sortedActs=ws.acts.some(a=>a.volgorde!==null)
-        ?[...ws.acts].sort((a,b)=>(a.volgorde??999)-(b.volgorde??999))
-        :[...ws.acts];
+      // Stappen sorteren: op volgorde als aanwezig, anders volgorde in bestand
+      const sortedStappen=pr.stappen.some(a=>a.volgorde!==null)
+        ?[...pr.stappen].sort((a,b)=>(a.volgorde??999)-(b.volgorde??999))
+        :[...pr.stappen];
 
-      const stappen=sortedActs.map((act,si)=>{
+      const stappen=sortedStappen.map((act,si)=>{
         act.systemen.forEach(s=>alleSystemen.add(s));
         if(act.verantwoordelijke)alleRollen.add(act.verantwoordelijke);
-        const stap={
+        return{
           id:gid('s'),naam:act.naam,type:'activiteit',
           verantwoordelijke:act.verantwoordelijke||'',systeem:act.systemen.join('; '),
-          beschrijving:'',volgorde:act.volgorde??si+1,
+          beschrijving:act.beschrijving||'',volgorde:act.volgorde??si+1,
           status:'concept',substappen:[],medeverantwoordelijken:[],
           input:act.inputs.map(inp=>({label:inp.naam,bron:inp.code||'intern'})),
           output:act.outputs.map(o=>({label:o.naam,doel:o.code||'intern'}))
         };
-        return stap;
       });
 
-      processen.push({id:gid('p'),naam:ws.naam,categorie:aId(ws.parentId),
-        niveau:2,volgorde:vol,eigenaar:'',beschrijving:'',
+      processen.push({id:gid('p'),naam:pr.naam,categorie:aId(pr.clusterId),
+        niveau:2,volgorde:pr.volgorde,eigenaar:'',beschrijving:'',
         status:'concept',versie:'0.1',aangepast:td(),stappen});
     }
 
     // Documenten: alle unieke PRD-codes uit inputs en outputs verzamelen
     const docMap={};
-    for(const id in wsMap){
-      for(const act of wsMap[id].acts){
+    for(const id in procesMap){
+      for(const act of procesMap[id].stappen){
         for(const o of act.outputs){if(o.code&&o.code!=='intern'&&!docMap[o.code])docMap[o.code]=o.naam;}
         for(const inp of act.inputs){if(inp.code&&inp.code!=='intern'&&!docMap[inp.code])docMap[inp.code]=inp.naam;}
       }
