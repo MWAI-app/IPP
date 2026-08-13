@@ -77,6 +77,26 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .wi{width:68px;height:68px;background:var(--gn);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px}
 #wlk h2{font-size:20px;font-weight:700;color:var(--gd)}
 #wlk p{font-size:13px;max-width:340px;line-height:1.6}
+/* PROCESOVERZICHT */
+.po-wrap{max-width:1100px;margin:0 auto}
+.po-top{margin-bottom:18px}
+.po-top h2{font-size:18px;font-weight:700;color:var(--gd)}
+.po-top p{font-size:12px;color:var(--gs);margin-top:3px}
+.po-cl{border:1.5px solid var(--g2);border-radius:var(--rl);background:var(--gw);padding:16px 18px;margin-bottom:16px}
+.po-cl.po-d1{background:var(--gc)}
+.po-cl.po-d2{background:var(--gw)}
+.po-hdr{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap}
+.po-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.po-nm{font-size:14px;font-weight:700;color:var(--gd)}
+.po-afk{font-family:var(--m);font-size:10px;font-weight:700;color:var(--gm);background:var(--gn);padding:2px 7px;border-radius:4px}
+.po-cnt{margin-left:auto;font-size:11px;color:var(--gs);font-weight:600}
+.po-subs{display:flex;flex-direction:column;gap:12px;margin-top:4px;margin-bottom:4px}
+.po-procs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.po-proc{border:1px solid var(--g1);border-radius:var(--r);padding:8px 10px;background:var(--gc);cursor:pointer;transition:all .15s}
+.po-proc:hover{border-color:var(--ga);box-shadow:var(--sh);background:var(--gw)}
+.po-proc-nr{font-family:var(--m);font-size:10px;font-weight:700;color:var(--ga2);margin-right:5px}
+.po-proc-nm{font-size:12.5px;font-weight:600;color:var(--gd)}
+.po-leeg{font-size:11px;color:var(--g3);font-style:italic}
 /* KNOPPEN */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--r);font-family:var(--f);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
 .bp{background:var(--ga);color:var(--gd)}.bp:hover{background:var(--ga2)}

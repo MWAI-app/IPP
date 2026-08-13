@@ -308,6 +308,43 @@ function bouwLijst(){
   el.innerHTML=html;
 }
 
+// ── PROCESOVERZICHT (geneste cluster-blokken) ──
+function toonProcesOverzicht(){
+  if(!S.data){notif('Laad eerst een project','fout');return;}
+  S.hid=null;S.pad=[];sluitSP();bouwLijst();
+  document.getElementById('vt').style.display='none';
+  ['bst','bbw','bib','bea'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('wbs').textContent='Procesoverzicht';
+  const clusters=(S.data.clusters||[]).slice().sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
+  const canvas=document.getElementById('canvas');
+  if(!clusters.length){
+    canvas.innerHTML='<div class="leeg"><div class="li">&#128193;</div><h3>Geen clusters</h3><p>Maak eerst een procescluster aan via Beheer.</p></div>';
+    return;
+  }
+  const totProc=(S.data.processen||[]).length;
+  let h=`<div class="po-wrap"><div class="po-top"><h2>Procesoverzicht</h2><p>${totProc} processen in ${clusters.length} hoofdcluster${clusters.length!==1?'s':''} — klik op een proces om het te openen.</p></div>`;
+  h+=clusters.map(c=>renderPOCluster(c,0)).join('');
+  h+='</div>';
+  canvas.innerHTML=h;
+}
+function renderPOCluster(c,depth){
+  const procs=(S.data.processen||[]).filter(p=>p.categorie===c.id)
+    .sort((a,b)=>(a.volgorde||0)-(b.volgorde||0)||(a.naam||'').localeCompare(b.naam||''));
+  const subs=(c.subclusters||[]).slice().sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
+  const totaal=(S.data.processen||[]).filter(p=>alleClusterIds(c).includes(p.categorie)).length;
+  let h=`<div class="po-cl po-d${Math.min(depth,2)}" style="border-color:${c.kleur||'#c8d4cc'}">`;
+  h+=`<div class="po-hdr"><span class="po-dot" style="background:${c.kleur||'#888'}"></span><span class="po-nm">${c.label}</span>`;
+  if(c.afkorting)h+=`<span class="po-afk">${c.afkorting}</span>`;
+  h+=`<span class="po-cnt">${totaal} proces${totaal!==1?'sen':''}</span></div>`;
+  if(subs.length)h+=`<div class="po-subs">${subs.map(sc=>renderPOCluster(sc,depth+1)).join('')}</div>`;
+  if(procs.length){
+    h+=`<div class="po-procs">${procs.map(p=>`<div class="po-proc" onclick="sel('${p.id}')"><span class="po-proc-nr">${procNr(p)}</span><span class="po-proc-nm">${p.naam}</span></div>`).join('')}</div>`;
+  }
+  if(!subs.length&&!procs.length)h+='<p class="po-leeg">Geen processen in dit cluster.</p>';
+  h+='</div>';
+  return h;
+}
+
 // ── SELECTIE & NAVIGATIE ──
 function sel(id){
   S.hid=id;S.pad=[];sluitSP();bouwLijst();
