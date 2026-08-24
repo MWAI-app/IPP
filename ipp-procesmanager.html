@@ -49,7 +49,7 @@
       <button class="vtb" id="vbt" onclick="setView('t')" title="Tabel">t</button>
       <button class="vtb" id="vbsl" onclick="setView('sl')" title="Swimlane">s</button>
     </div>
-    <button class="btn bg" id="bst" style="display:none" onclick="stapModal()">+ Stap</button>
+    <button class="btn bg" id="bst" style="display:none" onclick="S.pad=[];stapModal()">+ Stap</button>
     <button class="btn bg" id="bbw" style="display:none" onclick="bewerkProc()">Bewerk</button>
     <button class="btn bg" id="bib" style="display:none;border-color:var(--gg);color:var(--gg)" onclick="toonIB()">IB Inventarisatie</button>
     <button class="btn bg" id="bea" style="display:none;border-color:var(--gm);color:var(--gm)" onclick="toonEA()">Elementen &amp; Attributen</button>
@@ -174,8 +174,20 @@
         </div>
       </div>
       <div class="fr">
-        <div class="fg"><label>Niveau</label><div id="sniv-info" style="padding:7px 9px;background:var(--gn);border-radius:var(--r);font-size:13px;font-weight:600;color:var(--gd)">N1</div></div>
+        <div class="fg">
+          <label>Niveau</label>
+          <div id="sniv-info" style="padding:7px 9px;background:var(--gn);border-radius:var(--r);font-size:13px;font-weight:600;color:var(--gd)">N1</div>
+          <div class="niv-pick" id="niv-pick" style="display:none">
+            <button type="button" class="niv-b" data-n="1" onclick="kiesNiv(1)">N1</button>
+            <button type="button" class="niv-b" data-n="2" onclick="kiesNiv(2)">N2</button>
+            <button type="button" class="niv-b" data-n="3" onclick="kiesNiv(3)">N3</button>
+          </div>
+        </div>
         <div class="fg"><label>Volgorde</label><input type="number" id="svol" min="1" value="1"></div>
+      </div>
+      <div class="fr" id="niv-ouder-rij" style="display:none">
+        <div class="fg" id="niv-ouder-n1-fg"><label>Onder N1-stap *</label><select id="niv-ouder-n1" onchange="nivOuderN1Chg()"></select></div>
+        <div class="fg" id="niv-ouder-n2-fg" style="display:none"><label>Onder N2-substap *</label><select id="niv-ouder-n2" onchange="nivOuderN2Chg()"></select></div>
       </div>
       <div class="fr frvol"><div class="fg"><label>Beschrijving</label><textarea id="sbesc" placeholder="Wat gebeurt er in deze stap?"></textarea></div></div>
       <div class="ios">

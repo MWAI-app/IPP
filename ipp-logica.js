@@ -161,6 +161,17 @@ function zoekStap(stappen,sid){
   }
   return null;
 }
+// Geeft het S.pad-pad (ouder-id's) naar sid, ongeacht wat S.pad daarvoor toevallig was —
+// voorkomt dat een stap via een verouderd/ander pad op het verkeerde niveau terechtkomt.
+function padNaarStap(stappen,sid,pad){
+  pad=pad||[];
+  for(const s of stappen){
+    if(s.id===sid)return pad;
+    const r=padNaarStap(s.substappen||[],sid,[...pad,s.id]);
+    if(r)return r;
+  }
+  return null;
+}
 
 // ── INITIALISATIE ──
 function init(){
@@ -692,7 +703,7 @@ function tekenT(cv,st){
         h+=`<td rowspan="${maxIO}" class="tbl-meta-cel">${s.verantwoordelijke||'-'}</td>`;
         h+=`<td rowspan="${maxIO}" class="tbl-meta-cel">${s.systeem?`<span class="sks">${s.systeem}</span>`:''}</td>`;
         h+=`<td rowspan="${maxIO}" class="tbl-act-cel">
-          <button class="tbl-act-btn" onclick="S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>
+          <button class="tbl-act-btn" onclick="S.pad=[];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>
           <button class="tbl-act-btn tbl-act-sub ${heeftSub?'heeft':''}" onclick="openSP('${s.id}')">${heeftSub?'v'+s.substappen.length:'+ N2'}</button>
         </td>`;
       }
@@ -706,7 +717,7 @@ function tekenT(cv,st){
 function showDet(sid){
   const p=proc(S.hid);if(!p)return;
   const s=zoekStap(p.stappen||[],sid);if(!s)return;
-  S.bsid=sid;
+  S.bsid=sid;S.pad=padNaarStap(p.stappen||[],sid)||[];
   document.getElementById('dett').textContent=s.naam;
   let h=`<div class="dts"><div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
     <span class="chip cr">${IC[s.type]} ${s.type}</span>
@@ -726,23 +737,75 @@ function stapModal(sid){
   S.bsid=sid||null;
   const p=proc(S.hid);if(!p)return;
   const s=sid?zoekStap(p.stappen||[],sid):null;
-  const niv=huidigNiv();
   const nivLabels={1:'N1 - Overzicht (hoofdstap)',2:'N2 - Operationeel (substap van N1)',3:'N3 - Detail (substap van N2)'};
-  document.getElementById('mst').textContent=s?`N${niv}-stap bewerken`:`N${niv}-stap toevoegen`;
   document.getElementById('bds').style.display=s?'':'none';
-  document.getElementById('sniv-info').textContent=nivLabels[niv]||'N'+niv;
   document.getElementById('snm').value=s?.naam||'';
   document.getElementById('stp').value=s?.type||'activiteit';
   document.getElementById('sbesc').value=s?.beschrijving||'';
-  const lijstLen=(niv===1?(p.stappen||[]).length:(ouderStap()?.substappen||[]).length);
-  document.getElementById('svol').value=s?.volgorde||(lijstLen+1);
   vulSels();setRol(s?.verantwoordelijke||'');setSys(s?.systeem||'');
   document.getElementById('smedev').innerHTML='';(s?.medeverantwoordelijken||[]).forEach(v=>medevRij(v));
   bouwIO('in',s?.input||[]);bouwIO('out',s?.output||[]);
   _updateTypeSecs(s?.type||'activiteit');
   bouwBranches(s?.branches||[]);
   bouwBron(s?.bronStappen||[]);
+  if(s){
+    // Bewerken: niveau ligt vast (staat al goed door de knop waarmee dit modal is geopend)
+    const niv=huidigNiv();
+    document.getElementById('mst').textContent=`N${niv}-stap bewerken`;
+    document.getElementById('sniv-info').style.display='';
+    document.getElementById('sniv-info').textContent=nivLabels[niv]||'N'+niv;
+    document.getElementById('niv-pick').style.display='none';
+    document.getElementById('niv-ouder-rij').style.display='none';
+    document.getElementById('svol').value=s.volgorde||1;
+  } else {
+    // Toevoegen: niveau + bovenliggende stap expliciet kiesbaar, i.p.v. impliciet via welke knop je klikte
+    document.getElementById('mst').textContent='Stap toevoegen';
+    document.getElementById('sniv-info').style.display='none';
+    document.getElementById('niv-pick').style.display='';
+    const startNiv=Math.min(3,Math.max(1,huidigNiv()));
+    _vulNivOuders(S.pad[0],S.pad[1]);
+    kiesNiv(startNiv);
+  }
   document.getElementById('ms').style.display='flex';
+}
+function huidigeGekozenNiv(){return+document.querySelector('#niv-pick .niv-b.a')?.dataset.n||1;}
+function _vulNivOuders(voorkeurN1,voorkeurN2){
+  const p=proc(S.hid);if(!p)return;
+  const selN1=document.getElementById('niv-ouder-n1');
+  selN1.innerHTML=(p.stappen||[]).map(s=>`<option value="${s.id}">${s.naam}</option>`).join('');
+  if(voorkeurN1&&(p.stappen||[]).some(s=>s.id===voorkeurN1))selN1.value=voorkeurN1;
+  _vulNivOuderN2(voorkeurN2);
+}
+function _vulNivOuderN2(voorkeur){
+  const p=proc(S.hid);if(!p)return;
+  const n1=zoekStap(p.stappen||[],document.getElementById('niv-ouder-n1').value);
+  const sel=document.getElementById('niv-ouder-n2');
+  sel.innerHTML=(n1?.substappen||[]).map(s=>`<option value="${s.id}">${s.naam}</option>`).join('');
+  if(voorkeur&&(n1?.substappen||[]).some(s=>s.id===voorkeur))sel.value=voorkeur;
+}
+function nivOuderN1Chg(){_vulNivOuderN2();_nivPadBijwerken(huidigeGekozenNiv());}
+function nivOuderN2Chg(){_nivPadBijwerken(3);}
+function kiesNiv(niv){
+  const p=proc(S.hid);
+  if(niv>1&&!(p?.stappen||[]).length){
+    notif('Voeg eerst een N1-stap toe voordat je een N2- of N3-substap kunt toevoegen','fout');niv=1;
+  } else if(niv===3){
+    const n1=zoekStap(p.stappen||[],document.getElementById('niv-ouder-n1').value);
+    if(!n1||!(n1.substappen||[]).length){
+      notif('Deze N1-stap heeft nog geen N2-substappen. Voeg die eerst toe.','fout');niv=2;
+    }
+  }
+  document.querySelectorAll('#niv-pick .niv-b').forEach(b=>b.classList.toggle('a',+b.dataset.n===niv));
+  document.getElementById('niv-ouder-rij').style.display=niv>1?'':'none';
+  document.getElementById('niv-ouder-n2-fg').style.display=niv>2?'':'none';
+  _nivPadBijwerken(niv);
+}
+function _nivPadBijwerken(niv){
+  if(niv===1)S.pad=[];
+  else if(niv===2)S.pad=[document.getElementById('niv-ouder-n1').value];
+  else S.pad=[document.getElementById('niv-ouder-n1').value,document.getElementById('niv-ouder-n2').value];
+  const p=proc(S.hid);
+  document.getElementById('svol').value=(niv===1?(p?.stappen||[]).length:(ouderStap()?.substappen||[]).length)+1;
 }
 function bouwIO(r,items){const el=document.getElementById('i'+r);el.innerHTML='';items.forEach(io=>ioRij(r,io));}
 function ioToe(r){ioRij(r,{});}
