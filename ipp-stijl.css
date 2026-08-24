@@ -196,6 +196,8 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .sa.sub{border-color:var(--gg);color:var(--gg)}.sa.sub:hover{background:var(--gn)}
 .sa.sub.heeft{background:var(--gn);color:var(--gm)}
 .sa.bwrk{border-color:var(--ga);color:var(--ga2)}.sa.bwrk:hover{background:#fffbf0}
+.sa.vlg,.spa.vlg{padding-left:8px;padding-right:8px;font-weight:700}
+.sa:disabled,.spa:disabled{opacity:.3;cursor:not-allowed;pointer-events:none}
 /* SUB PANEEL KAARTJES */
 .spk{background:var(--gc);border:1.5px solid var(--g1);border-radius:var(--rl);padding:10px 12px;margin-bottom:8px;position:relative;transition:all .15s}
 .spk:hover{border-color:var(--gg);box-shadow:var(--sh)}

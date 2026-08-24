@@ -425,6 +425,8 @@ function vulSPBody(substappen,ouderNr,niv,n1sid,n2sid){
       </div>
       <div class="sp-mt"><span>&#128100; ${s.verantwoordelijke||'-'}</span>${s.systeem?`<span class="sks">${s.systeem}</span>`:''}</div>
       <div class="sp-ac">
+        <button class="spa vlg" title="Omhoog" ${i===0?'disabled':''} onclick="verplaatsStap('${s.id}',-1)">&#8593;</button>
+        <button class="spa vlg" title="Omlaag" ${i===substappen.length-1?'disabled':''} onclick="verplaatsStap('${s.id}',1)">&#8595;</button>
         <button class="spa" onclick="showDet('${s.id}')">Detail</button>
         <button class="spa bwrk" onclick="${bewerk}">Bewerk</button>
         ${niv<3?`<button class="spa sub ${heeftSub?'heeft':''}" onclick="${n2sid?'':''} openSP2('${n1sid||n2sid?n1sid:''}','${s.id}')">
@@ -506,6 +508,8 @@ function n2Kolom(subs,n1nr,n1sid){
     stH+=`<div class="skr" style="margin-top:3px;font-size:10px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks">${s.systeem}</span>`:''}</div>`;
     if(s.beschrijving) stH+=`<div style="font-size:10px;color:var(--gs);margin-top:4px;line-height:1.4">${s.beschrijving}</div>`;
     stH+=`<div class="sk-acties" style="margin-top:6px;padding-top:6px">`;
+    stH+=`<button class="sa vlg" style="font-size:10px;padding:2px 6px" title="Omhoog" ${i===0?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',-1)">&#8593;</button>`;
+    stH+=`<button class="sa vlg" style="font-size:10px;padding:2px 6px" title="Omlaag" ${i===subs.length-1?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',1)">&#8595;</button>`;
     stH+=`<button class="sa" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
     stH+=`<button class="sa bwrk" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();S.pad=['${n1sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
     if(heeftN3) stH+=`<button class="sa sub heeft" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();toggleN3('${n1sid}','${s.id}')">${expN3?'&#9650; N3 inklappen':'v'+s.substappen.length+' N3 &#8595;'}</button><button class="sa sub" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();openSP2('${n1sid}','${s.id}')">+ N3</button>`;
@@ -546,6 +550,8 @@ function n3Kolom(subs,n2nr,n1sid,n2sid){
     stH+=`<div class="skr" style="margin-top:2px;font-size:9px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks" style="font-size:9px">${s.systeem}</span>`:''}</div>`;
     if(s.beschrijving) stH+=`<div style="font-size:9px;color:var(--gs);margin-top:3px;line-height:1.35">${s.beschrijving}</div>`;
     stH+=`<div class="sk-acties" style="margin-top:4px;padding-top:4px">`;
+    stH+=`<button class="sa vlg" style="font-size:9px;padding:1px 5px" title="Omhoog" ${i===0?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',-1)">&#8593;</button>`;
+    stH+=`<button class="sa vlg" style="font-size:9px;padding:1px 5px" title="Omlaag" ${i===subs.length-1?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',1)">&#8595;</button>`;
     stH+=`<button class="sa" style="font-size:9px;padding:1px 5px" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
     stH+=`<button class="sa bwrk" style="font-size:9px;padding:1px 5px" onclick="event.stopPropagation();S.pad=['${n1sid}','${n2sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
     stH+=`</div></div></div>`;
@@ -596,6 +602,8 @@ function tekenV(cv,st){
     stH+=`<div class="skr" style="margin-top:4px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks">${s.systeem}</span>`:''}</div>`;
     if(s.beschrijving) stH+=`<div style="font-size:11px;color:var(--gs);margin-top:5px;line-height:1.45">${s.beschrijving}</div>`;
     stH+=`<div class="sk-acties">`;
+    stH+=`<button class="sa vlg" title="Omhoog" ${i===0?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',-1)">&#8593;</button>`;
+    stH+=`<button class="sa vlg" title="Omlaag" ${i===st.length-1?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',1)">&#8595;</button>`;
     stH+=`<button class="sa" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
     stH+=`<button class="sa bwrk" onclick="event.stopPropagation();S.pad=[];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
     if(heeftSub) stH+=`<button class="sa sub heeft" onclick="event.stopPropagation();toggleN2('${s.id}')">${exp?'&#9650; N2 inklappen':'v'+s.substappen.length+' N2 &#8595;'}</button><button class="sa sub" onclick="event.stopPropagation();openSP('${s.id}')">+ N2</button>`;
@@ -966,6 +974,21 @@ function delStap(){
     if(ouder)ouder.substappen=(ouder.substappen||[]).filter(s=>s.id!==S.bsid);
   }
   sluit('ms');markeer();teken();notif('Stap verwijderd','ok');
+}
+// Verplaatst een stap één plek omhoog (-1) of omlaag (+1) binnen zijn eigen niveau (N1/N2/N3),
+// door de volgorde-waarden van de lijst waar hij toe behoort te normaliseren en te wisselen.
+function verplaatsStap(sid,richting){
+  const p=proc(S.hid);if(!p)return;
+  const pad=padNaarStap(p.stappen||[],sid);if(pad===null)return;
+  let lijst=p.stappen||[];
+  for(const oid of pad){const ouder=zoekStap(p.stappen,oid);if(!ouder)return;if(!ouder.substappen)ouder.substappen=[];lijst=ouder.substappen;}
+  const sorted=[...lijst].sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
+  sorted.forEach((s,i)=>{s.volgorde=i+1;});
+  const idx=sorted.findIndex(s=>s.id===sid);
+  const doel=idx+richting;
+  if(idx<0||doel<0||doel>=sorted.length)return;
+  const tmp=sorted[idx].volgorde;sorted[idx].volgorde=sorted[doel].volgorde;sorted[doel].volgorde=tmp;
+  markeer();teken();
 }
 
 // ── PROCES MODAL ──
