@@ -499,36 +499,36 @@ function n2Kolom(subs,n1nr,n1sid){
     const expN3=heeftN3&&uitgeklaptN3.has(key);
     const bronSt2=s.type==='start'?(s.bronStappen||[]):[];
     let inH='<div class="sk2-io">';
-    if(bronSt2.length){inH+=`<div class="sk2-iol sk3-iol-bron">GESTART VANUIT</div>`;bronSt2.forEach(b=>{const info=zoekStapInfo(b.stapId);inH+=`<div class="ioi ioi-bron" style="font-size:10px;padding:2px 5px">${info?.naam||b.label||'?'}${info?.nr?` <span class="ioi-stapnr">${info.nr}</span>`:''}</div>`;});if(inp.length)inH+=`<div class="sk2-iol" style="margin-top:5px">— INPUT</div>`;}else{inH+=`<div class="sk2-iol">— INPUT</div>`;}
-    if(inp.length)inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}" style="font-size:10px;padding:2px 5px">${io.label}${e?` <span class="ioe">&#8593; ${bronNm(io.bron)}</span>`:''}</div>`;});
-    else if(!bronSt2.length)inH+='<span style="font-size:10px;color:var(--g3)">—</span>';
+    if(bronSt2.length){inH+=`<div class="sk2-iol sk3-iol-bron">GESTART VANUIT</div>`;bronSt2.forEach(b=>{const info=zoekStapInfo(b.stapId);inH+=`<div class="ioi ioi-bron">${info?.naam||b.label||'?'}${info?.nr?` <span class="ioi-stapnr">${info.nr}</span>`:''}</div>`;});if(inp.length)inH+=`<div class="sk2-iol" style="margin-top:6px">— INPUT</div>`;}else{inH+=`<div class="sk2-iol">— INPUT</div>`;}
+    if(inp.length)inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8593; ${bronNm(io.bron)}</span>`:''}</div>`;});
+    else if(!bronSt2.length)inH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     inH+='</div>';
-    let stH=`<div class="sk2-step ${tc}"><div class="sk2-thdr"><span class="sk2-ico">${IC[s.type]||'?'}</span><span>${typeNm[s.type]||s.type}</span><span style="margin-left:auto;font-family:var(--m);font-size:10px">${nr}</span></div>`;
-    stH+=`<div class="sk2-body"><div class="skn" style="font-size:12px">${s.naam}</div>`;
-    stH+=`<div class="skr" style="margin-top:3px;font-size:10px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks">${s.systeem}</span>`:''}</div>`;
-    if(s.beschrijving) stH+=`<div style="font-size:10px;color:var(--gs);margin-top:4px;line-height:1.4">${s.beschrijving}</div>`;
-    stH+=`<div class="sk-acties" style="margin-top:6px;padding-top:6px">`;
-    stH+=`<button class="sa vlg" style="font-size:10px;padding:2px 6px" title="Omhoog" ${i===0?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',-1)">&#8593;</button>`;
-    stH+=`<button class="sa vlg" style="font-size:10px;padding:2px 6px" title="Omlaag" ${i===subs.length-1?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',1)">&#8595;</button>`;
-    stH+=`<button class="sa" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
-    stH+=`<button class="sa bwrk" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();S.pad=['${n1sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
-    if(heeftN3) stH+=`<button class="sa sub heeft" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();toggleN3('${n1sid}','${s.id}')">${expN3?'&#9650; N3 inklappen':'v'+s.substappen.length+' N3 &#8595;'}</button><button class="sa sub" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();openSP2('${n1sid}','${s.id}')">+ N3</button>`;
-    else stH+=`<button class="sa sub" style="font-size:10px;padding:2px 7px" onclick="event.stopPropagation();openSP2('${n1sid}','${s.id}')">+ N3 toevoegen</button>`;
+    let stH=`<div class="sk2-step ${tc}"><div class="sk2-thdr"><span class="sk2-ico">${IC[s.type]||'?'}</span><span>${typeNm[s.type]||s.type}</span><span style="margin-left:auto;font-family:var(--m);font-size:11px">${nr}</span></div>`;
+    stH+=`<div class="sk2-body"><div class="skn">${s.naam}</div>`;
+    stH+=`<div class="skr" style="margin-top:4px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks">${s.systeem}</span>`:''}</div>`;
+    if(s.beschrijving) stH+=`<div style="font-size:11px;color:var(--gs);margin-top:5px;line-height:1.45">${s.beschrijving}</div>`;
+    stH+=`<div class="sk-acties">`;
+    stH+=`<button class="sa vlg" title="Omhoog" ${i===0?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',-1)">&#8593;</button>`;
+    stH+=`<button class="sa vlg" title="Omlaag" ${i===subs.length-1?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',1)">&#8595;</button>`;
+    stH+=`<button class="sa" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
+    stH+=`<button class="sa bwrk" onclick="event.stopPropagation();S.pad=['${n1sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
+    if(heeftN3) stH+=`<button class="sa sub heeft" onclick="event.stopPropagation();toggleN3('${n1sid}','${s.id}')">${expN3?'&#9650; N3 inklappen':'v'+s.substappen.length+' N3 &#8595;'}</button><button class="sa sub" onclick="event.stopPropagation();openSP2('${n1sid}','${s.id}')">+ N3</button>`;
+    else stH+=`<button class="sa sub" onclick="event.stopPropagation();openSP2('${n1sid}','${s.id}')">+ N3 toevoegen</button>`;
     stH+=`</div></div></div>`;
     const branches2=s.branches||[];
     let outH='<div class="sk2-io">';
     if(branches2.length){
       outH+=`<div class="sk2-iol sk3-iol-pad">${s.type==='einde'?'VERVOLG &#8594;':'PADEN &#9670;'}</div>`;
-      branches2.forEach(b=>{const info=zoekStapInfo(b.stapId);const nr_=info?.nr||(b.label?zoekStapNr(b.label):null);const naam=info?.naam||b.label||'...';outH+=`<div class="ioi ioi-pad" style="font-size:10px;padding:2px 5px">${b.conditie?`<span class="ioi-cond">${b.conditie}</span> <span class="ioi-parr">&#8594;</span> `:''}${naam}${nr_?` <span class="ioi-stapnr">${nr_}</span>`:''}</div>`;});
-      if(out.length)outH+=`<div class="sk2-iol" style="margin-top:5px">OUTPUT —</div>`;
+      branches2.forEach(b=>{const info=zoekStapInfo(b.stapId);const nr_=info?.nr||(b.label?zoekStapNr(b.label):null);const naam=info?.naam||b.label||'...';outH+=`<div class="ioi ioi-pad">${b.conditie?`<span class="ioi-cond">${b.conditie}</span> <span class="ioi-parr">&#8594;</span> `:''}${naam}${nr_?` <span class="ioi-stapnr">${nr_}</span>`:''}</div>`;});
+      if(out.length)outH+=`<div class="sk2-iol" style="margin-top:6px">OUTPUT —</div>`;
     }else{outH+=`<div class="sk2-iol">OUTPUT —</div>`;}
-    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}" style="font-size:10px;padding:2px 5px">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
-    else if(!branches2.length)outH+='<span style="font-size:10px;color:var(--g3)">—</span>';
+    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
+    else if(!branches2.length)outH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     outH+='</div>';
     if(i>0) h+='<div class="n2-kpijl"></div>';
     if(expN3){
       const n3subs=(s.substappen||[]).sort((a,b)=>(a.volgorde||0)-(b.volgorde||0));
-      h+=`<div class="n2-exp-wrap"><div class="sk2row">${inH}${stH}${outH}</div><div class="n3-col-wrap"><div class="n2-harrow" style="font-size:16px;margin-top:24px">&#8594;</div>${n3Kolom(n3subs,nr,n1sid,s.id)}</div></div>`;
+      h+=`<div class="n2-exp-wrap"><div class="sk2row">${inH}${stH}${outH}</div><div class="n3-col-wrap"><div class="n2-harrow" style="margin-top:30px">&#8594;</div>${n3Kolom(n3subs,nr,n1sid,s.id)}</div></div>`;
     } else {
       h+=`<div class="sk2row">${inH}${stH}${outH}</div>`;
     }
@@ -542,28 +542,28 @@ function n3Kolom(subs,n2nr,n1sid,n2sid){
     const tc=tcls(s.type),nr=n2nr+'.'+String(i+1).padStart(2,'0');
     const inp=s.input||[],out=s.output||[];
     let inH='<div class="sk1-io"><div class="sk2-iol">— INPUT</div>';
-    if(inp.length) inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}" style="font-size:9px;padding:1px 4px">${io.label}</div>`;});
-    else inH+='<span style="font-size:9px;color:var(--g3)">—</span>';
+    if(inp.length) inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${io.label}</div>`;});
+    else inH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     inH+='</div>';
-    let stH=`<div class="sk1-step ${tc}"><div class="sk2-thdr" style="font-size:9px;padding:4px 8px"><span class="sk2-ico" style="font-size:11px">${IC[s.type]||'?'}</span><span>${typeNm[s.type]||s.type}</span><span style="margin-left:auto;font-family:var(--m);font-size:9px">${nr}</span></div>`;
-    stH+=`<div class="sk2-body" style="padding:5px 8px"><div class="skn" style="font-size:11px">${s.naam}</div>`;
-    stH+=`<div class="skr" style="margin-top:2px;font-size:9px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks" style="font-size:9px">${s.systeem}</span>`:''}</div>`;
-    if(s.beschrijving) stH+=`<div style="font-size:9px;color:var(--gs);margin-top:3px;line-height:1.35">${s.beschrijving}</div>`;
-    stH+=`<div class="sk-acties" style="margin-top:4px;padding-top:4px">`;
-    stH+=`<button class="sa vlg" style="font-size:9px;padding:1px 5px" title="Omhoog" ${i===0?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',-1)">&#8593;</button>`;
-    stH+=`<button class="sa vlg" style="font-size:9px;padding:1px 5px" title="Omlaag" ${i===subs.length-1?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',1)">&#8595;</button>`;
-    stH+=`<button class="sa" style="font-size:9px;padding:1px 5px" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
-    stH+=`<button class="sa bwrk" style="font-size:9px;padding:1px 5px" onclick="event.stopPropagation();S.pad=['${n1sid}','${n2sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
+    let stH=`<div class="sk1-step ${tc}"><div class="sk2-thdr"><span class="sk2-ico">${IC[s.type]||'?'}</span><span>${typeNm[s.type]||s.type}</span><span style="margin-left:auto;font-family:var(--m);font-size:11px">${nr}</span></div>`;
+    stH+=`<div class="sk2-body"><div class="skn">${s.naam}</div>`;
+    stH+=`<div class="skr" style="margin-top:4px">&#128100; ${s.verantwoordelijke||'-'}${s.systeem?` <span class="sks">${s.systeem}</span>`:''}</div>`;
+    if(s.beschrijving) stH+=`<div style="font-size:11px;color:var(--gs);margin-top:5px;line-height:1.45">${s.beschrijving}</div>`;
+    stH+=`<div class="sk-acties">`;
+    stH+=`<button class="sa vlg" title="Omhoog" ${i===0?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',-1)">&#8593;</button>`;
+    stH+=`<button class="sa vlg" title="Omlaag" ${i===subs.length-1?'disabled':''} onclick="event.stopPropagation();verplaatsStap('${s.id}',1)">&#8595;</button>`;
+    stH+=`<button class="sa" onclick="event.stopPropagation();showDet('${s.id}')">Detail</button>`;
+    stH+=`<button class="sa bwrk" onclick="event.stopPropagation();S.pad=['${n1sid}','${n2sid}'];S.bsid='${s.id}';stapModal('${s.id}')">Bewerk</button>`;
     stH+=`</div></div></div>`;
     const branches3=s.branches||[];
     let outH='<div class="sk1-io">';
     if(branches3.length){
       outH+=`<div class="sk2-iol sk3-iol-pad">PADEN &#9670;</div>`;
-      branches3.forEach(b=>{const info=zoekStapInfo(b.stapId);const nr_=info?.nr||(b.label?zoekStapNr(b.label):null);const naam=info?.naam||b.label||'...';outH+=`<div class="ioi ioi-pad" style="font-size:9px;padding:1px 4px"><span class="ioi-cond">${b.conditie}</span> <span class="ioi-parr">&#8594;</span> ${naam}${nr_?` <span class="ioi-stapnr">${nr_}</span>`:''}</div>`;});
-      if(out.length)outH+=`<div class="sk2-iol" style="margin-top:4px">OUTPUT —</div>`;
+      branches3.forEach(b=>{const info=zoekStapInfo(b.stapId);const nr_=info?.nr||(b.label?zoekStapNr(b.label):null);const naam=info?.naam||b.label||'...';outH+=`<div class="ioi ioi-pad"><span class="ioi-cond">${b.conditie}</span> <span class="ioi-parr">&#8594;</span> ${naam}${nr_?` <span class="ioi-stapnr">${nr_}</span>`:''}</div>`;});
+      if(out.length)outH+=`<div class="sk2-iol" style="margin-top:6px">OUTPUT —</div>`;
     }else{outH+=`<div class="sk2-iol">OUTPUT —</div>`;}
-    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}" style="font-size:9px;padding:1px 4px">${io.label}</div>`;});
-    else if(!branches3.length)outH+='<span style="font-size:9px;color:var(--g3)">—</span>';
+    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${io.label}</div>`;});
+    else if(!branches3.length)outH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     outH+='</div>';
     if(i>0) h+='<div class="n3-kpijl"></div>';
     h+=`<div class="sk1row">${inH}${stH}${outH}</div>`;
@@ -1719,17 +1719,34 @@ function exportPDF(){
   });
   teken();
 
-  // Op A3 liggend passen (±1500px afdrukbare breedte na marges) — schaal de hele tekening
-  // met CSS zoom naar beneden zodat niets buiten het vel valt, in plaats van af te kappen.
+  // Werkelijke afdrukbreedte meten: tijdelijk dezelfde lay-out aanzetten als bij het echte
+  // printen (.pdf-mode, zie ipp-stijl.css) — anders meet je de smallere schermbreedte
+  // (met sidebar) i.p.v. de volle breedte die de tekening op papier nodig heeft.
+  document.body.classList.add('pdf-mode');
   const cv=document.getElementById('canvas');
+  const inner=cv.firstElementChild;
+  const breedte=inner?inner.scrollWidth:cv.scrollWidth;
+  const hoogte=inner?inner.scrollHeight:cv.scrollHeight;
+  document.body.classList.remove('pdf-mode');
+
+  // Op A3 liggend passen (±1500px afdrukbare breedte na 10mm marges). We schalen met
+  // transform i.p.v. zoom, en zetten de eigenlijke afmeting van de wrapper ook expliciet
+  // terug — anders blijft de gereserveerde ruimte voor paginering de ONgeschaalde
+  // (te grote) maat gebruiken en klopt de paginaverdeling niet.
   const beschikbaar=1500;
-  const schaal=Math.min(1,beschikbaar/Math.max(cv.scrollWidth,1));
+  const schaal=Math.min(1,beschikbaar/Math.max(breedte,1));
+  if(inner&&schaal<1){
+    inner.style.transform=`scale(${schaal})`;
+    inner.style.transformOrigin='top left';
+    inner.style.width=breedte+'px';
+    cv.style.width=(breedte*schaal)+'px';
+    cv.style.height=(hoogte*schaal)+'px';
+  }
 
   const st=document.createElement('style');st.id='pst';
   st.textContent=`@media print{
     @page{size:A3 landscape;margin:10mm}
     body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    #canvas>div{zoom:${schaal}}
   }`;
   document.head.appendChild(st);
   window.print();
