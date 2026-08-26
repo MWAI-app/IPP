@@ -1726,27 +1726,20 @@ function exportPDF(){
   const cv=document.getElementById('canvas');
   const inner=cv.firstElementChild;
   const breedte=inner?inner.scrollWidth:cv.scrollWidth;
-  const hoogte=inner?inner.scrollHeight:cv.scrollHeight;
   document.body.classList.remove('pdf-mode');
 
-  // Op A3 liggend passen (±1500px afdrukbare breedte na 10mm marges). We schalen met
-  // transform i.p.v. zoom, en zetten de eigenlijke afmeting van de wrapper ook expliciet
-  // terug — anders blijft de gereserveerde ruimte voor paginering de ONgeschaalde
-  // (te grote) maat gebruiken en klopt de paginaverdeling niet.
+  // Op A3 liggend passen (±1500px afdrukbare breedte na 10mm marges). CSS zoom herberekent
+  // de lay-out echt op de kleinere maat (i.t.t. transform:scale, dat alleen visueel
+  // verkleint maar de paginering op de originele — te grote — afmeting laat rekenen).
+  // Alleen tijdens het printen actief (via @media print), niet op het scherm.
   const beschikbaar=1500;
   const schaal=Math.min(1,beschikbaar/Math.max(breedte,1));
-  if(inner&&schaal<1){
-    inner.style.transform=`scale(${schaal})`;
-    inner.style.transformOrigin='top left';
-    inner.style.width=breedte+'px';
-    cv.style.width=(breedte*schaal)+'px';
-    cv.style.height=(hoogte*schaal)+'px';
-  }
 
   const st=document.createElement('style');st.id='pst';
   st.textContent=`@media print{
     @page{size:A3 landscape;margin:10mm}
     body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    #canvas>div{zoom:${schaal}}
   }`;
   document.head.appendChild(st);
   window.print();
