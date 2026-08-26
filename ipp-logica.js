@@ -1707,10 +1707,36 @@ function exportPDF(){
   if(!S.hid){notif('Selecteer eerst een proces','fout');return;}
   const p=proc(S.hid);const orig=document.title;
   document.title=(p?.naam||'Proces')+' - IPP Antea Group';
+
+  // Alle N2/N3 tijdelijk volledig uitklappen (ongeacht wat er nu open staat), zodat alle
+  // drie de niveaus naast elkaar op de afdruk staan — zie [[project-ipp]] printvoorkeur.
+  const _uOrig=new Set(uitgeklapt),_u3Orig=new Set(uitgeklaptN3);
+  (p.stappen||[]).forEach(n1=>{
+    if((n1.substappen||[]).length){
+      uitgeklapt.add(n1.id);
+      n1.substappen.forEach(n2=>{if((n2.substappen||[]).length)uitgeklaptN3.add(n1.id+':'+n2.id);});
+    }
+  });
+  teken();
+
+  // Op A3 liggend passen (±1500px afdrukbare breedte na marges) — schaal de hele tekening
+  // met CSS zoom naar beneden zodat niets buiten het vel valt, in plaats van af te kappen.
+  const cv=document.getElementById('canvas');
+  const beschikbaar=1500;
+  const schaal=Math.min(1,beschikbaar/Math.max(cv.scrollWidth,1));
+
   const st=document.createElement('style');st.id='pst';
-  st.textContent='@media print{@page{size:A4 landscape;margin:12mm}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
-  document.head.appendChild(st);window.print();
-  setTimeout(()=>{document.title=orig;document.getElementById('pst')?.remove();},1000);
+  st.textContent=`@media print{
+    @page{size:A3 landscape;margin:10mm}
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    #canvas>div{zoom:${schaal}}
+  }`;
+  document.head.appendChild(st);
+  window.print();
+  setTimeout(()=>{
+    document.title=orig;document.getElementById('pst')?.remove();
+    uitgeklapt=_uOrig;uitgeklaptN3=_u3Orig;teken();
+  },1000);
 }
 
 // ── CSV ──

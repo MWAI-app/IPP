@@ -365,10 +365,13 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 #nf.ok{border-left:4px solid var(--gl)}
 #nf.fout{border-left:4px solid #dc2626}
 @media print{
-  #hdr,#sb,#wb,#nf{display:none!important}
+  #hdr,#sb,#wb,#nf,#sp{display:none!important}
   #bdy,#main{display:block}
+  html,body,#canvas{background:#fff!important}
   #canvas{overflow:visible;padding:0}
   .sk{break-inside:avoid}
+  .sk-acties,.sp-ac{display:none!important}
+  .sk3-step,.sk2-step,.sk1-step,.sk3-io,.sk2-io,.sk1-io{break-inside:avoid}
 }
 
 /* ── ELEMENTEN & ATTRIBUTEN MODULE ── */
