@@ -1430,14 +1430,14 @@ function verwerkRelaticsCSVv2(csvTekst){
       if(wrd.length===2)return(wrd[0].slice(0,2)+wrd[1][0]).toUpperCase();
       return(wrd[0]||naam||'??').slice(0,3).toUpperCase();
     }
-    // Stadium alleen vastleggen als de productstadium-omschrijving daadwerkelijk afwijkt van
-    // de productnaam (voorkomt een badge die overal hetzelfde/nutteloze stadium toont).
-    // Relatics gebruikt hiervoor vaak het patroon "Productnaam | stadium" — in dat geval
-    // tonen we alleen het deel ná de streep, niet de dubbele productnaam ervoor.
+    // Stadium = de productstadium-omschrijving zoals die in Relatics staat, 1-op-1
+    // overgenomen (ook als die nu nog toevallig hetzelfde is als de productnaam — dat is een
+    // kwestie van hoe Relatics op dit moment is ingevuld, niet iets om in de import te
+    // onderdrukken; corrigeren kan direct in de app). Relatics gebruikt hiervoor soms wel het
+    // patroon "Productnaam | stadium" — in dat geval tonen we alleen het deel ná de streep.
     function stadiumVan(oms,naam){
       if(!oms)return'';
       const o=oms.trim(),n=(naam||'').trim();
-      if(o.toLowerCase()===n.toLowerCase())return'';
       if(o.includes('|')){
         const idx=o.indexOf('|');
         if(o.slice(0,idx).trim().toLowerCase()===n.toLowerCase())return o.slice(idx+1).trim();
