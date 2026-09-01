@@ -1,7 +1,7 @@
 ﻿
 // ── CONSTANTEN & STATE ──
 const IC = {activiteit:'&#9881;', start:'&#9654;', einde:'&#9209;', beslissing:'&#9670;', document:'&#128196;'};
-const CSV_COLS = ['proces_id','proces_naam','stap_nr','ouder_stap_nr','stap_naam','type','verantwoordelijke','systeem','beschrijving','input_1','input_1_bron','input_2','input_2_bron','input_3','input_3_bron','output_1','output_1_doel','output_2','output_2_doel','output_3','output_3_doel','volgorde','status'];
+const CSV_COLS = ['proces_id','proces_naam','stap_nr','ouder_stap_nr','stap_naam','type','verantwoordelijke','systeem','beschrijving','input_1','input_1_bron','input_1_stadium','input_2','input_2_bron','input_2_stadium','input_3','input_3_bron','input_3_stadium','output_1','output_1_doel','output_1_stadium','output_2','output_2_doel','output_2_stadium','output_3','output_3_doel','output_3_stadium','volgorde','status'];
 const S = {data:null, hid:null, pad:[], view:'v', bpid:null, bsid:null, gw:false, eaMode:'ist', eaSollProcs:[], eaGekozen:null};
 let csvBuf = null;
 let jsonFileHandle = null;
@@ -500,7 +500,7 @@ function n2Kolom(subs,n1nr,n1sid){
     const bronSt2=s.type==='start'?(s.bronStappen||[]):[];
     let inH='<div class="sk2-io">';
     if(bronSt2.length){inH+=`<div class="sk2-iol sk3-iol-bron">GESTART VANUIT</div>`;bronSt2.forEach(b=>{const info=zoekStapInfo(b.stapId);inH+=`<div class="ioi ioi-bron">${info?.naam||b.label||'?'}${info?.nr?` <span class="ioi-stapnr">${info.nr}</span>`:''}</div>`;});if(inp.length)inH+=`<div class="sk2-iol" style="margin-top:6px">— INPUT</div>`;}else{inH+=`<div class="sk2-iol">— INPUT</div>`;}
-    if(inp.length)inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8593; ${bronNm(io.bron)}</span>`:''}</div>`;});
+    if(inp.length)inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${ioWeergave(io)}${e?` <span class="ioe">&#8593; ${bronNm(io.bron)}</span>`:''}</div>`;});
     else if(!bronSt2.length)inH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     inH+='</div>';
     let stH=`<div class="sk2-step ${tc}"><div class="sk2-thdr"><span class="sk2-ico">${IC[s.type]||'?'}</span><span>${typeNm[s.type]||s.type}</span><span style="margin-left:auto;font-family:var(--m);font-size:11px">${nr}</span></div>`;
@@ -522,7 +522,7 @@ function n2Kolom(subs,n1nr,n1sid){
       branches2.forEach(b=>{const info=zoekStapInfo(b.stapId);const nr_=info?.nr||(b.label?zoekStapNr(b.label):null);const naam=info?.naam||b.label||'...';outH+=`<div class="ioi ioi-pad">${b.conditie?`<span class="ioi-cond">${b.conditie}</span> <span class="ioi-parr">&#8594;</span> `:''}${naam}${nr_?` <span class="ioi-stapnr">${nr_}</span>`:''}</div>`;});
       if(out.length)outH+=`<div class="sk2-iol" style="margin-top:6px">OUTPUT —</div>`;
     }else{outH+=`<div class="sk2-iol">OUTPUT —</div>`;}
-    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
+    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${ioWeergave(io)}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
     else if(!branches2.length)outH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     outH+='</div>';
     if(i>0) h+='<div class="n2-kpijl"></div>';
@@ -542,7 +542,7 @@ function n3Kolom(subs,n2nr,n1sid,n2sid){
     const tc=tcls(s.type),nr=n2nr+'.'+String(i+1).padStart(2,'0');
     const inp=s.input||[],out=s.output||[];
     let inH='<div class="sk1-io"><div class="sk2-iol">— INPUT</div>';
-    if(inp.length) inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${io.label}</div>`;});
+    if(inp.length) inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${ioWeergave(io)}</div>`;});
     else inH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     inH+='</div>';
     let stH=`<div class="sk1-step ${tc}"><div class="sk2-thdr"><span class="sk2-ico">${IC[s.type]||'?'}</span><span>${typeNm[s.type]||s.type}</span><span style="margin-left:auto;font-family:var(--m);font-size:11px">${nr}</span></div>`;
@@ -562,7 +562,7 @@ function n3Kolom(subs,n2nr,n1sid,n2sid){
       branches3.forEach(b=>{const info=zoekStapInfo(b.stapId);const nr_=info?.nr||(b.label?zoekStapNr(b.label):null);const naam=info?.naam||b.label||'...';outH+=`<div class="ioi ioi-pad"><span class="ioi-cond">${b.conditie}</span> <span class="ioi-parr">&#8594;</span> ${naam}${nr_?` <span class="ioi-stapnr">${nr_}</span>`:''}</div>`;});
       if(out.length)outH+=`<div class="sk2-iol" style="margin-top:6px">OUTPUT —</div>`;
     }else{outH+=`<div class="sk2-iol">OUTPUT —</div>`;}
-    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${io.label}</div>`;});
+    if(out.length)out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${ioWeergave(io)}</div>`;});
     else if(!branches3.length)outH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     outH+='</div>';
     if(i>0) h+='<div class="n3-kpijl"></div>';
@@ -591,7 +591,7 @@ function tekenV(cv,st){
       bronStappen.forEach(b=>{const info=zoekStapInfo(b.stapId);const naam=info?.naam||b.label||'?';inH+=`<div class="ioi ioi-bron">${naam}${info?.nr?` <span class="ioi-stapnr">${info.nr}</span>`:''}</div>`;});
       if(inp.length)inH+=`<div class="sk3-iol" style="margin-top:6px">— INPUT</div>`;
     }else{inH+=`<div class="sk3-iol">— INPUT</div>`;}
-    if(inp.length)inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8593; ${bronNm(io.bron)}</span>`:''}</div>`;});
+    if(inp.length)inp.forEach(io=>{const e=io.bron&&io.bron!=='intern';inH+=`<div class="ioi ${e?'ext':''}">${ioWeergave(io)}${e?` <span class="ioe">&#8593; ${bronNm(io.bron)}</span>`:''}</div>`;});
     else if(!bronStappen.length)inH+='<span style="font-size:11px;color:var(--g3)">—</span>';
     inH+='</div>';
     // STAP kaart
@@ -625,10 +625,10 @@ function tekenV(cv,st){
       if(out.length||subOuts.length)outH+=`<div class="sk3-iol" style="margin-top:6px">OUTPUT —</div>`;
     }else{outH+=`<div class="sk3-iol">OUTPUT —</div>`;}
     if(out.length||subOuts.length){
-      out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
+      out.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}">${ioWeergave(io)}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
       if(subOuts.length){
         if(out.length)outH+='<div style="font-size:9px;color:var(--gs);margin:3px 0 1px;opacity:.8">via substappen:</div>';
-        subOuts.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}" style="font-size:10px;opacity:.8">${io.label}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
+        subOuts.forEach(io=>{const e=io.doel&&io.doel!=='intern';outH+=`<div class="ioi ${e?'ext':''}" style="font-size:10px;opacity:.8">${ioWeergave(io)}${e?` <span class="ioe">&#8594; ${doelNm(io.doel)}</span>`:''}</div>`;});
       }
     }else if(!branches.length){outH+='<span style="font-size:11px;color:var(--g3)">—</span>';}
     outH+='</div>';
@@ -733,8 +733,8 @@ function showDet(sid){
     ${s.systeem?`<span class="chip cy">${s.systeem}</span>`:''}
     ${(s.substappen||[]).length?`<span class="chip" style="background:var(--gn);color:var(--gg)">${s.substappen.length} substappen</span>`:''}
   </div>${s.beschrijving?`<p style="font-size:13px;color:var(--gs);line-height:1.6">${s.beschrijving}</p>`:''}</div>`;
-  if((s.input||[]).length){h+='<div class="dts"><h3>Input</h3>';s.input.forEach(io=>{const e=io.bron&&io.bron!=='intern';h+=`<div class="ioi ${e?'ext':''}" style="margin-bottom:5px">${io.label}${e?` <span class="ioe">van ${bronNm(io.bron)}</span>`:''}</div>`;});h+='</div>';}
-  if((s.output||[]).length){h+='<div class="dts"><h3>Output</h3>';s.output.forEach(io=>{const e=io.doel&&io.doel!=='intern';h+=`<div class="ioi ${e?'ext':''}" style="margin-bottom:5px">${io.label}${e?` <span class="ioe">naar ${doelNm(io.doel)}</span>`:''}</div>`;});h+='</div>';}
+  if((s.input||[]).length){h+='<div class="dts"><h3>Input</h3>';s.input.forEach(io=>{const e=io.bron&&io.bron!=='intern';h+=`<div class="ioi ${e?'ext':''}" style="margin-bottom:5px">${ioWeergave(io)}${e?` <span class="ioe">van ${bronNm(io.bron)}</span>`:''}</div>`;});h+='</div>';}
+  if((s.output||[]).length){h+='<div class="dts"><h3>Output</h3>';s.output.forEach(io=>{const e=io.doel&&io.doel!=='intern';h+=`<div class="ioi ${e?'ext':''}" style="margin-bottom:5px">${ioWeergave(io)}${e?` <span class="ioe">naar ${doelNm(io.doel)}</span>`:''}</div>`;});h+='</div>';}
   document.getElementById('detb').innerHTML=h;
   document.getElementById('mdet').style.display='flex';
 }
@@ -822,10 +822,14 @@ function ioRij(r,io){
   const div=document.createElement('div');div.className='ior';
   const v=r==='in'?'bron':'doel';const hv=io[v]||'intern';
   const lid='iorl-'+(++_iorCnt);
+  const sid='iosl-'+_iorCnt;
   const eigenLabels=ioLabelsVanProc(S.hid);
+  const eigenStadia=ioAlleStadia();
   const opts=(S.data.processen||[]).filter(p=>p.id!==S.hid).map(p=>`<option value="${p.id}" ${hv===p.id?'selected':''}>${procNr(p)} ${p.naam}</option>`).join('');
-  div.innerHTML=`<input type="text" placeholder="Omschrijving" value="${io.label||''}" list="${lid}" autocomplete="off" style="flex:1">
+  div.innerHTML=`<input type="text" class="io-label" placeholder="Omschrijving" value="${io.label||''}" list="${lid}" autocomplete="off">
     <datalist id="${lid}">${eigenLabels.map(l=>`<option value="${ioEscAttr(l)}">`).join('')}</datalist>
+    <input type="text" class="io-stadium" placeholder="Stadium" value="${io.stadium||''}" list="${sid}" autocomplete="off" title="Stadium van dit informatie-element (bijv. concept, besproken, vastgesteld)">
+    <datalist id="${sid}">${eigenStadia.map(l=>`<option value="${ioEscAttr(l)}">`).join('')}</datalist>
     <select onchange="ioUpdateList(this,'${r}','${lid}')"><option value="intern" ${hv==='intern'?'selected':''}>Intern</option>${opts}</select>
     <button class="iorm" onclick="this.parentElement.remove()">x</button>`;
   el.appendChild(div);
@@ -839,6 +843,21 @@ function ioLabelsVanProc(procId){
     [...(st.input||[]),...(st.output||[])].forEach(io=>{if(io.label?.trim())s.add(io.label.trim());});
   });
   return[...s].sort();
+}
+// Alle ooit gebruikte stadium-waarden, appbreed (niet per proces) — stadia zoals "concept"/
+// "vastgesteld" gelden doorgaans voor het hele informatiemodel, niet per proces.
+function ioAlleStadia(){
+  const s=new Set();
+  (S.data.processen||[]).forEach(p=>{
+    alleStappenFlat(p.stappen||[]).forEach(st=>{
+      [...(st.input||[]),...(st.output||[])].forEach(io=>{if(io.stadium?.trim())s.add(io.stadium.trim());});
+    });
+  });
+  return[...s].sort();
+}
+// Weergave van een input/output-element inclusief stadium-badge (indien aanwezig)
+function ioWeergave(io){
+  return io.stadium?`${io.label} <span class="io-stad">${io.stadium}</span>`:io.label;
 }
 function ioUpdateList(sel,r,lid){ioUpdateListDirect(sel,r,lid);}
 function ioUpdateListDirect(sel,r,lid){
@@ -862,7 +881,13 @@ function ioUpdateListDirect(sel,r,lid){
 }
 function leesIO(r){
   const v=r==='in'?'bron':'doel';
-  return Array.from(document.getElementById('i'+r).querySelectorAll('.ior')).map(rij=>{const f=rij.querySelectorAll('input,select');return{label:f[0].value,[v]:f[1].value};}).filter(io=>io.label.trim());
+  return Array.from(document.getElementById('i'+r).querySelectorAll('.ior')).map(rij=>{
+    const label=rij.querySelector('.io-label').value;
+    const stadium=rij.querySelector('.io-stadium').value.trim();
+    const io={label,[v]:rij.querySelector('select').value};
+    if(stadium)io.stadium=stadium;
+    return io;
+  }).filter(io=>io.label.trim());
 }
 function leesRol(){const s=document.getElementById('srol');return s.value==='__vrij__'?document.getElementById('srol-vrij').value.trim():s.value;}
 function leesSys(){const s=document.getElementById('ssys');return s.value==='__vrij__'?document.getElementById('ssys-vrij').value.trim():s.value;}
@@ -1330,6 +1355,10 @@ async function importeerRelatics(){
   }
 }
 
+function importeerRelaticsV2(){
+  notif('Relatics IPP v2: nog in ontwikkeling — het nieuwe exportformaat is geanalyseerd, de importlogica volgt nog','fout');
+}
+
 // CSV-tekst naar rijen van velden, met respect voor "aanhalingstekens" (velden met
 // ingesloten ; of newlines, zoals lange beschrijvingsteksten uit Relatics).
 function parseCSV(tekst,delim){
@@ -1779,7 +1808,7 @@ function dlCSV(p){
   const rijen=[];
   const li={v:0};
   flatCSV(p.stappen||[],p.id,p.naam,p,rijen,1,li);
-  if(!rijen.length)rijen.push([p.id,p.naam,pr+'01','','Eerste stap','activiteit','','','','','','','','','','','','','','','',1,'concept'].map(v=>csvEsc(String(v))).join(';'));
+  if(!rijen.length)rijen.push([p.id,p.naam,pr+'01','','Eerste stap','activiteit','','','','','','','','','','','','','','','','','','','','','',1,'concept'].map(v=>csvEsc(String(v))).join(';'));
   const inhoud=meta+'\n'+header+'\n'+rijen.join('\n');
   const blob=new Blob([inhoud],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=p.id+'_import.csv';a.click();URL.revokeObjectURL(a.href);
@@ -1790,7 +1819,7 @@ function flatCSV(stappen,pid,pnaam,p,rijen,niv,li,ouderNr){
     if(niv===1){nr=pref+String(li.v+1).padStart(2,'00').slice(-2);li.v++;}
     else{nr=ouderNr+'.'+String(i+1).padStart(2,'00').slice(-2);}
     const inp=s.input||[];const out=s.output||[];
-    rijen.push([pid,pnaam,nr,ouderNr||'',s.naam,s.type||'activiteit',s.verantwoordelijke||'',s.systeem||'',s.beschrijving||'',inp[0]?.label||'',inp[0]?.bron||'',inp[1]?.label||'',inp[1]?.bron||'',inp[2]?.label||'',inp[2]?.bron||'',out[0]?.label||'',out[0]?.doel||'',out[1]?.label||'',out[1]?.doel||'',out[2]?.label||'',out[2]?.doel||'',s.volgorde||i+1,s.status||''].map(v=>csvEsc(String(v))).join(';'));
+    rijen.push([pid,pnaam,nr,ouderNr||'',s.naam,s.type||'activiteit',s.verantwoordelijke||'',s.systeem||'',s.beschrijving||'',inp[0]?.label||'',inp[0]?.bron||'',inp[0]?.stadium||'',inp[1]?.label||'',inp[1]?.bron||'',inp[1]?.stadium||'',inp[2]?.label||'',inp[2]?.bron||'',inp[2]?.stadium||'',out[0]?.label||'',out[0]?.doel||'',out[0]?.stadium||'',out[1]?.label||'',out[1]?.doel||'',out[1]?.stadium||'',out[2]?.label||'',out[2]?.doel||'',out[2]?.stadium||'',s.volgorde||i+1,s.status||''].map(v=>csvEsc(String(v))).join(';'));
     if((s.substappen||[]).length)flatCSV(s.substappen,pid,pnaam,p,rijen,niv+1,li,nr);
   });
 }
@@ -1867,9 +1896,9 @@ function verwerkCSV(tekst){
 function bouwIOcsv(cellen,idx,r){
   const res=[];
   for(let n=1;n<=3;n++){
-    const lk=r+'_'+n,bk=r+'_'+n+(r==='input'?'_bron':'_doel'),v=r==='input'?'bron':'doel';
-    const lbl=(cellen[idx(lk)]||'').trim(),bron=(cellen[idx(bk)]||'').trim()||'intern';
-    if(lbl)res.push({label:lbl,[v]:bron});
+    const lk=r+'_'+n,bk=r+'_'+n+(r==='input'?'_bron':'_doel'),sk=r+'_'+n+'_stadium',v=r==='input'?'bron':'doel';
+    const lbl=(cellen[idx(lk)]||'').trim(),bron=(cellen[idx(bk)]||'').trim()||'intern',stadium=(cellen[idx(sk)]||'').trim();
+    if(lbl){const io={label:lbl,[v]:bron};if(stadium)io.stadium=stadium;res.push(io);}
   }
   return res;
 }

@@ -183,6 +183,7 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .ioi{font-size:11px;color:var(--gt);padding:2px 7px;margin-bottom:2px;border-radius:3px;background:var(--gc);border-left:2px solid var(--g2);display:flex;align-items:center;gap:4px}
 .ioi.ext{border-left-color:var(--ga);background:#fffbf0}
 .ioe{font-family:var(--m);font-size:9px;color:var(--ga2)}
+.io-stad{font-size:9px;font-weight:700;color:var(--gm);background:var(--gn);padding:1px 6px;border-radius:8px;white-space:nowrap}
 .sk3-iol-pad{color:var(--ga)!important;border-bottom-color:rgba(240,165,0,.35)!important}
 .ioi-pad{background:rgba(240,165,0,.08)!important;border-left-color:var(--ga)!important}
 .sk3-iol-bron{color:var(--gg)!important;border-bottom-color:rgba(0,122,194,.3)!important}
@@ -295,6 +296,7 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 .ior input,.ior select{padding:5px 8px;border:1.5px solid var(--g1);border-radius:var(--r);font-family:var(--f);font-size:12px;outline:none}
 .ior input:focus,.ior select:focus{border-color:var(--gg)}
 .ior input{flex:1}.ior select{width:160px}
+.ior input.io-stadium{flex:.6}
 .iorm{width:24px;height:24px;border-radius:50%;background:#fee2e2;border:none;cursor:pointer;color:#dc2626;font-size:13px;display:flex;align-items:center;justify-content:center}
 .iorm:hover{background:#fecaca}
 .dts{margin-bottom:16px}
