@@ -1356,7 +1356,249 @@ async function importeerRelatics(){
 }
 
 function importeerRelaticsV2(){
-  notif('Relatics IPP v2: nog in ontwikkeling — het nieuwe exportformaat is geanalyseerd, de importlogica volgt nog','fout');
+  if('showOpenFilePicker' in window){
+    try{
+      (async()=>{
+        try{
+          const [fh]=await window.showOpenFilePicker({types:[{description:'CSV bestand',accept:{'text/csv':['.csv']}}]});
+          verwerkRelaticsCSVv2(await(await fh.getFile()).text());
+        }catch(e){if(e.name!=='AbortError')notif('Kon CSV niet openen','fout');}
+      })();
+    }catch(e){}
+  }else{
+    const inp=document.createElement('input');inp.type='file';inp.accept='.csv';
+    inp.onchange=async()=>{if(inp.files[0])verwerkRelaticsCSVv2(await inp.files[0].text());};
+    inp.click();
+  }
+}
+
+// Relatics IPP v2-import: nieuw exportformaat met (1) volledige RASCI i.p.v. alleen
+// accountable, (2) input/output als Productstadium+Product (geeft evt. een 'stadium'),
+// (3) processen die onder andere processen kunnen hangen ("Is onderdeel van Proces"),
+// wat wordt platgeslagen tot geneste processtappen (N1/N2/N3).
+function verwerkRelaticsCSVv2(csvTekst){
+  try{
+    const regels=parseCSV(csvTekst,';');
+    if(regels.length<3)throw new Error('CSV bevat geen data-rijen');
+
+    const rij1=regels[0]||[];
+    let laatsteGroep='';
+    const groep=rij1.map(g=>{g=g.trim();if(g)laatsteGroep=g;return laatsteGroep.toLowerCase();});
+    // Alle startkolommen van kolomgroepen die 'deel' bevatten (i.p.v. alleen de eerste) —
+    // nodig omdat "has origin Product" hier tweemaal voorkomt (bij input én output).
+    const groepStarts=deel=>{
+      const res=[];
+      for(let i=0;i<groep.length;i++){if(groep[i].includes(deel)&&(i===0||groep[i]!==groep[i-1]))res.push(i);}
+      return res;
+    };
+    const groepStart=deel=>groepStarts(deel)[0]??-1;
+
+    const gCl=groepStart('werkspoor');                 // Cluster: id, volgorde, naam
+    const gPr=groepStart('origin of proces');           // Proces: id, volgorde, naam
+    const gAc=groepStart('activiteiten');               // Processtap: id, volgorde, naam, beschrijving
+    const gTl=groepStart('tools');                      // Software: id, naam
+    const gRas=groepStart("rasci");                     // RASCI-koppeling: id, toewijzing (R/A/S/C/I)
+    const gRol=groepStart('rolhouder');                 // Rol: id, afkorting, naam
+    const gInPst=groepStart('input productstadium');    // Input-productstadium: id, omschrijving
+    const gOutPst=groepStart('output productstadium');  // Output-productstadium: id, omschrijving
+    const gOrigin=groepStarts('has origin');             // [inputProduct, outputProduct]: id, naam
+    const gOnderdeelVan=groepStart('onderdeel van proces'); // bovenliggend proces: id, volgorde, naam
+
+    if([gCl,gPr,gAc,gTl,gRas,gRol,gInPst,gOutPst].some(i=>i<0)||gOrigin.length<2)
+      throw new Error('Onbekende kolomstructuur — dit lijkt geen Relatics IPP-Werkspoor v2-export te zijn');
+
+    const clId=gCl,clVol=gCl+1,clNm=gCl+2;
+    const prId=gPr,prVol=gPr+1,prNm=gPr+2;
+    const acId=gAc,acVol=gAc+1,acNm=gAc+2,acBesch=gAc+3;
+    const tlNm=gTl+1;
+    const rasNm=gRas+1;
+    const rolNm=gRol+2;
+    const pstInOms=gInPst+1,prdInId=gOrigin[0],prdInNm=gOrigin[0]+1;
+    const pstOutOms=gOutPst+1,prdOutId=gOrigin[1],prdOutNm=gOrigin[1]+1;
+    const onderdeelVanId=gOnderdeelVan;
+
+    function parseVol(s){
+      if(!s||!s.trim())return 99999;
+      const p=s.trim().split('.').map(n=>parseInt(n)||0);
+      return p[0]*10000+(p[1]||0)*100+(p[2]||0);
+    }
+    const aId=id=>(id||'').toLowerCase().replace(/-/g,'_');
+    function afk(naam){
+      const sw=new Set(['en','van','de','het','der','aan','bij','met','in','voor','op','als','om']);
+      const wrd=(naam||'').replace(/[()\/&-]/g,' ').split(/\s+/).filter(w=>w.length>1&&!sw.has(w.toLowerCase()));
+      if(wrd.length>=3)return(wrd[0][0]+wrd[1][0]+wrd[2][0]).toUpperCase();
+      if(wrd.length===2)return(wrd[0].slice(0,2)+wrd[1][0]).toUpperCase();
+      return(wrd[0]||naam||'??').slice(0,3).toUpperCase();
+    }
+    // Stadium alleen vastleggen als de productstadium-omschrijving daadwerkelijk afwijkt van
+    // de productnaam (voorkomt een badge die overal hetzelfde/nutteloze stadium toont).
+    // Relatics gebruikt hiervoor vaak het patroon "Productnaam | stadium" — in dat geval
+    // tonen we alleen het deel ná de streep, niet de dubbele productnaam ervoor.
+    function stadiumVan(oms,naam){
+      if(!oms)return'';
+      const o=oms.trim(),n=(naam||'').trim();
+      if(o.toLowerCase()===n.toLowerCase())return'';
+      if(o.includes('|')){
+        const idx=o.indexOf('|');
+        if(o.slice(0,idx).trim().toLowerCase()===n.toLowerCase())return o.slice(idx+1).trim();
+      }
+      return o;
+    }
+
+    const kleuren=['#1a3c34','#2d6a4f','#40916c','#52b788','#74c69d','#b7e4c7','#8ecae6','#219ebc','#6a4c93','#023047','#e63946','#ffb703'];
+    const clusterMap={};
+    const procesMap={};   // PRC-id → {id,naam,volgorde,clusterId,parentId,stappen:[]}
+    let huidigCluster=null,huidigProces=null,huidigStap=null;
+
+    for(let i=2;i<regels.length;i++){
+      const r=regels[i];
+      if(!r.some(v=>v&&v.trim()))continue;
+      const c=n=>(r[n]||'').trim();
+
+      if(c(clId).startsWith('IPP-')){
+        const id=c(clId);
+        if(!clusterMap[id]){
+          const rawVol=c(clVol);
+          clusterMap[id]={id,naam:c(clNm),volgorde:rawVol!==''?parseInt(rawVol):(Object.keys(clusterMap).length+1)};
+        }
+        huidigCluster=clusterMap[id];huidigProces=null;huidigStap=null;
+      }
+      if(c(prId).startsWith('PRC-')){
+        const id=c(prId);
+        if(!procesMap[id]){
+          const parentRaw=c(onderdeelVanId);
+          procesMap[id]={id,naam:c(prNm),volgorde:parseVol(c(prVol)),clusterId:huidigCluster?.id,
+            parentId:parentRaw.startsWith('PRC-')?parentRaw:null,stappen:[]};
+        }
+        huidigProces=procesMap[id];huidigStap=null;
+      }
+      // vangnet: "onderdeel van"-waarde kan op een vervolgregel staan i.p.v. de openingsregel
+      if(huidigProces&&!huidigProces.parentId){
+        const parentRaw=c(onderdeelVanId);
+        if(parentRaw.startsWith('PRC-'))huidigProces.parentId=parentRaw;
+      }
+      if(!huidigProces)continue;
+      if(c(acId).startsWith('ACT-')&&c(acNm)){
+        huidigStap={naam:c(acNm),beschrijving:c(acBesch),volgorde:c(acVol)?parseInt(c(acVol)):null,
+          systemen:[],inputs:[],outputs:[],rasci:[]};
+        huidigProces.stappen.push(huidigStap);
+      }
+      if(huidigStap){
+        if(c(tlNm)&&!huidigStap.systemen.includes(c(tlNm)))huidigStap.systemen.push(c(tlNm));
+        if(c(rasNm)&&c(rolNm))huidigStap.rasci.push({toewijzing:c(rasNm),rol:c(rolNm)});
+        if(c(prdInNm)){
+          const naam=c(prdInNm);
+          huidigStap.inputs.push({code:c(prdInId),naam,stadium:stadiumVan(c(pstInOms),naam)});
+        }
+        if(c(prdOutNm)){
+          const naam=c(prdOutNm);
+          huidigStap.outputs.push({code:c(prdOutId),naam,stadium:stadiumVan(c(pstOutOms),naam)});
+        }
+      }
+    }
+
+    // Clusters — afkorting komt letterlijk uit de Relatics-code, zoals bij v1.
+    let ki=0;
+    const clusters=Object.values(clusterMap)
+      .sort((a,b)=>a.volgorde-b.volgorde)
+      .map(ws=>({id:aId(ws.id),label:ws.naam,kleur:kleuren[ki++%kleuren.length],afkorting:ws.id||afk(ws.naam),volgorde:ws.volgorde,subclusters:[]}));
+
+    const alleSystemen=new Set(S.data?.systemen||leeg().systemen);
+    const alleRollen=new Set(S.data?.rollen||leeg().rollen);
+    // Elke activiteit wordt sowieso meegenomen in systemen/rollen, ongeacht op welk
+    // processtap-niveau hij straks terechtkomt (N1/N2/N3).
+    for(const id in procesMap){
+      for(const act of procesMap[id].stappen){
+        act.systemen.forEach(s=>alleSystemen.add(s));
+        act.rasci.forEach(r=>alleRollen.add(r.rol));
+      }
+    }
+
+    function bouwStapUitAct(act,si){
+      const accountable=act.rasci.find(r=>/^a\s*-/i.test(r.toewijzing));
+      const verantwoordelijke=accountable?.rol||act.rasci[0]?.rol||'';
+      const medeverantwoordelijken=[...new Set(act.rasci.map(r=>r.rol))].filter(r=>r&&r!==verantwoordelijke);
+      return{
+        id:gid('s'),naam:act.naam,type:'activiteit',
+        verantwoordelijke,systeem:act.systemen.join('; '),
+        beschrijving:act.beschrijving||'',volgorde:act.volgorde??si+1,
+        status:'concept',substappen:[],medeverantwoordelijken,
+        input:act.inputs.map(inp=>{const io={label:inp.naam,bron:inp.code||'intern'};if(inp.stadium)io.stadium=inp.stadium;return io;}),
+        output:act.outputs.map(o=>{const io={label:o.naam,doel:o.code||'intern'};if(o.stadium)io.stadium=o.stadium;return io;})
+      };
+    }
+
+    // Sub-processen ("Is onderdeel van Proces") worden platgeslagen tot geneste
+    // processtappen: eigen activiteiten van een (sub-)proces vormen het huidige niveau,
+    // sub-processen zelf worden er stappen bij (van type 'activiteit') met hun eigen
+    // activiteiten/sub-processen als substappen — tot de N1/N2/N3-limiet van de app.
+    const NIVEAU_MAX=3;
+    const nietGeplaatst=[];
+    const kinderenVan=pid=>Object.values(procesMap).filter(p=>p.parentId===pid).sort((a,b)=>a.volgorde-b.volgorde);
+    function bouwStappen(procId,niveau){
+      const pr=procesMap[procId];
+      const sortedActs=pr.stappen.some(a=>a.volgorde!==null)
+        ?[...pr.stappen].sort((a,b)=>(a.volgorde??999)-(b.volgorde??999))
+        :[...pr.stappen];
+      const actStappen=sortedActs.map((act,si)=>bouwStapUitAct(act,si));
+      const subProcs=kinderenVan(procId);
+      let subStappen=[];
+      if(subProcs.length){
+        if(niveau>=NIVEAU_MAX){
+          subProcs.forEach(sp=>nietGeplaatst.push(sp.naam));
+        }else{
+          subStappen=subProcs.map((sub,si)=>({
+            id:gid('s'),naam:sub.naam,type:'activiteit',
+            verantwoordelijke:'',systeem:'',beschrijving:'',
+            volgorde:sub.volgorde??si+1,status:'concept',
+            substappen:bouwStappen(sub.id,niveau+1),
+            medeverantwoordelijken:[],input:[],output:[]
+          }));
+        }
+      }
+      return[...actStappen,...subStappen];
+    }
+
+    const processen=[];
+    for(const id in procesMap){
+      const pr=procesMap[id];
+      const isGenest=pr.parentId&&procesMap[pr.parentId];
+      if(isGenest)continue;          // wordt als processtap gevouwen in zijn ouder-proces
+      if(!pr.clusterId)continue;     // proces zonder cluster overslaan
+      processen.push({id:gid('p'),naam:pr.naam,categorie:aId(pr.clusterId),
+        niveau:2,volgorde:pr.volgorde,eigenaar:'',beschrijving:'',
+        status:'concept',versie:'0.1',aangepast:td(),stappen:bouwStappen(id,1)});
+    }
+
+    // Documenten: alle unieke product-codes uit inputs en outputs verzamelen
+    const docMap={};
+    for(const id in procesMap){
+      for(const act of procesMap[id].stappen){
+        for(const o of act.outputs){if(o.code&&o.code!=='intern'&&!docMap[o.code])docMap[o.code]=o.naam;}
+        for(const inp of act.inputs){if(inp.code&&inp.code!=='intern'&&!docMap[inp.code])docMap[inp.code]=inp.naam;}
+      }
+    }
+    const documenten=Object.entries(docMap).map(([code,naam])=>({code,naam})).sort((a,b)=>a.code.localeCompare(b.code));
+
+    S.data={versie:'1.1',project:'IPP Procesmanagement Antea Group',aangepast:td(),
+      clusters,rollen:[...alleRollen],
+      systemen:[...alleSystemen],documenten,eaLinks:[],processen};
+
+    S.hid=null;S.pad=[];uitCl=new Set();
+    allesClusters().forEach(c=>uitCl.add(c.id));
+    jsonFileHandle=null;
+    document.getElementById('bos-als').style.display='none';
+    laadUI();
+    try{localStorage.setItem('ipp_v2',JSON.stringify(S.data));}catch(e){}
+    setGw(true);
+    const waarschuwing=nietGeplaatst.length?`<p style="color:#dc2626;font-size:12px;margin-top:8px">Let op: ${nietGeplaatst.length} sub-proces(sen) gaan dieper dan 3 niveaus en zijn overgeslagen: ${nietGeplaatst.slice(0,5).join(', ')}${nietGeplaatst.length>5?'…':''}</p>`:'';
+    document.getElementById('canvas').innerHTML='<div id="wlk"><div class="wi">&#10003;</div><h2>Relatics IPP v2 geïmporteerd</h2><p>'+processen.length+' processen · '+clusters.length+' clusters · '+documenten.length+' documenten geladen.<br>Gebruik <strong>Opslaan</strong> om op te slaan als JSON.</p>'+waarschuwing+'</div>';
+    document.getElementById('vt').style.display='none';
+    ['bst','bbw','bib','bea'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('wbs').textContent='';
+    notif('Relatics IPP v2: '+processen.length+' processen geladen'+(nietGeplaatst.length?' ('+nietGeplaatst.length+' sub-processen overgeslagen, te diep genest)':''),nietGeplaatst.length?'fout':'ok');
+
+  }catch(e){console.error(e);notif('Fout bij Relatics IPP v2-import: '+e.message,'fout');}
 }
 
 // CSV-tekst naar rijen van velden, met respect voor "aanhalingstekens" (velden met
