@@ -21,6 +21,16 @@ body{font-family:var(--f);background:var(--gc);color:var(--gt);font-size:14px;li
 #fn.zb{display:inline-block}
 .sp{flex:1}
 .ha{display:flex;gap:7px;align-items:center}
+/* MODUS-SCHAKELAAR (Beginner / Enduser) */
+.modus{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;padding:4px 10px;border:1px solid var(--g1);border-radius:20px;background:var(--gc)}
+.modus input{display:none}
+.modus-lb{font-size:11px;font-weight:600;color:var(--g3);transition:color .15s}
+.modus-schuif{position:relative;width:32px;height:18px;border-radius:9px;background:var(--gl);transition:background .15s;flex-shrink:0}
+.modus-schuif::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--gw);box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s}
+.modus input:checked + .modus-schuif{background:var(--gd)}
+.modus input:checked + .modus-schuif::after{left:16px}
+body.beginner .modus-beg,body:not(.beginner) .modus-end{color:var(--gd)}
+body.beginner .expert{display:none!important}
 /* BODY */
 #bdy{display:flex;flex:1;overflow:hidden}
 /* SIDEBAR */

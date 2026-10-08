@@ -175,6 +175,8 @@ function padNaarStap(stappen,sid,pad){
 
 // ── INITIALISATIE ──
 function init(){
+  let m='beginner';try{m=localStorage.getItem('ipp_modus')||'beginner';}catch(e){}
+  zetModus(m==='enduser');
   try{
     const r=localStorage.getItem('ipp_v2');
     if(r){
@@ -190,6 +192,17 @@ function init(){
   }catch(e){}
   try{localStorage.removeItem('ipp_v2');}catch(e){}
   S.data=leeg();uitCl=new Set();laadUI();setGw(false);
+}
+// Beginner: vereenvoudigd scherm (knoppen met class "expert" verborgen). Enduser: alles zichtbaar.
+// Keuze wordt per browser onthouden.
+function zetModus(enduser){
+  document.body.classList.toggle('beginner',!enduser);
+  document.getElementById('modus-sw').checked=enduser;
+  try{localStorage.setItem('ipp_modus',enduser?'enduser':'beginner');}catch(e){}
+  if(!enduser){
+    if(document.getElementById('ib-canvas').style.display==='flex')sluitIB();
+    if(document.getElementById('ea-canvas').style.display==='flex')sluitEA();
+  }
 }
 function beginOpnieuw(){
   if(!confirm('Alles wissen en opnieuw beginnen?\n\nAlle geladen data, processen en clusters worden verwijderd.'))return;

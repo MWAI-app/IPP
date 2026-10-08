@@ -15,13 +15,19 @@
   <span id="os">Opgeslagen</span>
   <span id="fn"></span>
   <div class="sp"></div>
+  <label class="modus" title="Beginner: vereenvoudigd scherm. Enduser: alle mogelijkheden.">
+    <span class="modus-lb modus-beg">Beginner</span>
+    <input type="checkbox" id="modus-sw" onchange="zetModus(this.checked)">
+    <span class="modus-schuif"></span>
+    <span class="modus-lb modus-end">Enduser</span>
+  </label>
   <div class="ha">
     <button class="btn bs" onclick="beginOpnieuw()" title="Alles wissen en opnieuw beginnen" style="color:#f87171;border-color:rgba(248,113,113,.35)">Nieuw</button>
     <button class="btn bs" onclick="laadBestand()">Laden</button>
-    <button class="btn bs" onclick="importeerRelatics()" title="Importeer werksporen uit Relatics IPP CSV-uitdraai">Relatics IPP</button>
+    <button class="btn bs expert" onclick="importeerRelatics()" title="Importeer werksporen uit Relatics IPP CSV-uitdraai">Relatics IPP</button>
     <button class="btn bs" onclick="importeerRelaticsV2()" title="Nieuw Relatics IPP-exportformaat (in ontwikkeling)">Relatics IPP v2</button>
-    <button class="btn bs" onclick="importeerRelaticsSE()" title="Importeer SE-processen uit Relatics SE CSV-uitdraai">Relatics SE</button>
-    <button class="btn bs" onclick="importeerProcWizard()" title="Importeer processen vanuit een ander JSON-bestand">Importeer processen</button>
+    <button class="btn bs expert" onclick="importeerRelaticsSE()" title="Importeer SE-processen uit Relatics SE CSV-uitdraai">Relatics SE</button>
+    <button class="btn bs expert" onclick="importeerProcWizard()" title="Importeer processen vanuit een ander JSON-bestand">Importeer processen</button>
     <button class="btn bsv" id="bos" onclick="opslaanJSON()" disabled>Opslaan</button>
     <button class="btn bs" id="bos-als" onclick="opslaanAls()" style="display:none;padding:6px 8px;font-size:11px" title="Opslaan naar ander bestand">Opslaan als...</button>
     <button class="btn bs" onclick="toonProcesOverzicht()" title="Alle processen gegroepeerd per cluster">Overzicht</button>
@@ -36,8 +42,8 @@
   <div id="pl"></div>
   <div id="sf">
     <button class="btn bs" style="justify-content:center" onclick="exportPDF()">PDF exporteren</button>
-    <button class="btn bs" style="justify-content:center;background:rgba(240,165,0,.15);border-color:var(--ga);color:#7a3f00" onclick="csvWizard()">CSV import / export</button>
-    <button class="btn bs" style="justify-content:center;background:rgba(0,97,155,.12);border-color:var(--gm);color:var(--gm)" onclick="exporteerInformatieModel()">Informatiemodel exporteren</button>
+    <button class="btn bs expert" style="justify-content:center;background:rgba(240,165,0,.15);border-color:var(--ga);color:#7a3f00" onclick="csvWizard()">CSV import / export</button>
+    <button class="btn bs expert" style="justify-content:center;background:rgba(0,97,155,.12);border-color:var(--gm);color:var(--gm)" onclick="exporteerInformatieModel()">Informatiemodel exporteren</button>
   </div>
 </aside>
 <main id="main">
@@ -52,8 +58,8 @@
     </div>
     <button class="btn bg" id="bst" style="display:none" onclick="S.pad=[];stapModal()">+ Stap</button>
     <button class="btn bg" id="bbw" style="display:none" onclick="bewerkProc()">Bewerk</button>
-    <button class="btn bg" id="bib" style="display:none;border-color:var(--gg);color:var(--gg)" onclick="toonIB()">IB Inventarisatie</button>
-    <button class="btn bg" id="bea" style="display:none;border-color:var(--gm);color:var(--gm)" onclick="toonEA()">Elementen &amp; Attributen</button>
+    <button class="btn bg expert" id="bib" style="display:none;border-color:var(--gg);color:var(--gg)" onclick="toonIB()">IB Inventarisatie</button>
+    <button class="btn bg expert" id="bea" style="display:none;border-color:var(--gm);color:var(--gm)" onclick="toonEA()">Elementen &amp; Attributen</button>
   </div>
   <div id="cw">
     <div id="ib-canvas" style="display:none;flex:1;overflow:auto;padding:26px 20px;background:var(--gc);flex-direction:column"></div>
