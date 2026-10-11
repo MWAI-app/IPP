@@ -145,12 +145,18 @@ Het Procesoverzicht, de IB-inventarisatie en het EA-scherm vervangen het canvas 
 ---
 
 ## Importfuncties
-| Knop | Functie | Bron |
-|------|---------|------|
-| Relatics IPP | `importeerRelatics()` | platte export cluster > proces > N1 (aug. 2026). Kolommen worden op koptekst herkend (`groepStart()`). Gebruikt een eigen `parseCSV()` die aanhalingstekens respecteert. |
-| Relatics IPP v2 | `importeerRelaticsV2()` | nieuw formaat (sept. 2026). RASCI: accountable wordt verantwoordelijke, de rest medeverantwoordelijken. Stadium komt uit "Productnaam \| stadium" en wordt 1-op-1 overgenomen (`stadiumVan()`). De "Is onderdeel van Proces"-hiërarchie wordt platgeslagen tot N1/N2. |
-| Relatics SE | `importeerRelaticsSE()` | SE-processen |
-| Importeer processen | `importeerProcWizard()` | processen uit een ander JSON-bestand samenvoegen |
+| Knop | Functie | Zichtbaar | Bron |
+|------|---------|-----------|------|
+| Relatics import | `importeerRelaticsV2()` | Beginner + Enduser | huidige Relatics IPP-Werkspoor-export. RASCI: accountable wordt verantwoordelijke, de rest medeverantwoordelijken. Input/output = product (PRD) met productstadium als stadium (`stadiumVan()`, 1-op-1). De "Is onderdeel van Proces"-hiërarchie wordt platgeslagen tot N1/N2. Accepteert "Productstadium" en "Productstadia". |
+| Relatics IPP (oud) | `importeerRelatics()` | Enduser | exportstructuur van augustus 2026. Leest geen RASCI, stadium of sub-processen; in nieuwere exports pakt hij het productstadium als input/output. |
+| Relatics SE | `importeerRelaticsSE()` | Enduser | SE-processen |
+| Importeer processen | `importeerProcWizard()` | Enduser | processen uit een ander JSON-bestand samenvoegen |
+
+Beide Relatics IPP-importers herkennen kolommen op koptekst (`groepStart()`) en gebruiken een eigen `parseCSV()` die aanhalingstekens respecteert.
+
+**Werkspoor-boom:** staat de kolom "Is onderdeel van IPP-Werkspoor" in de export, dan bouwt `bouwWerkspoorBoom()` de werksporen als geneste clusters op (bijv. IPP-6 > IPP-1 t/m 5 en IPP-30). Zonder die kolom blijven de clusters plat. Naamloze, lege werksporen vallen weg; dieper dan 3 niveaus wordt op niveau 3 platgeslagen.
+
+**Beginner/Enduser:** de schuifknop in de header zet `body.beginner`. Elementen met class `expert` zijn dan verborgen (Relatics IPP (oud), Relatics SE, Importeer processen, IB Inventarisatie, Elementen & Attributen, CSV import/export, Informatiemodel exporteren). De keuze staat per browser in localStorage `ipp_modus`.
 
 ## CSV-structuur (processen)
 Puntkomma-gescheiden, commentaarregels met `#`. Kolommen (`CSV_COLS`):

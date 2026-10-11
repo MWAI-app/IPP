@@ -1368,6 +1368,38 @@ async function importeerRelatics(){
   }
 }
 
+// Bouwt de clusterboom uit Relatics-werksporen. Een werkspoor met een bovenliggend werkspoor
+// (kolom "Is onderdeel van IPP-Werkspoor", vastgelegd als ws.ouder) wordt subcluster daarvan.
+// Zonder die kolom blijft de lijst plat, zoals bij oudere exports. Naamloze werksporen zonder
+// processen of sub-werksporen vallen weg. Dieper dan 3 niveaus wordt op niveau 3 platgeslagen.
+// gebruikt = Set van werkspoor-id's waar processen aan hangen; maak(ws) levert het cluster-object.
+function bouwWerkspoorBoom(clusterMap,gebruikt,maak){
+  Object.values(clusterMap).forEach(ws=>{
+    if(ws.ouder&&!clusterMap[ws.ouder.id])
+      clusterMap[ws.ouder.id]={id:ws.ouder.id,naam:ws.ouder.naam,volgorde:Object.keys(clusterMap).length+1};
+  });
+  const kinderen={};
+  Object.values(clusterMap).forEach(ws=>{const o=ws.ouder?.id;if(o&&o!==ws.id)(kinderen[o]=kinderen[o]||[]).push(ws);});
+  const inhoud=(ws,pad=new Set())=>{
+    if(pad.has(ws.id))return false;pad.add(ws.id);
+    return !!ws.naam||gebruikt.has(ws.id)||(kinderen[ws.id]||[]).some(k=>inhoud(k,pad));
+  };
+  const sorteer=l=>l.filter(ws=>inhoud(ws)).sort((a,b)=>a.volgorde-b.volgorde);
+  const bezocht=new Set();
+  const bouw=(ws,niv)=>{
+    bezocht.add(ws.id);
+    const cl=maak(ws);
+    const kids=sorteer(kinderen[ws.id]||[]).filter(k=>!bezocht.has(k.id));
+    if(niv>=3)return [cl,...kids.flatMap(k=>bouw(k,3))];
+    cl.subclusters=kids.flatMap(k=>bouw(k,niv+1));
+    return [cl];
+  };
+  const wortels=sorteer(Object.values(clusterMap).filter(ws=>!ws.ouder||ws.ouder.id===ws.id||!clusterMap[ws.ouder.id]));
+  const clusters=wortels.flatMap(ws=>bouw(ws,1));
+  // Vangnet voor een kringverwijzing in Relatics: niet-bereikte werksporen alsnog bovenaan
+  sorteer(Object.values(clusterMap).filter(ws=>!bezocht.has(ws.id))).forEach(ws=>{if(!bezocht.has(ws.id))clusters.push(...bouw(ws,1));});
+  return clusters;
+}
 function importeerRelaticsV2(){
   if('showOpenFilePicker' in window){
     try{
@@ -1407,13 +1439,14 @@ function verwerkRelaticsCSVv2(csvTekst){
     const groepStart=deel=>groepStarts(deel)[0]??-1;
 
     const gCl=groepStart('werkspoor');                 // Cluster: id, volgorde, naam
+    const gOuder=groepStart('onderdeel van ipp-werkspoor'); // bovenliggend werkspoor: id, naam (optioneel)
     const gPr=groepStart('origin of proces');           // Proces: id, volgorde, naam
     const gAc=groepStart('activiteiten');               // Processtap: id, volgorde, naam, beschrijving
     const gTl=groepStart('tools');                      // Software: id, naam
     const gRas=groepStart("rasci");                     // RASCI-koppeling: id, toewijzing (R/A/S/C/I)
     const gRol=groepStart('rolhouder');                 // Rol: id, afkorting, naam
-    const gInPst=groepStart('input productstadium');    // Input-productstadium: id, omschrijving
-    const gOutPst=groepStart('output productstadium');  // Output-productstadium: id, omschrijving
+    const gInPst=groepStart('input productstadi');      // Input-productstadium/-stadia: id, omschrijving
+    const gOutPst=groepStart('output productstadi');    // Output-productstadium/-stadia: id, omschrijving
     const gOrigin=groepStarts('has origin');             // [inputProduct, outputProduct]: id, naam
     const gOnderdeelVan=groepStart('onderdeel van proces'); // bovenliggend proces: id, volgorde, naam
 
@@ -1476,6 +1509,8 @@ function verwerkRelaticsCSVv2(csvTekst){
         }
         huidigCluster=clusterMap[id];huidigProces=null;huidigStap=null;
       }
+      if(gOuder>=0&&huidigCluster&&!huidigCluster.ouder&&c(gOuder).startsWith('IPP-'))
+        huidigCluster.ouder={id:c(gOuder),naam:c(gOuder+1)};
       if(c(prId).startsWith('PRC-')){
         const id=c(prId);
         if(!procesMap[id]){
@@ -1512,9 +1547,8 @@ function verwerkRelaticsCSVv2(csvTekst){
 
     // Clusters — afkorting komt letterlijk uit de Relatics-code, zoals bij v1.
     let ki=0;
-    const clusters=Object.values(clusterMap)
-      .sort((a,b)=>a.volgorde-b.volgorde)
-      .map(ws=>({id:aId(ws.id),label:ws.naam,kleur:kleuren[ki++%kleuren.length],afkorting:ws.id||afk(ws.naam),volgorde:ws.volgorde,subclusters:[]}));
+    const clusters=bouwWerkspoorBoom(clusterMap,new Set(Object.values(procesMap).map(p=>p.clusterId)),
+      ws=>({id:aId(ws.id),label:ws.naam,kleur:kleuren[ki++%kleuren.length],afkorting:ws.id||afk(ws.naam),volgorde:ws.volgorde,subclusters:[]}));
 
     const alleSystemen=new Set(S.data?.systemen||leeg().systemen);
     const alleRollen=new Set(S.data?.rollen||leeg().rollen);
@@ -1605,7 +1639,7 @@ function verwerkRelaticsCSVv2(csvTekst){
     try{localStorage.setItem('ipp_v2',JSON.stringify(S.data));}catch(e){}
     setGw(true);
     const waarschuwing=nietGeplaatst.length?`<p style="color:#dc2626;font-size:12px;margin-top:8px">Let op: ${nietGeplaatst.length} sub-proces(sen) gaan dieper dan 3 niveaus en zijn overgeslagen: ${nietGeplaatst.slice(0,5).join(', ')}${nietGeplaatst.length>5?'…':''}</p>`:'';
-    document.getElementById('canvas').innerHTML='<div id="wlk"><div class="wi">&#10003;</div><h2>Relatics IPP v2 geïmporteerd</h2><p>'+processen.length+' processen · '+clusters.length+' clusters · '+documenten.length+' documenten geladen.<br>Gebruik <strong>Opslaan</strong> om op te slaan als JSON.</p>'+waarschuwing+'</div>';
+    document.getElementById('canvas').innerHTML='<div id="wlk"><div class="wi">&#10003;</div><h2>Relatics geïmporteerd</h2><p>'+processen.length+' processen · '+allesClusters().length+' clusters · '+documenten.length+' documenten geladen.<br>Gebruik <strong>Opslaan</strong> om op te slaan als JSON.</p>'+waarschuwing+'</div>';
     document.getElementById('vt').style.display='none';
     ['bst','bbw','bib','bea'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('wbs').textContent='';
@@ -1649,6 +1683,7 @@ function verwerkRelaticsCSV(csvTekst){
 
     const groepStart=deel=>groep.findIndex(g=>g.includes(deel));
     const gCl=groepStart('werkspoor');            // Cluster: id, volgorde, naam
+    const gOuder=groepStart('onderdeel van ipp-werkspoor'); // bovenliggend werkspoor: id, naam (optioneel)
     const gPr=groepStart('processen');            // Proces: id, volgorde, naam
     const gAc=groepStart('activiteiten');         // Processtap: id, volgorde, naam, beschrijving
     const gTl=groepStart('tools');                // Software: id, naam
@@ -1705,6 +1740,8 @@ function verwerkRelaticsCSV(csvTekst){
         }
         huidigCluster=clusterMap[id];huidigProces=null;huidigStap=null;
       }
+      if(gOuder>=0&&huidigCluster&&!huidigCluster.ouder&&c(gOuder).startsWith('IPP-'))
+        huidigCluster.ouder={id:c(gOuder),naam:c(gOuder+1)};
       if(c(prId).startsWith('PRC-')){
         const id=c(prId);
         if(!procesMap[id])procesMap[id]={id,naam:c(prNm),volgorde:parseVol(c(prVol)),clusterId:huidigCluster?.id,stappen:[]};
@@ -1728,9 +1765,8 @@ function verwerkRelaticsCSV(csvTekst){
     // Clusters opbouwen — afkorting komt letterlijk uit de Relatics-code (bv. "IPP-30"),
     // want de codering wordt in dit import-pad afgedwongen door de bron-export.
     let ki=0;
-    const clusters=Object.values(clusterMap)
-      .sort((a,b)=>a.volgorde-b.volgorde)
-      .map(ws=>({id:aId(ws.id),label:ws.naam,kleur:kleuren[ki++%kleuren.length],afkorting:ws.id||afk(ws.naam),volgorde:ws.volgorde,subclusters:[]}));
+    const clusters=bouwWerkspoorBoom(clusterMap,new Set(Object.values(procesMap).map(p=>p.clusterId)),
+      ws=>({id:aId(ws.id),label:ws.naam,kleur:kleuren[ki++%kleuren.length],afkorting:ws.id||afk(ws.naam),volgorde:ws.volgorde,subclusters:[]}));
 
     // Processen opbouwen
     const alleSystemen=new Set(S.data?.systemen||leeg().systemen);
@@ -1785,7 +1821,7 @@ function verwerkRelaticsCSV(csvTekst){
     laadUI();
     try{localStorage.setItem('ipp_v2',JSON.stringify(S.data));}catch(e){}
     setGw(true);
-    document.getElementById('canvas').innerHTML='<div id="wlk"><div class="wi">&#10003;</div><h2>Relatics geïmporteerd</h2><p>'+processen.length+' processen · '+clusters.length+' clusters · '+documenten.length+' documenten geladen.<br>Gebruik <strong>Opslaan</strong> om op te slaan als JSON.</p></div>';
+    document.getElementById('canvas').innerHTML='<div id="wlk"><div class="wi">&#10003;</div><h2>Relatics IPP (oud) geïmporteerd</h2><p>'+processen.length+' processen · '+allesClusters().length+' clusters · '+documenten.length+' documenten geladen.<br>Gebruik <strong>Opslaan</strong> om op te slaan als JSON.</p></div>';
     document.getElementById('vt').style.display='none';
     ['bst','bbw','bib','bea'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('wbs').textContent='';
